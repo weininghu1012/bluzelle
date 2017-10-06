@@ -1,5 +1,6 @@
 #include "NodeUtilities.h"
 
+#include <algorithm>
 #include <iostream>
 
 bool all_nodes_alive(const Nodes& nodes)
@@ -22,35 +23,35 @@ void wait_for_all_nodes_to_start(const Nodes &nodes)
         }
 }
 
-void reaper(Nodes *nodes)
+void join_dead_tasks(Nodes *nodes)
 {
-    for(auto node : *nodes)
+    for(auto n : *nodes )
         {
-        if(node->state() == Task::dead)
+        if(n->state() == Task::dead)
             {
-            if(node->is_joinable())
-                {
-                node->join();
-                }
+            n->join();
             }
         }
-
-
-    std::cout << "**** before erase\n";
-    nodes->erase
-            (
-                    std::remove_if
-                            (
-                                    nodes->begin(),
-                                    nodes->end(),
-                                    [](auto node)
-                                        {
-                                        return (node->state() == Task::dead);
-                                        }
-                            )
-            );
-
-    std::cout << " ***** nodes:[" << nodes->size() << "]\n\n";
-
 }
 
+void remove_dead_nodes(Nodes *nodes)
+{
+    auto is_task_dead = [](auto n) {return (n->state() == Task::dead);};
+    auto r = std::remove_if
+            (
+                    nodes->begin(),
+                    nodes->end(),
+                    is_task_dead
+            );
+    if(r != nodes->end())
+        {
+        nodes->erase(r,nodes->end());
+        }
+}
+
+
+void reaper(Nodes *nodes)
+{
+    join_dead_tasks(nodes);
+    remove_dead_nodes(nodes);
+}

@@ -3,12 +3,12 @@
 
 #include "Task.h"
 #include <boost/thread.hpp>
+#include <boost/shared_ptr.hpp>
 
 class Node
 {
-    Task*               _task;
-    boost::thread*      _thread;
-
+    boost::shared_ptr<Task>             _task;
+    boost::shared_ptr<boost::thread>    _thread;
 public:
     Node()
     {
@@ -20,17 +20,17 @@ public:
             task->run();
             };
 
-        _task   = new Task();
-        _thread = new boost::thread
+        _task.reset(new Task());
+        _thread.reset(new boost::thread
                 (
                         thread_function,
-                        _task
-                );
+                        _task.get()
+                ));
     }
 
-    boost::thread::id get_id()
+    boost::thread::id get_thread_id()
     {
-        return _task->get_id();
+        return _thread->get_id();
     }
 
     void kill()
@@ -57,6 +57,7 @@ public:
     {
         _task->ping(other);
     }
+
 
 private:
 

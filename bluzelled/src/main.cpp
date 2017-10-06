@@ -16,7 +16,7 @@ Nodes create_nodes(int number_of_nodes);
 
 int main(/*int argc,char *argv[]*/)
 {
-    const uint8_t MAX_TASKS = 5;
+    const uint8_t MAX_TASKS = 25;
     uint8_t numTasks = 2;
     get_mutex();
 
@@ -50,8 +50,7 @@ int main(/*int argc,char *argv[]*/)
                 print_message(ss.str());
                 }
             }
-
-
+        
 
         // clean up
         print_message("The app is ending\n");
@@ -115,7 +114,7 @@ void make_introductions(const Nodes &nodes)
         {
         if (nullptr != last_node)
             {
-            last_node->ping(node->get_id());
+            last_node->ping(node->get_thread_id());
             }
         last_node = node;
         }

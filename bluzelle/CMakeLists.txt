@@ -80,6 +80,8 @@ set(SOURCE_FILES
         src/test.cpp
         src/sim/ThreadData.tests.cpp
         src/containers/BZSyncMapWrapper.tests.cpp
-        src/containers/BZSyncSetWrapper.tests.cpp inc/containers/CQueue.h src/containers/BZSyncQueue.tests.cpp)
+        src/containers/BZSyncSetWrapper.tests.cpp
+        inc/containers/CQueue.h
+        src/containers/BZSyncQueue.tests.cpp)
 add_executable(bluzelle_test ${SOURCE_FILES})
 target_link_libraries(bluzelle_test ${Boost_LIBRARIES})
