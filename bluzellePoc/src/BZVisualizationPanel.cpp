@@ -5,8 +5,6 @@
 #include <algorithm>
 #include <memory>
 
-
-
 BEGIN_EVENT_TABLE(BZVisualizationPanel, wxPanel)
                 EVT_PAINT(BZVisualizationPanel::paintEvent)
 END_EVENT_TABLE()

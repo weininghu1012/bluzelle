@@ -57,12 +57,12 @@ private:
     void remove_nodes();
     void push_new_nodes(const std::vector<std::string>& nodes);
     void set_node_states(const std::vector<std::string>& nodes);
-    void drawNode(wxDC& dc, Node* node, const int x, const int y);
+    void drawNode(wxDC& dc, Node* node, int x, int y);
 protected:
     DECLARE_EVENT_TABLE()
 
 public:
-    BZVisualizationPanel(wxFrame* parent);
+    explicit BZVisualizationPanel(wxFrame* parent);
     void paintEvent(wxPaintEvent& evt);
     void paintNow();
     void render(wxDC& dc);

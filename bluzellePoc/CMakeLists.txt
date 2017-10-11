@@ -22,9 +22,11 @@ if(Boost_FOUND)
     include_directories(${Boost_INCLUDE_DIRS})
 endif()
 
+
 include_directories(inc)
 
-set(SOURCE_FILES
+set(
+        SOURCE_FILES
         inc/KeplerApplication.hpp
         inc/KeplerFrame.hpp
         inc/KeplerSynchronizedMapWrapper.hpp
@@ -41,6 +43,9 @@ set(SOURCE_FILES
         inc/BZVisualizationPanel.h
         src/BZVisualizationPanel.cpp
         )
+
+SET(CMAKE_BUILD_TYPE distribution)
+##set(CMAKE_EXE_LINKER_FLAGS -static)
 
 add_executable(bluzelle_poc ${SOURCE_FILES})
 target_link_libraries(bluzelle_poc ${Boost_LIBRARIES})
