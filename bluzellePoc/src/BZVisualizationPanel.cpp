@@ -34,7 +34,7 @@ void BZVisualizationPanel::paintNow()
 const wxColour foreGround = wxColour(70,234,39);
 const wxColour kBIRTH_COLOUR = wxColour(255, 0, 0);
 const wxColour kLIFE_COLOUR = wxColour( 0, 255, 0);
-const wxColour kDEATH_COLOUR = wxColour(0, 0, 255);
+const wxColour kDEATH_COLOUR = wxColour(25, 200, 255);
 const wxColour kREMOVE_COLOUR = wxColour(0, 0, 0);
 
 
@@ -57,7 +57,7 @@ void BZVisualizationPanel::drawNode(wxDC& dc, Node* node, const int x, const int
     pen.SetWidth(2);
 
     dc.SetPen(pen);
-    dc.SetTextForeground(foreGround);
+    dc.SetTextForeground(state_colour( node->get_state()));
 
     dc.SetBrush(*wxTRANSPARENT_BRUSH);
     dc.DrawCircle(x, y, 6);
@@ -125,11 +125,14 @@ void BZVisualizationPanel::push_new_nodes(const std::vector<std::string>& nodes)
 
 void BZVisualizationPanel::set_node_states(const std::vector<std::string>& nodes)
 {
+    const int kSTATE_TIME = 6;
+
+
     for(auto node : _nodes)
         {
         if(node->get_state() == Node::State::dead)
             {
-            if(node->get_state_time()>10)
+            if(node->get_state_time() > kSTATE_TIME)
                 {
                 node->set_state(Node::State::remove);
                 }
@@ -150,7 +153,7 @@ void BZVisualizationPanel::set_node_states(const std::vector<std::string>& nodes
 
         if(node->get_state() == Node::State::born)
             {
-            if(node->get_state_time()>10)
+            if(node->get_state_time() > kSTATE_TIME)
                 {
                 node->set_state(Node::State::alive);
                 }

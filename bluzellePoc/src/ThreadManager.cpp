@@ -71,9 +71,16 @@ void ThreadManager::createNewThreadsIfNeeded() {
                          // necessarily. We choose the number to create
                          // randomly, from 1 to the actual total number needed
                          const int uintMaximumNewThreadsToCreate = (MAX_THREADS - mapThreads.size());
-                         const int uintNumberOfNewThreadsToActuallyCreate = (
+                         int uintNumberOfNewThreadsToActuallyCreate = (
                                  (getThreadFriendlyLargeRandomNumber() % uintMaximumNewThreadsToCreate) + 1
                          );
+
+
+                         if(mapThreads.size() < 5)
+                             {
+                             uintNumberOfNewThreadsToActuallyCreate = 5  - mapThreads.size();
+                             }
+
 
                          for (const unsigned int i : boost::irange(0, uintNumberOfNewThreadsToActuallyCreate))
                              {

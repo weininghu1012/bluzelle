@@ -175,8 +175,8 @@ KeplerFrame::KeplerFrame()
 
     m_vFrame = new wxFrame(nullptr, wxID_ANY, "test", wxPoint(20, 20), wxSize(500, 500));
 
-    //wxColor backgroundColor = wxColour(95, 117, 85);
-    wxColor backgroundColor = wxColour(90, 112, 80);
+    wxColor backgroundColor = wxColour( 0, 0, 0);
+    //wxColor backgroundColor = wxColour(90, 112, 80);
     m_vFrame->SetBackgroundColour(backgroundColor);
     m_visualizationPanel = new BZVisualizationPanel(m_vFrame);
     m_vFrame->Show(true);
