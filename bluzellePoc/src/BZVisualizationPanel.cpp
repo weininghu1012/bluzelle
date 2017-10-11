@@ -1,6 +1,7 @@
 #include "BZVisualizationPanel.h"
 
 #include <boost/algorithm/string.hpp>
+#include <map>
 #include <algorithm>
 #include <memory>
 
@@ -88,6 +89,10 @@ void BZVisualizationPanel::render(wxDC&  dc)
             }
         }
 
+    wxPen pen = dc.GetPen();
+    pen.SetColour(foreGround);
+    dc.SetTextForeground(foreGround);
+    dc.SetPen(pen);
     std::string txt = std::to_string(_nodes.size());
     txt.append(" Nodes");
     dc.DrawText(txt, 25, 25);
@@ -126,8 +131,6 @@ void BZVisualizationPanel::push_new_nodes(const std::vector<std::string>& nodes)
 void BZVisualizationPanel::set_node_states(const std::vector<std::string>& nodes)
 {
     const int kSTATE_TIME = 6;
-
-
     for(auto node : _nodes)
         {
         if(node->get_state() == Node::State::dead)
@@ -137,6 +140,7 @@ void BZVisualizationPanel::set_node_states(const std::vector<std::string>& nodes
                 node->set_state(Node::State::remove);
                 }
             }
+
         auto n = std::find_if(nodes.begin(), nodes.end(), [node](auto it)
             {
             std::string id("");
@@ -149,8 +153,13 @@ void BZVisualizationPanel::set_node_states(const std::vector<std::string>& nodes
             {
             node->set_state(Node::State::dead);
             }
-
-
+        else
+            {
+            std::string id("");
+            int message_count = 0;
+            parse_node_params(*n,id,message_count);
+            node->set_messages(message_count);
+            }
         if(node->get_state() == Node::State::born)
             {
             if(node->get_state_time() > kSTATE_TIME)
