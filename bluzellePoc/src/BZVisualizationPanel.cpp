@@ -50,7 +50,7 @@ wxColour state_colour(const Node::State& state)
     return m[state];
 }
 
-void drawNode(wxDC& dc, Node* node, const int x, const int y)
+void BZVisualizationPanel::drawNode(wxDC& dc, Node* node, const int x, const int y)
 {
     wxPen pen = dc.GetPen();
     pen.SetColour(state_colour( node->get_state()));
@@ -102,7 +102,6 @@ void parse_node_params(const std::string& item, std::string& id, int& message_co
     std::string::size_type sz = params[1].length();
     message_count = std::stoi(params[1], &sz);
 }
-
 
 void BZVisualizationPanel::push_new_nodes(const std::vector<std::string>& nodes)
 {
@@ -174,22 +173,10 @@ void BZVisualizationPanel::remove_nodes()
     );
 }
 
-
 void BZVisualizationPanel::update_node_data(const std::vector<std::string>& nodes)
 {
     push_new_nodes(nodes);
     set_node_states(nodes);
     remove_nodes();
-
-
-
-
-
-
-
-
-
-
-
-
 }
+
