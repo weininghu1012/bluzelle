@@ -533,7 +533,7 @@ void KeplerFrame::OnTimer(wxTimerEvent &e) {
                 }
 
     );
-    m_visualizationPanel->_nodeData = nodeData;
+    m_visualizationPanel->update_node_data(nodeData);
     m_visualizationPanel->Refresh(true);
 }
 
