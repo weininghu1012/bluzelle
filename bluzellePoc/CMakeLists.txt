@@ -45,7 +45,6 @@ set(
         )
 
 SET(CMAKE_BUILD_TYPE distribution)
-##set(CMAKE_EXE_LINKER_FLAGS -static)
 
 add_executable(bluzelle_poc ${SOURCE_FILES})
 target_link_libraries(bluzelle_poc ${Boost_LIBRARIES})

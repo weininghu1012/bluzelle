@@ -41,6 +41,8 @@ public:
         return duration;
     }
 
+    time_t get_time() { return _state_start;}
+
 private:
     std::string _id;
     State       _state;
