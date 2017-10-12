@@ -76,9 +76,9 @@ void ThreadManager::createNewThreadsIfNeeded() {
                          );
 
 
-                         if(mapThreads.size() < 5)
+                         if(mapThreads.size() < 10)
                              {
-                             uintNumberOfNewThreadsToActuallyCreate = 5  - mapThreads.size();
+                             uintNumberOfNewThreadsToActuallyCreate = 10  - mapThreads.size();
                              }
 
 
