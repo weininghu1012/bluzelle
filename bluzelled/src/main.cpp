@@ -1,5 +1,6 @@
 #include "Node.h"
 #include "NodeUtilities.h"
+#include "WebSocket.h"
 
 #include <boost/exception/all.hpp>
 #include <iostream>
@@ -14,11 +15,39 @@ boost::mutex &get_mutex();
 
 Nodes create_nodes(int number_of_nodes);
 
+unsigned number_of_nodes_to_create(unsigned max_tasks, unsigned current_number_of_tasks)
+{
+    auto proportional = [](int max_tasks, int current_number_of_tasks)
+        {
+        return  (
+                        std::max((int) 0, (int) (max_tasks - current_number_of_tasks))
+                ) / 2;
+        };
+    auto integral = [] () {return 0;};
+    auto derivative = [] () {return 0;};
+    return proportional(max_tasks, current_number_of_tasks) + integral() + derivative();
+}
+
+void add_nodes(const Nodes& nodes)
+{
+    print_message("locking and adding new threads\n");
+    boost::mutex::scoped_lock lock(*s_mutex);
+    s_nodes.insert(s_nodes.end(), nodes.begin(), nodes.end());
+    std::stringstream ss;
+    ss.str("");
+    ss << "*** added [" << nodes.size() << "] nodes\n";
+    print_message(ss.str());
+}
+
 int main(/*int argc,char *argv[]*/)
 {
     const uint8_t MAX_TASKS = 25;
     uint8_t numTasks = 2;
     get_mutex();
+
+
+    WebSocket ws(&s_nodes);
+
 
     std::stringstream ss;
     try
@@ -33,24 +62,13 @@ int main(/*int argc,char *argv[]*/)
 
             // add new tasks + threads as old task/threads die to keep a constant
             // how many new threads do we need? Proportional
-            int num_of_new_nodes =
-                    (
-                            std::max((int) 0, (int) (MAX_TASKS - s_nodes.size()))
-                    ) / 2;
-
+            int num_of_new_nodes = number_of_nodes_to_create( MAX_TASKS, s_nodes.size());
             if (num_of_new_nodes > 0)
                 {
                 Nodes nodes = create_nodes(num_of_new_nodes);
-                print_message("locking and adding new threads\n");
-                boost::mutex::scoped_lock lock(*s_mutex);
-                s_nodes.insert(s_nodes.end(), nodes.begin(), nodes.end());
-
-                ss.str("");
-                ss << "*** added [" << nodes.size() << "] nodes\n";
-                print_message(ss.str());
+                add_nodes(nodes);
                 }
             }
-        
 
         // clean up
         print_message("The app is ending\n");
@@ -121,7 +139,8 @@ void make_introductions(const Nodes &nodes)
 }
 
 
-boost::mutex &get_mutex() {
+boost::mutex &get_mutex()
+{
     if (nullptr == s_mutex)
         {
         s_mutex = new boost::mutex();

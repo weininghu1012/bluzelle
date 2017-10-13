@@ -1,8 +1,9 @@
 cmake_minimum_required(VERSION 3.7)
 project(bluzelled)
 
+###############################################################################
+## bluzelled
 message(STATUS "*** CMakeLists for Bluzelled")
-
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_VERBOSE_MAKEFILE OFF)
 
@@ -25,6 +26,8 @@ endif()
 include_directories(
         inc
         inc/containers
+        /usr/local/include/uWS
+        /usr/local/opt/openssl/include
 )
 
 set(SOURCE_FILES
@@ -37,16 +40,24 @@ set(SOURCE_FILES
         inc/Task.h
         inc/NodeUtilities.h
         src/NodeUtilities.cpp
-        )
+        src/WebSocket.cpp inc/WebSocket.h)
 
+add_compile_options(-L/usr/local/opt/openssl/lib)
 add_executable(bluzelled ${SOURCE_FILES})
-target_link_libraries(bluzelled ${Boost_LIBRARIES})
+target_link_libraries(
+        bluzelled ${Boost_LIBRARIES}
+        /usr/local/lib/libuWS.dylib
+        /usr/local/opt/openssl/lib/libssl.dylib
+        /usr/lib/libz.dylib
+        /usr/local/lib/libuv.dylib
+)
 
 
-################################################################
+###############################################################################
 # Unit tests
-
-
+message(STATUS "*** CMakeLists for bluzelled_test")
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_VERBOSE_MAKEFILE OFF)
 if(MSVC)
     add_compile_options(/W4)
 else()
@@ -72,16 +83,10 @@ set(SOURCE_FILES
         src/Task.cpp
         inc/Task.h
         inc/NodeUtilities.h
-        src/NodeUtilities.cpp src/cmap_test.cpp src/node_test.cpp)
-
-
-
-
-
+        src/NodeUtilities.cpp
+        src/cmap_test.cpp
+        src/node_test.cpp
+        )
 file(COPY assets/words.txt DESTINATION ${CMAKE_BINARY_DIR})
 add_executable(bluzelled_test ${SOURCE_FILES})
-target_link_libraries(bluzelled_test ${Boost_LIBRARIES})
-
-
-
-message(STATUS "\n\n")
+target_link_libraries(bluzelled_test ${Boost_LIBRARIES} )
