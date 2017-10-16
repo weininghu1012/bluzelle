@@ -1,15 +1,12 @@
 import remove from 'lodash/remove'
-import {sendCommand, addCommandProcessor, socketReady} from 'services/CommunicationService'
+import {sendCommand, addCommandProcessor} from 'services/CommunicationService'
 
 const nodes = observable([]);
 
 
 addCommandProcessor('addNodes', (nodes) => nodes.forEach(addNode));
 
-autorun(() => {
-    socketReady.get() && sendCommand('getAllNodes');
-});
-
+sendCommand('getAllNodes');
 
 export const getNodes = () => nodes;
 
