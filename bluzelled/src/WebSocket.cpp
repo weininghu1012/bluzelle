@@ -9,6 +9,7 @@ WebSocket::WebSocket(Nodes *nodes) : _nodes(nodes)
         h.onMessage(
                 [this](uWS::WebSocket<uWS::SERVER>* ws, char *message, size_t length, uWS::OpCode opCode)
                     {
+                    std::cout << "got a message\n";
                     this->on_message(ws, message, length, opCode);
                     });
 

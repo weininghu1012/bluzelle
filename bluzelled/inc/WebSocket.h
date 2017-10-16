@@ -8,6 +8,7 @@
 #include <boost/algorithm/string/join.hpp>
 #include <sstream>
 #include <fstream>
+#include <iostream>
 
 // {cmds:[{cmd: 'addNode', data:{address: '0xffff', status: 'alive'}}]}
 
@@ -40,11 +41,22 @@ class WebSocket {
             size_t length,
             size_t remainingBytes)
     {
+        std::string url_string = req.getUrl().toString();
+        std::stringstream filestream;
+
+        if(0 == url_string.compare("/"))
+            {
+            url_string.append("index.html");
+            }
+
+        filestream << "../web" << url_string;
+
         std::stringstream ss;
         std::ifstream file;
-        file.open("../web/index.html");
+        file.open(filestream.str().c_str());
         if(file.is_open())
             {
+            std::cerr << "*** Open [" << filestream.str() << "]\n" ;
             std::string line;
             while(std::getline(file,line))
                 {
@@ -53,7 +65,7 @@ class WebSocket {
             }
         else
             {
-            std::cerr << "Unable to open index.html.\n";
+            std::cerr << "Unable to open [" << filestream.str() << "]\n" ;
             }
         res->end(ss.str().c_str(), ss.str().length());
     }

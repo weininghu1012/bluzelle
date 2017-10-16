@@ -30,13 +30,8 @@ unsigned number_of_nodes_to_create(unsigned max_tasks, unsigned current_number_o
 
 void add_nodes(const Nodes& nodes)
 {
-    print_message("locking and adding new threads\n");
     boost::mutex::scoped_lock lock(*s_mutex);
     s_nodes.insert(s_nodes.end(), nodes.begin(), nodes.end());
-    std::stringstream ss;
-    ss.str("");
-    ss << "*** added [" << nodes.size() << "] nodes\n";
-    print_message(ss.str());
 }
 
 int main(/*int argc,char *argv[]*/)
