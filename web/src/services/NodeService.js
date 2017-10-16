@@ -1,14 +1,13 @@
 import remove from 'lodash/remove'
-import {sendCommand, addCommandProcessor} from 'services/CommunicationService'
+import {sendCommand, addCommandProcessor, socketReady} from 'services/CommunicationService'
 
 const nodes = observable([]);
-global.nodes = nodes;
 
 
 addCommandProcessor('addNodes', (nodes) => nodes.forEach(addNode));
 
 autorun(() => {
-    Session.get('websocket.ready') && (console.log('sending command') || sendCommand('getAllNodes'));
+    socketReady.get() && sendCommand('getAllNodes');
 });
 
 
