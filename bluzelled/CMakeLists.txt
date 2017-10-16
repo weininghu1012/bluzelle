@@ -7,6 +7,8 @@ message(STATUS "*** CMakeLists for Bluzelled")
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_VERBOSE_MAKEFILE OFF)
 
+file(COPY assets/web DESTINATION ${CMAKE_BINARY_DIR})
+
 if(MSVC)
     add_compile_options(/W4)
 else()
