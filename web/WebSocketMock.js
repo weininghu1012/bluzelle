@@ -1,7 +1,4 @@
 module.exports = SocketBase => class Socket extends SocketBase {
-    wsOptions() {
-        return {path: '/ws'}
-    }
 
     websocket(wss) {
         wss.on('connection', (ws, req) => {

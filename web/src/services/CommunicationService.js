@@ -7,7 +7,7 @@ autorun(() =>
 );
 
 const startSocket = () => {
-    socket = new WebSocket(`ws://${window.location.host}/ws`);
+    socket = new WebSocket(`ws://${window.location.host}`);
     socket.onopen = () => Session.set('websocket.ready', true);
     socket.onmessage = (ev) => {
         const msg = JSON.parse(ev.data);
