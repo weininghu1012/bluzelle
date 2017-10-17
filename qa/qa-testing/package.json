@@ -1,9 +1,11 @@
 {
   "scripts": {
-      "run-tests": "mocha --recursive --use_strict mocha-setup test"
+    "run-tests": "mocha --recursive --use_strict mocha-setup test"
   },
   "dependencies": {
     "chai": "^4.1.2",
-    "mocha": "^4.0.1"
+    "mocha": "^4.0.1",
+    "request": "^2.83.0",
+    "ws": "^3.2.0"
   }
 }
