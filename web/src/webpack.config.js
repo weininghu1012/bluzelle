@@ -11,7 +11,7 @@ PROD && console.log('----------- Compiling for production ----------');
 
 console.log(`------------------------------- ${os.platform()} -----------------------`);
 
-const IS_WINDOWS = os.platform() === 'windows';
+const IS_WINDOWS = os.platform() === 'win32';
 
 
 
