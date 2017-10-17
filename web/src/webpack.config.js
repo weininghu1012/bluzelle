@@ -8,10 +8,13 @@ const testFiles = glob.sync("**/*.spec.js").filter(filename => /node_modules/.te
 const PROD = process.env.NODE_ENV === 'production';
 PROD && console.log('----------- Compiling for production ----------');
 
+
+
+
 module.exports = {
     entry: {
-        index: './index.js',
-        test: './test.js'
+        index: path.resolve('./index.js'),
+        test: path.resolve('./test.js')
     },
     output: {
         path: path.resolve('../dist/generated/js'),
