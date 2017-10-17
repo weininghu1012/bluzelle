@@ -4,7 +4,7 @@
     "dev-compile": "cd src; webpack --watch --env.beep",
     "test": "mocha -r jsdom-global/register dist/runTests.js --exit",
     "start": "ws --spa index.html -d dist --websocket ./WebSocketMock.js",
-    "coverage": "nyc --instrument=false --reporter=lcov  --report-dir=coverage yarn test"
+    "coverage": "nyc --instrument=false --reporter=cobertura  --report-dir=coverage yarn test"
   },
   "dependencies": {
     "babel-core": "^6.26.0",
