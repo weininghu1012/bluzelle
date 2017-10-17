@@ -3,7 +3,9 @@
     "run-tests": "mocha --recursive --use_strict mocha-setup test"
   },
   "dependencies": {
+    "async-wait-until": "^1.1.5",
     "chai": "^4.1.2",
+    "lodash": "^4.17.4",
     "mocha": "^4.0.1",
     "request": "^2.83.0",
     "ws": "^3.2.0"
