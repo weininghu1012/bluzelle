@@ -2,8 +2,9 @@
   "scripts": {
     "prod-compile": "cd src; NODE_ENV=production webpack -p",
     "dev-compile": "cd src; webpack --watch --env.beep",
-    "test": "mocha -r jsdom-global/register dist/runTests.js",
-    "start": "ws --spa index.html -d dist --websocket ./WebSocketMock.js"
+    "test": "mocha -r jsdom-global/register dist/runTests.js --exit",
+    "start": "ws --spa index.html -d dist --websocket ./WebSocketMock.js",
+    "coverage": "nyc --instrument=false yarn test"
   },
   "dependencies": {
     "babel-core": "^6.26.0",
@@ -31,6 +32,7 @@
     "mobx": "^3.3.1",
     "mobx-react": "^4.3.3",
     "mocha": "^4.0.1",
+    "nyc": "^11.2.1",
     "prop-types": "^15.6.0",
     "react": "^16.0.0",
     "react-bootstrap": "^0.31.3",

@@ -21,9 +21,7 @@ describe('web sockets interface', () => {
         })
     });
 
-    afterEach(() => {
-        socket.close();
-    });
+    afterEach(() => socket.close());
 });
 
 const wsSend = (cmd, data) => {

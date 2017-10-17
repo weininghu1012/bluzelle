@@ -53,8 +53,16 @@ module.exports = {
                 use: {
                     loader: "url-loader"
                 }
+            },
+            {
+                test: /\.js$|\.jsx$/,
+                use: {
+                    loader: 'istanbul-instrumenter-loader',
+                    options: { esModules: true }
+                },
+                enforce: 'post',
+                exclude: /node_modules|\.specs\.js$/,
             }
-
         ]
     },
     resolve: {

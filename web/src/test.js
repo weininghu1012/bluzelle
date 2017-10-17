@@ -21,3 +21,11 @@ global.sinon = sinon;
 
 const testsContext = require.context('.', true, /\.specs\.js$/);
 testsContext.keys().forEach(testsContext);
+
+//Mock WebSocket
+global.WebSocket = function() {
+    return {}
+};
+
+
+window.location.host = window.location.host || (window.location.host = 'localhost');
