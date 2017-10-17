@@ -4,10 +4,14 @@ const BeepPlugin = require('webpack-beep-plugin');
 const glob = require('glob');
 const WebpackShellPlugin = require('webpack-shell-plugin');
 const testFiles = glob.sync("**/*.spec.js").filter(filename => /node_modules/.test(filename) === false);
+const os = require('os');
 
 const PROD = process.env.NODE_ENV === 'production';
 PROD && console.log('----------- Compiling for production ----------');
 
+console.log(os.platform());
+
+const IS_WINDOWS = os.platform() === 'windows';
 
 
 
