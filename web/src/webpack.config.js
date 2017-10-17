@@ -9,7 +9,7 @@ const os = require('os');
 const PROD = process.env.NODE_ENV === 'production';
 PROD && console.log('----------- Compiling for production ----------');
 
-console.log(os.platform());
+console.log(`------------------------------- ${os.platform()} -----------------------`);
 
 const IS_WINDOWS = os.platform() === 'windows';
 
@@ -82,9 +82,6 @@ module.exports = {
         }
     },
     plugins: [
-        new WebpackShellPlugin({
-            onBuildEnd:['./copy-to-daemon.sh']
-        }),
         new webpack.ProvidePlugin({
             React: 'react',
 
@@ -115,3 +112,8 @@ module.exports = {
         new webpack.NamedModulesPlugin()
     ]
 };
+
+IS_WINDOWS || module.exports.plugins.push(new WebpackShellPlugin({
+        onBuildEnd:['./copy-to-daemon.sh']
+    }),
+);
