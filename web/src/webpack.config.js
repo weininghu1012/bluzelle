@@ -9,8 +9,6 @@ const os = require('os');
 const PROD = process.env.NODE_ENV === 'production';
 PROD && console.log('----------- Compiling for production ----------');
 
-console.log(`------------------------------- ${os.platform()} -----------------------`);
-
 const IS_WINDOWS = os.platform() === 'win32';
 
 
