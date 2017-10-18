@@ -72,13 +72,14 @@ BOOST_AUTO_TEST_CASE(cset_find)
 
 BOOST_AUTO_TEST_CASE(cset_remove)
 {
-    std::vector<std::string> words = ReadWords(WORDS_FILENAME, MAX_WORDS);
-    BOOST_CHECK(words.size() == MAX_WORDS);
+    const long max_words = 100;
+    std::vector<std::string> words = ReadWords(WORDS_FILENAME, max_words);
+    BOOST_CHECK(words.size() == max_words);
 
     CSet<std::string> sut;
     for (auto w : words)
         {
-        BOOST_CHECK(sut.insert(w));
+        BOOST_CHECK(sut.cInsert(w));
         }
 
     BOOST_CHECK(words.size() == sut.size());
