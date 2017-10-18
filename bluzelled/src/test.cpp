@@ -1,5 +1,6 @@
 #define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MODULE "BaseClassModule"
+#define BOOST_USE_VALGRIND
 
 #include "CMap.h"
 #include "CSet.h"
@@ -70,42 +71,22 @@ BOOST_AUTO_TEST_CASE(cset_find)
         }
 }
 
+
+//  --run_test=cset_remove
 BOOST_AUTO_TEST_CASE(cset_remove)
 {
+    // simple remove tests
     const long max_words = 100;
     std::vector<std::string> words = ReadWords(WORDS_FILENAME, max_words);
-    BOOST_CHECK(words.size() == max_words);
-
     CSet<std::string> sut;
     for (auto w : words)
         {
         BOOST_CHECK(sut.cInsert(w));
         }
-
     BOOST_CHECK(words.size() == sut.size());
-
-    const uint16_t numThreads = 10;
-    std::vector<boost::thread *> threads;
-    for (int i = 0; i < numThreads; ++i)
-        {
-        threads.emplace_back
-                (
-                        new boost::thread
-                                (
-                                        0 == i
-                                        ? csetInsertThreadFunction
-                                        : csetRemoveThreadFunction, words, &sut)
-                );
-        }
-
-    for (auto t : threads)
-        {
-        BOOST_CHECK(t->joinable());
-        t->join();
-        BOOST_CHECK(nullptr != t);
-        delete t;
-        }
-
+    boost::thread* thread = new boost::thread(csetRemoveThreadFunction,words,&sut);
+    thread->join();
+    delete thread;
     BOOST_CHECK(0 == sut.size());
 }
 
@@ -208,7 +189,10 @@ void csetRemoveThreadFunction(std::vector<std::string> &words, CSet<std::string>
         {
         std::string word = words[dist(gen)];
         auto found = sut->find(word);
-        sut->remove(found);
+        if(found != sut->end())
+            {
+            sut->remove(found);
+            }
         boost::this_thread::yield();
         }
 }
