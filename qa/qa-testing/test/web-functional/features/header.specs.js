@@ -6,6 +6,7 @@ describe('web page header', () => {
     });
 
     it('should exist', () => {
+        header.waitForExist('img');
         expect(header.getAttribute('img', 'src')).to.contain('data');
     });
 });
