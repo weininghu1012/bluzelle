@@ -10,6 +10,6 @@ describe('The tab panel', () => {
     it('should go to the node list if the node list tab is clicked', () => {
         expect(browser.isExisting('div=alive')).to.be.false;
         base.click('=Node List');
-        browser.waitForExist('div=alive');
+        browser.waitForExist('div=alive', 2000);
     });
 });
