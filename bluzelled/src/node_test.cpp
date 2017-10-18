@@ -48,9 +48,9 @@ BOOST_AUTO_TEST_CASE( test_reaper )
     BOOST_CHECK( 0 == count_alive(*nodes) );
 
     reaper(nodes);
-    boost::this_thread::sleep_for(boost::chrono::milliseconds(100));
+    boost::this_thread::sleep_for(boost::chrono::milliseconds(500));
 
-    BOOST_CHECK( 0 == nodes->size() );
+    BOOST_CHECK_MESSAGE( 0 == nodes->size(), " nodes->size() is [" << nodes->size() << "].");
 
     delete nodes;
 }
