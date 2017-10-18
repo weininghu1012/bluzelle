@@ -1,12 +1,8 @@
 describe('web page header', () => {
-    let header;
-    beforeEach(() => {
-        browser.url('http://localhost:3000');
-        header = browser.element('#app-container>div>div');
-    });
+    const header = require('../getBaseElement')('#app-container>div>div');
 
     it('should exist', () => {
-        header.waitForExist('img');
-        expect(header.getAttribute('img', 'src')).to.contain('data');
+        header().waitForExist('img');
+        expect(header().getAttribute('img', 'src')).to.contain('data');
     });
 });
