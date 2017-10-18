@@ -1,9 +1,16 @@
 cmake_minimum_required(VERSION 3.7)
-project(bluzelled)
 
+function(list_cmake_properties)
+    get_cmake_property(_variableNames VARIABLES)
+    foreach (_variableName ${_variableNames})
+        message(STATUS "${_variableName}=${${_variableName}}")
+    endforeach()
+endfunction()
+
+project(bluzelled)
 ###############################################################################
 ## bluzelled
-message(STATUS "*** CMakeLists for Bluzelled")
+message(STATUS "*** CMakeLists for Bluzelled Starts")
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_VERBOSE_MAKEFILE OFF)
 
@@ -11,13 +18,11 @@ file(COPY assets/web DESTINATION ${CMAKE_BINARY_DIR})
 
 if(MSVC)
     add_compile_options(/W4)
-else()
-    add_compile_options(-Wall -Wextra -Wpedantic)
-endif()
-
-if(UNIX)
-    add_compile_options(-lrt)
+elseif(UNIX AND NOT APPLE)
     message(STATUS "***** UNIX!!!!!!!!!!!!!!!")
+    add_compile_options(-lrt)
+elseif(APPLE)
+    add_compile_options(-Wall -Wextra -Wpedantic)
 endif()
 
 find_package(Boost 1.64.0 REQUIRED COMPONENTS system coroutine thread REQUIRED)
@@ -28,8 +33,7 @@ endif()
 include_directories(
         inc
         inc/containers
-        /usr/local/include/uWS
-        /usr/local/opt/openssl/include
+        third_party/beast
 )
 
 set(SOURCE_FILES
@@ -42,16 +46,14 @@ set(SOURCE_FILES
         inc/Task.h
         inc/NodeUtilities.h
         src/NodeUtilities.cpp
-        src/WebSocket.cpp inc/WebSocket.h)
+        src/WebSocket.cpp
+        inc/WebSocket.h
+        )
 
-add_compile_options(-L/usr/local/opt/openssl/lib)
 add_executable(bluzelled ${SOURCE_FILES})
 target_link_libraries(
-        bluzelled ${Boost_LIBRARIES}
-        /usr/local/lib/libuWS.dylib
-        /usr/local/opt/openssl/lib/libssl.dylib
-        /usr/lib/libz.dylib
-        /usr/local/lib/libuv.dylib
+        bluzelled
+        ${Boost_LIBRARIES}
 )
 
 
@@ -61,14 +63,14 @@ message(STATUS "*** CMakeLists for bluzelled_test")
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_VERBOSE_MAKEFILE OFF)
 if(MSVC)
+    message(STATUS "***** MSVC *****")
     add_compile_options(/W4)
-else()
-    add_compile_options(-Wall -Wextra -Wpedantic)
-endif()
-
-if(UNIX)
+elseif(UNIX AND NOT APPLE)
+    message(STATUS "***** UNIX *****")
     add_compile_options(-lrt)
-    message(STATUS "***** UNIX!!!!!!!!!!!!!!!")
+else(APPLE)
+    message(STATUS "***** APPLE *****")
+    add_compile_options(-Wall -Wextra -Wpedantic)
 endif()
 
 
@@ -92,3 +94,9 @@ set(SOURCE_FILES
 file(COPY assets/words.txt DESTINATION ${CMAKE_BINARY_DIR})
 add_executable(bluzelled_test ${SOURCE_FILES})
 target_link_libraries(bluzelled_test ${Boost_LIBRARIES} )
+
+
+message(STATUS "*** CMakeLists for Bluzelled Ends\n\n")
+
+
+
