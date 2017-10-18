@@ -1,12 +1,12 @@
 {
   "scripts": {
     "run-tests": "mocha --recursive --use_strict mocha-setup test",
-    "run-web-functional-tests": "cd test/web-functional; chimp --mocha"
+    "run-web-functional-tests": "cd test/web-functional; yarn chimp --mocha"
   },
   "dependencies": {
     "async-wait-until": "^1.1.5",
-    "babel-polyfill": "^6.26.0",
     "chai": "^4.1.2",
+    "chimp": "^0.50.2",
     "lodash": "^4.17.4",
     "mocha": "^4.0.1",
     "nyc": "^11.2.1",
