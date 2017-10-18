@@ -7,9 +7,9 @@ describe('The tab panel', () => {
         base.waitForExist('a=Node Graph');
     });
 
-    it('should go to the node list if the node list tab is clicked', () => {
+    it('@watch should go to the node list if the node list tab is clicked', () => {
         expect(browser.isExisting('div=alive')).to.be.false;
         base.click('=Node List');
-        browser.waitForExist('div=alive', 2000);
+        browser.waitForExist('div=alive', 750);
     });
 });
