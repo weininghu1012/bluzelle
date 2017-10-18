@@ -3,7 +3,7 @@ describe('Node graph tab', () => {
 
     describe('individual nodes', () => {
         it('should display specs when mouseover', () => {
-            browser.waitForExist('=Node Graph', 5000);
+            browser.waitForExist('=Node Graph');
             browser.click('=Node Graph');
             browser.waitForExist('circle[fill="green"]');
             browser.moveToObject('circle[fill="green"]');
