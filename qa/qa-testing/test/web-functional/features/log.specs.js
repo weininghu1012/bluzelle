@@ -1,13 +1,11 @@
 describe('log tab', () => {
     describe('Table Headers', () =>{
-        const header = require('../base').getBase('div.react-grid-HeaderRow');
+        require('../base').getBase('div.react-grid-HeaderRow');
         it('@watch should contain table headers', () =>{
-           console.log(base.element('.react-grid-HeaderCell').value.length);
+            ['Timer', 'Entry #', 'Timestamp', 'Message'].forEach(text =>{
+               console.log('******',`div.widget-HeaderCell__value*="${text}"`);
+                base.waitForExist (`div.widget-HeaderCell__value*="${text}"`);
+            });
         });
-    });
-
-    require('../base').getBase('div');
-    it('should display log entries', () =>{
-
     });
 });
