@@ -5,7 +5,7 @@ describe('log tab', () => {
 
         it('should contain table headers', () =>{
             ['Timer', 'Entry #', 'Timestamp', 'Message'].forEach(text =>{
-                header.el.waitForExist (`div.widget-HeaderCell__value*=${text}`);
+                header.waitForExist (`div.widget-HeaderCell__value*=${text}`);
             });
         });
     });
