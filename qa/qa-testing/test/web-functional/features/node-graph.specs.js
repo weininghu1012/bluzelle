@@ -1,7 +1,7 @@
 const _ = require('lodash');
 
 describe('Node graph tab', () => {
-    require('../base').getBase('div');
+    require('../getBaseElement')('body');
 
     beforeEach(() => {
         browser.waitForExist('=Node Graph', 2000);

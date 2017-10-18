@@ -1,15 +1,15 @@
 describe('The tab panel', () => {
-    require('../base').getBase('ul.nav-tabs');
+    const tabs = require('../getBaseElement')('ul.nav-tabs');
 
     it('should exist', () => {
-        base.waitForExist('a=Log');
-        base.waitForExist('a=Node List');
-        base.waitForExist('a=Node Graph');
+        tabs.el.waitForExist('a=Log');
+        tabs.el.waitForExist('a=Node List');
+        tabs.el.waitForExist('a=Node Graph');
     });
 
     it('@watch should go to the node list if the node list tab is clicked', () => {
         expect(browser.isExisting('div=alive')).to.be.false;
-        base.click('=Node List');
+        tabs.el.click('=Node List');
         browser.waitForExist('div=alive', 750);
     });
 });
