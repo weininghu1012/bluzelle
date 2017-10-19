@@ -1,16 +1,22 @@
 import remove from 'lodash/remove'
 import {sendCommand, addCommandProcessor} from 'services/CommunicationService'
+import extend from 'lodash/extend'
+
 
 const nodes = observable([]);
 
-
-addCommandProcessor('addNodes', (nodes) => nodes.forEach(addNode));
+addCommandProcessor('updateNodes', (nodes) => nodes.forEach(updateNode));
+addCommandProcessor('removeNodes', (addresses) => addresses.forEach(removeNodeByAddress));
 
 sendCommand('getAllNodes');
 
 export const getNodes = () => nodes;
 
-export const addNode = node => nodes.push(node);
+export const updateNode = node => {
+    const foundNode = nodes.find(n => n.address === node.address);
+    foundNode ? extend(foundNode, node) : nodes.push(node);
+};
+
 export const removeNodeByAddress = address => remove(nodes, n => n.address === address);
 export const clearNodes = () => remove(nodes);
 

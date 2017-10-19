@@ -11,7 +11,7 @@ const startSocket = () => {
     socket.onopen = () => socketReady = true;
     socket.onmessage = (ev) => {
         const msg = JSON.parse(ev.data);
-        commandProcessors[msg.cmd](msg.data);
+        commandProcessors[msg.cmd] ? commandProcessors[msg.cmd](msg.data) : console.error(`${msg.cmd} has no command processor`)
     }
 };
 

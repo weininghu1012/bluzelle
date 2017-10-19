@@ -1,3 +1,5 @@
+const _ = require('lodash')
+
 module.exports = SocketBase => class Socket extends SocketBase {
 
     websocket(wss) {
@@ -5,22 +7,45 @@ module.exports = SocketBase => class Socket extends SocketBase {
 
             ws.on('message', req => {
                 req = JSON.parse(req);
-                ws.send(
-                    JSON.stringify(
-                        Object.assign(
-                            commandProcessors[req.cmd](req.data),
-                            {seq: req.seq}
+                commandProcessors[req.cmd](req.data).forEach(cmd => {
+                    ws.send(
+                        JSON.stringify(
+                            Object.assign(
+                                cmd, {seq: req.seq}
+                            )
                         )
                     )
-                );
+                });
             })
         })
     }
 };
 
+let nodes = [];
+
+const createNodes = num => nodes = _.range(num).map((n, idx) => ({
+    address: `0x${_.padStart((n).toString(16), 2, '0')}`,
+    nodeState: ['alive', 'dead', 'new'][idx % 3],
+    messages: 20
+}));
+
 const commandProcessors = {
-    getAllNodes: () => ({
-        cmd: 'addNodes',
-        data: [{address: '0x01', nodeState: 'alive'}, {address: '0x02', nodeState: 'dead'}, {address: '0x03', nodeState: 'new'}]
-    })
+    getAllNodes: () => ([{
+        cmd: 'updateNodes',
+        data: createNodes(10)
+    }]),
+    getMaxNodes: () => ([{
+        cmd: 'setMaxNodes',
+        data: nodes.length
+    }]),
+    setMaxNodes: (num) => {
+        const cmds = [];
+
+        const nodesToRemove = nodes.slice(num).map(n => n.address);
+        nodesToRemove && cmds.push({cmd: 'removeNodes', data: nodesToRemove});
+
+        cmds.push({cmd: 'updateNodes', data: createNodes(num)});
+
+        return cmds;
+    }
 };
