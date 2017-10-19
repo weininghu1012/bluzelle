@@ -28,4 +28,4 @@ global.WebSocket = function() {
 };
 
 
-window.location.host = window.location.host || (window.location.host = 'localhost');
+//window.location.host = window.location.host || (window.location.host = 'localhost');

@@ -1,6 +1,8 @@
 import {addCommandProcessor, sendCommand} from 'services/CommunicationService'
 
-const settings = observable({});
+export const settings = observable({
+    maxNodes: 0
+});
 
 addCommandProcessor('setMaxNodes', num => settings.maxNodes = num);
 

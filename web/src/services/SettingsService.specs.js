@@ -1,8 +1,41 @@
-import {setMaxNodes} from 'services/SettingsService'
-import {commandProcessors} from 'services/CommunicationService'
+import {setMaxNodes, settings} from 'services/SettingsService'
+import {commandProcessors, clearSentCommands, getSentCommands, receiveCommand} from 'services/CommunicationService'
 
 describe('services/SettingsService', () => {
-    it('should add a "setMaxNodes" command processor on startup', () => {
-        expect(commandProcessors.setMaxNodes).not.to.be.undefined
+    describe('setMaxNodes command processor', () => {
+        it('should be added on startup', () => {
+            expect(commandProcessors.setMaxNodes).not.to.be.undefined
+        });
+
+        it('should reactively update the local settings object', () => {
+            let maxNodes;
+
+           const stop = autorun(() => maxNodes = settings.maxNodes);
+            setMaxNodes(0);
+            expect(maxNodes).to.equal(0);
+
+            receiveCommand('setMaxNodes', 99);
+            expect(maxNodes).to.equal(99);
+            stop();
+        });
+    });
+
+
+    describe('setMaxNodes()', () => {
+        beforeEach(clearSentCommands);
+
+        it('should set the max nodes in the settings', () => {
+            setMaxNodes(10);
+            expect(settings.maxNodes).to.equal(10);
+            setMaxNodes(20);
+            expect(settings.maxNodes).to.equal(20);
+        });
+
+        it('should send a setMaxNodes() command', () => {
+            expect(getSentCommands().length).to.equal(0);
+            setMaxNodes(50);
+            expect(getSentCommands()[0]).to.deep.equal({cmd: 'setMaxNodes', data: 50});
+        })
+
     })
 });
