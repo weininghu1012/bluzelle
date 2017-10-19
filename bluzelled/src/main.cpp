@@ -41,7 +41,28 @@ int main(/*int argc,char *argv[]*/)
     get_mutex();
 
 
-    WebSocket ws(&s_nodes);
+    auto const address = boost::asio::ip::address::from_string("127.0.0.1");
+    auto const port = static_cast<unsigned short>(std::atoi("3000"));
+    auto const threads = std::max<std::size_t>(1, std::atoi("1"));
+    // The io_service is required for all I/O
+    boost::asio::io_service ios{threads};
+
+    // Create and launch a listening port
+    std::make_shared<listener>(ios, tcp::endpoint{address, port})->run();
+
+    // Run the I/O service on the requested number of threads
+    std::vector<std::thread> v;
+    v.reserve(threads - 1);
+    for(auto i = threads - 1; i > 0; --i)
+        v.emplace_back(
+                [&ios]
+                    {
+                    ios.run();
+                    });
+    ios.run();
+
+
+
 
 
     std::stringstream ss;

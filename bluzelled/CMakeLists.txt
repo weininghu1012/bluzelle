@@ -27,13 +27,15 @@ endif()
 
 find_package(Boost 1.64.0 REQUIRED COMPONENTS system coroutine thread REQUIRED)
 if(Boost_FOUND)
+    if(NOT EXISTS "${ROOT}/configuration/${customer}/configuration.${project_name}.xml")
+        file(COPY ../third_party/boost/beast/include/boost/ DESTINATION ${Boost_INCLUDE_DIRS}/boost)
+    endif()
     include_directories(${Boost_INCLUDE_DIRS})
 endif()
 
 include_directories(
         inc
         inc/containers
-        third_party/beast
 )
 
 set(SOURCE_FILES

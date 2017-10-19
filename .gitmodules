@@ -1,3 +1,3 @@
-[submodule "third_party/beast"]
-	path = third_party/beast
+[submodule "third_party/boost/beast"]
+	path = third_party/boost/beast
 	url = git@github.com:boostorg/beast.git
