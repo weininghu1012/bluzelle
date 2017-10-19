@@ -14,7 +14,7 @@ config.module.rules.push({
         options: {esModules: true}
     },
     enforce: 'post',
-    exclude: /node_modules|\.specs\.js$/,
+    exclude: [/node_modules|\.specs\.js$/, /test\.js/],
 });
 
 module.exports = config;
