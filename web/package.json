@@ -6,7 +6,8 @@
     "test-watch": "mocha -r jsdom-global/register dist/runTests.js --watch",
     "test": "mocha -r jsdom-global/register dist/runTests.js --exit",
     "start": "ws --spa index.html -d dist --websocket ./WebSocketMock.js --port 3000",
-    "coverage": "nyc --instrument=false --reporter=cobertura  --report-dir=coverage yarn test"
+    "coverage": "nyc --instrument=false --reporter=cobertura  --report-dir=coverage yarn test",
+    "coverage-text": "nyc --instrument=false yarn test"
   },
   "dependencies": {
     "babel-core": "^6.26.0",
