@@ -12,7 +12,7 @@ export default class SettingsTabBody extends Component {
         return (
             <div style={{padding: 20}}>
             <Table>
-                <Row label="Max Nodes" setFn={this.doSetMaxNodes.bind(this)}>
+                <Row id="max-nodes-setting" label="Max Nodes" setFn={this.doSetMaxNodes.bind(this)}>
                     <input key={settings.maxNodes} ref={r => this.maxNodesInput = r} type="number" defaultValue={settings.maxNodes} />
                 </Row>
             </Table>
@@ -23,8 +23,8 @@ export default class SettingsTabBody extends Component {
 
 const Table = ({children}) => <table><tbody>{children}</tbody></table>;
 
-const Row = ({label, children, setFn}) => (
-      <tr>
+const Row = ({label, children, setFn, id}) => (
+      <tr id={id}>
           <th style={{paddingRight: 20}}>{label}</th>
           <th>{children}</th>
           <th style={{paddingLeft: 20}}><Button bsSize="small" onClick={setFn}>Set</Button></th>
