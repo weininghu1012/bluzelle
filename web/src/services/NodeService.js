@@ -5,6 +5,8 @@ import extend from 'lodash/extend'
 
 const nodes = observable([]);
 
+global.nodes = nodes;
+
 addCommandProcessor('updateNodes', (nodes) => nodes.forEach(updateNode));
 addCommandProcessor('removeNodes', (addresses) => addresses.forEach(removeNodeByAddress));
 
