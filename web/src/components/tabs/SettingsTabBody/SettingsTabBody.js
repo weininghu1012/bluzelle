@@ -26,7 +26,7 @@ const Table = ({children}) => <table><tbody>{children}</tbody></table>;
 const Row = ({label, children, setFn, id}) => (
       <tr id={id}>
           <th style={{paddingRight: 20}}>{label}</th>
-          <th>{children}</th>
-          <th style={{paddingLeft: 20}}><Button bsSize="small" onClick={setFn}>Set</Button></th>
+          <td>{children}</td>
+          <td style={{paddingLeft: 20}}><Button bsSize="small" onClick={setFn}>Set</Button></td>
       </tr>
 );
