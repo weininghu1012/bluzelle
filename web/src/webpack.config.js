@@ -1,9 +1,7 @@
 const path = require('path');
 const webpack = require('webpack');
 const BeepPlugin = require('webpack-beep-plugin');
-const glob = require('glob');
 const WebpackShellPlugin = require('webpack-shell-plugin');
-const testFiles = glob.sync("**/*.spec.js").filter(filename => /node_modules/.test(filename) === false);
 const os = require('os');
 
 const PROD = process.env.NODE_ENV === 'production';
@@ -15,8 +13,7 @@ const IS_WINDOWS = os.platform() === 'win32';
 
 module.exports = {
     entry: {
-        index: path.resolve('./index.js'),
-        test: path.resolve('./test.js')
+        index: path.resolve('./index.js')
     },
     output: {
         path: path.resolve('../dist/generated/js'),
@@ -113,5 +110,5 @@ module.exports = {
 
 IS_WINDOWS || module.exports.plugins.push(new WebpackShellPlugin({
         onBuildEnd:['./copy-to-daemon.sh']
-    }),
+    })
 );

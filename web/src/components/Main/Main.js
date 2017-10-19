@@ -1,7 +1,7 @@
 import Tabs from './MainTabs'
-import NodeGraph from 'components/NodeGraph'
-import NodeListView from 'components/NodeListView'
-import LogComponent from 'components/LogComponent'
+import NodeGraph from 'components/tabs/NodeGraph'
+import NodeListView from 'components/tabs/NodeListView'
+import LogComponent from 'components/tabs/LogComponent'
 import logo from './logo-color.png'
 
 export default class Main extends Component {
@@ -23,6 +23,7 @@ export default class Main extends Component {
                     <Switch>
                         <Route path="/node-graph" component={NodeGraph}/>
                         <Route path="/node-list" component={NodeListView} />
+                        {/*<Route path="/settings" component={Settings} />*/}
                         <Route component={LogComponent}/>
                     </Switch>
                 </Flex>

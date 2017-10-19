@@ -1,7 +1,8 @@
+import {getLogEntries} from 'services/LogService'
 import 'src/ReactPre16Support'
-
 const ReactDataGrid = require('react-data-grid');
 
+@observer
 export default class LogComponentView extends Component {
 
     constructor() {
@@ -23,7 +24,7 @@ export default class LogComponentView extends Component {
 
 
     render() {
-        const {logEntries} = this.props;
+        const logEntries = getLogEntries();
         const {gridHeight} = this.state;
         return (
             <div ref={r => this.wrapper = r} style={{height: '100%'}}>

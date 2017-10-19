@@ -17,6 +17,7 @@ class MainTabs extends Component {
                 <NavItem eventKey="/" active={this.isActive('/')}>Log</NavItem>
                 <NavItem eventKey="/node-list" active={this.isActive('/node-list')}>Node List</NavItem>
                 <NavItem eventKey="/node-graph"  active={this.isActive('/node-graph')}>Node Graph</NavItem>
+                <NavItem eventKey="/settings" active={this.isActive('/settings')}>Settings</NavItem>
             </Nav>
         )
     }
