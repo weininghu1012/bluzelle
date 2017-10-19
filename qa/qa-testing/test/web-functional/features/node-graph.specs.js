@@ -9,7 +9,7 @@ describe('Node graph tab', () => {
     });
 
     describe('individual nodes', () => {
-        _.each({green: ['alive', '0x01'], blue: ['dead', '0x02'], red: ['new', '0x03']}, (values,color) => {
+        _.each({green: ['alive', '0x00'], blue: ['dead', '0x01'], red: ['new', '0x02']}, (values,color) => {
             const [state,address] = values;
             it(`should display specs when mouseover on ${color} node`, () => {
                 browser.waitForExist(`circle[fill="${color}"]`, 2000);

@@ -1,4 +1,4 @@
-describe('@watch Node List tab', () => {
+describe('Node List tab', () => {
 
     describe('Table Headers', () => {
         const header = require('../getBaseElement')('div.react-grid-HeaderRow');
