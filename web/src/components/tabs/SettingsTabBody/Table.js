@@ -1,6 +1,6 @@
 const Table = ({children}) => (
     <table>
-        <tbody>{children}</tbody>
+        {children}
     </table>
 );
 

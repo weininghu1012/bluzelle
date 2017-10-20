@@ -25,9 +25,7 @@ export default class NodeListTabBody extends Component {
 
 const StatusFormatter = ({value}) => {
     return (
-
         <div><span style={{display: 'inline-block', backgroundColor: statusColors[value], height: 15, width: 15}}/> {value}</div>
-
     )
 };
 
@@ -45,6 +43,5 @@ const columns = [{
 }, {
     key: 'messages',
     name: 'Messages',
-    resizable: true,
-    width: 150
+    resizable: true
 }];

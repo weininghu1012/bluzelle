@@ -27,6 +27,7 @@ export default class Row extends Component {
         const {editing, waitingForUpdateValue} = this.state;
 
         return (
+            <tbody style={{display: 'block', paddingBottom: 3, borderBottom: '1px solid #ddd'}}>
             <tr id={id}>
                 <th style={{paddingRight: 20}}>{label}</th>
                 <td style={{width: 300}}>
@@ -46,6 +47,7 @@ export default class Row extends Component {
                     )}
                 </td>
             </tr>
+            </tbody>
         )
     }
 }
