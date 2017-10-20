@@ -1,6 +1,7 @@
 let socket;
 let seq = 0;
 let commandProcessors = [];
+const RETRY_TIME = 1000;
 
 export const socketState = observable(0);
 
@@ -20,7 +21,7 @@ const startSocket = () => {
 
     socket.onclose = () => {
         socketState.set(socket.readyState);
-        setTimeout(() => startSocket(), 500);
+        setTimeout(() => startSocket(), RETRY_TIME);
     };
 
     socket.onerror = () => {
