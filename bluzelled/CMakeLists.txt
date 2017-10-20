@@ -52,7 +52,7 @@ set(SOURCE_FILES
         inc/web_sockets/Listener.h
         src/web_sockets/Session.cpp
         inc/web_sockets/Session.h
-        )
+        src/services/Services.cpp inc/services/Services.h src/services/Service.cpp inc/services/Service.h src/services/Ping.cpp inc/services/Ping.h src/services/GetAllNodes.cpp inc/services/GetAllNodes.h)
 
 add_executable(bluzelled ${SOURCE_FILES})
 target_link_libraries(
@@ -98,7 +98,7 @@ set(SOURCE_FILES
         inc/web_sockets/Listener.h
         src/web_sockets/Session.cpp
         inc/web_sockets/Session.h
-        )
+        src/web_sockets/web_socket_tests.cpp src/services/Services.cpp inc/services/Services.h src/services/Service.cpp inc/services/Service.h src/services/Ping.cpp inc/services/Ping.h src/services/GetAllNodes.cpp inc/services/GetAllNodes.h src/services/service_tests.cpp)
 
 file(COPY assets/words.txt DESTINATION ${CMAKE_BINARY_DIR})
 add_executable(bluzelled_test ${SOURCE_FILES})
