@@ -7,11 +7,11 @@ describe('Node graph tab', () => {
         browser.waitForExist('=Node Graph', 2000);
         browser.click('=Node Graph');
     });
-    describe('@watch counting the nodes', () =>{
-       it('should show nodes equals to the number written on screen', () => {
-          console.log('********', browser.elements('circle').length);
-          var numberOfNodes = browser.elements('circle').length;
-          browser.waitForExist(numberOfNodes + 'Nodes');
-       });
+    describe('counting the nodes', () => {
+        it('should show nodes equals to the number written on screen', () => {
+            browser.waitForExist('circle');
+            const numberOfNodes = browser.elements('circle').value.length;
+            browser.waitForExist(`div=${numberOfNodes} Nodes`);
+        });
     });
 });
