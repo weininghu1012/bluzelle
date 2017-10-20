@@ -6,6 +6,11 @@ import SettingsTabBody from 'components/tabs/SettingsTabBody'
 import Header from './Header'
 
 export default class Main extends Component {
+
+    componentDidCatch(error, info) {
+        confirm('An unrecoverable error occurred, the application will now reload') && (window.location.href = window.location.origin);
+    }
+
     render() {
         return (
             <Layout type="column">
