@@ -23,14 +23,6 @@ describe('services/SettingsService', () => {
 
     describe('setMaxNodes()', () => {
         beforeEach(clearSentCommands);
-
-        it('should set the max nodes in the settings', () => {
-            setMaxNodes(10);
-            expect(settings.maxNodes).to.equal(10);
-            setMaxNodes(20);
-            expect(settings.maxNodes).to.equal(20);
-        });
-
         it('should send a setMaxNodes() command', () => {
             expect(getSentCommands().length).to.equal(0);
             setMaxNodes(50);

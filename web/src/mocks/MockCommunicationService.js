@@ -1,6 +1,8 @@
 export const commandProcessors = {};
 let sentCommands = [];
 
+export const socketState = {get: () => {}};
+
 export const addCommandProcessor = (name, fn) => commandProcessors[name] = fn;
 
 export const sendCommand = (cmd, data) => sentCommands.push({cmd: cmd, data: data});

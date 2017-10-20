@@ -1,7 +1,5 @@
 import Node from './Node'
 
-console.log(Node);
-
 describe('tabs/NodeGraph/Node', () => {
     it('should mount without errors', () => {
         const wrapper = mount(<Node node={{address: 1, xAngle: 0, yAngle: 0}} onMouseOver={() => {}} selected={false}/>);
