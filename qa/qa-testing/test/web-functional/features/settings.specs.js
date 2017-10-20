@@ -6,11 +6,12 @@ describe('Settings tab', () => {
         browser.click('=Settings');
     });
 
-    describe('@watch Changing Max Nodes value', () => {
-       it('should change the value of Max Nodes', () => {
-           console.log('***************', browser.element('[type=number]'));
-           browser.setValue('[type=number]',6);
-           browser.click('button=Set');
-       });
+    describe('Changing Max Nodes value', () => {
+        it('should change the value of Max Nodes', () => {
+            browser.click('button=Edit');
+            browser.waitForExist('[type=number]', 2000);
+            browser.setValue('[type=number]','6');
+            browser.click('button=Set');
+        });
     });
 });
