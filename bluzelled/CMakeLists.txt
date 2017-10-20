@@ -48,8 +48,10 @@ set(SOURCE_FILES
         inc/Task.h
         inc/NodeUtilities.h
         src/NodeUtilities.cpp
-        src/WebSocket.cpp
-        inc/WebSocket.h
+        src/web_sockets/Listener.cpp
+        inc/web_sockets/Listener.h
+        src/web_sockets/Session.cpp
+        inc/web_sockets/Session.h
         )
 
 add_executable(bluzelled ${SOURCE_FILES})
@@ -92,13 +94,14 @@ set(SOURCE_FILES
         src/NodeUtilities.cpp
         src/cmap_test.cpp
         src/node_test.cpp
+        src/web_sockets/Listener.cpp
+        inc/web_sockets/Listener.h
+        src/web_sockets/Session.cpp
+        inc/web_sockets/Session.h
         )
+
 file(COPY assets/words.txt DESTINATION ${CMAKE_BINARY_DIR})
 add_executable(bluzelled_test ${SOURCE_FILES})
 target_link_libraries(bluzelled_test ${Boost_LIBRARIES} )
 
-
 message(STATUS "*** CMakeLists for Bluzelled Ends\n\n")
-
-
-

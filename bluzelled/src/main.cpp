@@ -1,6 +1,8 @@
 #include "Node.h"
 #include "NodeUtilities.h"
-#include "WebSocket.h"
+#include "web_sockets/WebSocket.h"
+#include "web_sockets/Listener.h"
+#include "web_sockets/Session.h"
 
 #include <boost/exception/all.hpp>
 #include <iostream>
@@ -48,7 +50,7 @@ int main(/*int argc,char *argv[]*/)
     boost::asio::io_service ios{threads};
 
     // Create and launch a listening port
-    std::make_shared<listener>(ios, tcp::endpoint{address, port})->run();
+    std::make_shared<Listener>(ios, tcp::endpoint{address, port})->run();
 
     // Run the I/O service on the requested number of threads
     std::vector<std::thread> v;
