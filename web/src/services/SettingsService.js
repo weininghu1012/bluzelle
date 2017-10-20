@@ -10,6 +10,5 @@ sendCommand('getMaxNodes');
 addCommandProcessor('setMaxNodes', num => settings.maxNodes = num);
 
 export const setMaxNodes = num => {
-    settings.maxNodes = num;
     sendCommand('setMaxNodes', num);
 };

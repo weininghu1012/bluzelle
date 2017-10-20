@@ -1,4 +1,6 @@
-const _ = require('lodash')
+const _ = require('lodash');
+
+const DELAY = 500;
 
 module.exports = SocketBase => class Socket extends SocketBase {
 
@@ -7,15 +9,17 @@ module.exports = SocketBase => class Socket extends SocketBase {
 
             ws.on('message', req => {
                 req = JSON.parse(req);
-                commandProcessors[req.cmd](req.data).forEach(cmd => {
-                    ws.send(
-                        JSON.stringify(
-                            Object.assign(
-                                cmd, {seq: req.seq}
+                setTimeout(() => {
+                    commandProcessors[req.cmd](req.data).forEach(cmd => {
+                        ws.send(
+                            JSON.stringify(
+                                Object.assign(
+                                    cmd, {seq: req.seq}
+                                )
                             )
                         )
-                    )
-                });
+                    })
+                }, DELAY);
             })
         })
     }
@@ -40,6 +44,8 @@ const commandProcessors = {
     }]),
     setMaxNodes: (num) => {
         const cmds = [];
+
+        cmds.push({cmd: 'setMaxNodes', data: num});
 
         const nodesToRemove = nodes.slice(num).map(n => n.address);
         nodesToRemove && cmds.push({cmd: 'removeNodes', data: nodesToRemove});
