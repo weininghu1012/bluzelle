@@ -1,22 +1,35 @@
 let socket;
 let seq = 0;
 let commandProcessors = [];
-let socketReady = false;
+
+export const socketState = observable(0);
+
 
 setTimeout(() => startSocket());
 
-
 const startSocket = () => {
     socket = new WebSocket(`ws://${window.location.host}`);
-    socket.onopen = () => socketReady = true;
+    socketState.set(socket.readyState);
+
+    socket.onopen = () => socketState.set(socket.readyState);
+
     socket.onmessage = (ev) => {
         const msg = JSON.parse(ev.data);
         commandProcessors[msg.cmd] ? commandProcessors[msg.cmd](msg.data) : console.error(`${msg.cmd} has no command processor`)
-    }
+    };
+
+    socket.onclose = () => {
+        socketState.set(socket.readyState);
+        setTimeout(() => startSocket(), 500);
+    };
+
+    socket.onerror = () => {
+        socketState.set(socket.readyState);
+    };
 };
 
 export const sendCommand = (cmd, data) => {
-    socketReady ? (
+    socket && socket.readyState === WebSocket.OPEN ? (
         socket.send(JSON.stringify({cmd: cmd, data: data, seq: seq++}))
     ) : (
         setTimeout(() => sendCommand(cmd, data), 100)

@@ -86,6 +86,7 @@ module.exports = {
             extendObservable: ['mobx', 'extendObservable'],
             observer: ['mobx-react', 'observer'],
             autorun: ['mobx', 'autorun'],
+            untracked: ['mobx', 'untracked'],
             computed: ['mobx', 'computed'],
 
             Session: [path.resolve('stores/SessionStore'), 'default'],

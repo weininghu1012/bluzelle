@@ -1,11 +1,15 @@
-import {addCommandProcessor, sendCommand} from 'services/CommunicationService'
+import {socketState, addCommandProcessor, sendCommand} from 'services/CommunicationService'
 
 
 export const settings = observable({
     maxNodes: 0
 });
 
-sendCommand('getMaxNodes');
+autorun(() => socketState.get() === WebSocket.OPEN && untracked(getAllSettings));
+
+const getAllSettings = () => {
+    sendCommand('getMaxNodes');
+};
 
 addCommandProcessor('setMaxNodes', num => settings.maxNodes = num);
 
