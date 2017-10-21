@@ -60,5 +60,7 @@
     "webpack": "^3.6.0",
     "webpack-beep-plugin": "^1.0.0",
     "webpack-shell-plugin": "^0.5.0"
-  }
+  },
+  "license": "UNLICENSED",
+  "private": true
 }

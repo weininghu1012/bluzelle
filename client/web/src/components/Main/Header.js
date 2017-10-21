@@ -1,12 +1,16 @@
 import {socketState} from 'services/CommunicationService'
 import logo from './logo-color.png'
-import {daemonUrl} from "../../services/CommunicationService";
+import {daemonUrl, disconnect} from "../../services/CommunicationService";
+import Button from 'react-bootstrap/lib/Button'
 
 const Header = () => (
     <header>
         {daemonUrl.get() && (
             <div style={{float: 'right', padding: 10}}>
-                {socketStates[socketState.get()]}
+                <div>{socketStates[socketState.get()]} to {daemonUrl.get()}</div>
+                <div>
+                <Button bsSize="xsmall" onClick={disconnect}>Disconnect</Button>
+                </div>
             </div>
         )}
         <div style={{height: 50, padding: 2}}>
@@ -16,7 +20,6 @@ const Header = () => (
 );
 
 export default observer(Header);
-
 
 
 

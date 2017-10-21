@@ -5,7 +5,7 @@ const RETRY_TIME = 1000;
 
 export const socketState = observable(0);
 export const daemonUrl = observable(undefined);
-
+export const disconnect = () => daemonUrl.set(undefined);
 setTimeout(() => {
     global.electron || daemonUrl.set(window.location.host);
 });
