@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Hello World!</title>
+</head>
+<body>
+<div id="app-container"></div>
+<script>
+window.electron = require('electron');
+window.ipcRenderer = require('electron').ipcRenderer;
+require('../web/dist/generated/js/index.js')
+</script>

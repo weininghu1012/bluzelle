@@ -1,0 +1,11 @@
+{
+  "name": "bluzelle-desktop",
+  "version": "1.0.0",
+  "main": "index.js",
+  "dependencies": {
+    "electron": "^1.7.9"
+  },
+  "scripts": {
+    "start": "electron ."
+  }
+}
