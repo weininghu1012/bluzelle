@@ -1,13 +1,12 @@
 <!DOCTYPE html>
-<html>
+<html style="height: 100%">
 <head>
     <meta charset="UTF-8">
-    <title>Hello World!</title>
+    <title>Bluzelle</title>
 </head>
-<body>
-<div id="app-container"></div>
+<body style="height: 100%">
+<div id="app-container" style="height: 100%"></div>
 <script>
-window.electron = require('electron');
-window.ipcRenderer = require('electron').ipcRenderer;
-require('../web/dist/generated/js/index.js')
+    window.electron = require('electron');
+    require('../web/dist/generated/js/index.js')
 </script>

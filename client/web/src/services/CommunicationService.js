@@ -4,12 +4,16 @@ let commandProcessors = [];
 const RETRY_TIME = 1000;
 
 export const socketState = observable(0);
+export const daemonUrl = observable(undefined);
 
+setTimeout(() => {
+    global.electron || daemonUrl.set(window.location.host);
+});
 
-setTimeout(() => startSocket());
+autorun(() => daemonUrl.get() && startSocket(daemonUrl.get()));
 
-const startSocket = () => {
-    socket = new WebSocket(`ws://${window.location.host}`);
+const startSocket = (url) => {
+    socket = new WebSocket(`ws://${url}`);
     socketState.set(socket.readyState);
 
     socket.onopen = () => socketState.set(socket.readyState);
