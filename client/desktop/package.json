@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "main": "main.js",
   "dependencies": {
-    "electron": "^1.7.9"
+    "electron": "^1.7.9",
+    "mobx": "^3.3.1"
   },
   "scripts": {
     "start": "electron ."

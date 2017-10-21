@@ -9,7 +9,7 @@ const nodes = observable([]);
 addCommandProcessor('updateNodes', (nodes) => nodes.forEach(updateNode));
 addCommandProcessor('removeNodes', (addresses) => addresses.forEach(removeNodeByAddress));
 
-autorun(() => socketState.get() === WebSocket.OPEN && untracked(resetNodes));
+autorun(() => socketState.get() === 'open' && untracked(resetNodes));
 
 const resetNodes = () => {
     sendCommand("getAllNodes");

@@ -6,17 +6,18 @@ const RETRY_TIME = 1000;
 export const socketState = observable(0);
 export const daemonUrl = observable(undefined);
 export const disconnect = () => daemonUrl.set(undefined);
-setTimeout(() => {
-    global.electron || daemonUrl.set(window.location.host);
-});
 
 autorun(() => daemonUrl.get() && startSocket(daemonUrl.get()));
 
+
+
+const setSocketState = () => socketState.set(socketStates[socket.readyState]);
+
 const startSocket = (url) => {
     socket = new WebSocket(`ws://${url}`);
-    socketState.set(socket.readyState);
+    setSocketState();
 
-    socket.onopen = () => socketState.set(socket.readyState);
+    socket.onopen = setSocketState;
 
     socket.onmessage = (ev) => {
         const msg = JSON.parse(ev.data);
@@ -24,12 +25,12 @@ const startSocket = (url) => {
     };
 
     socket.onclose = () => {
-        socketState.set(socket.readyState);
+        setSocketState()
         setTimeout(() => startSocket(), RETRY_TIME);
     };
 
     socket.onerror = () => {
-        socketState.set(socket.readyState);
+        setSocketState();
     };
 };
 
@@ -43,3 +44,4 @@ export const sendCommand = (cmd, data) => {
 
 export const addCommandProcessor = (name, fn) => commandProcessors[name] = fn;
 
+const socketStates = ['opening', 'open', 'closing', 'closed'];

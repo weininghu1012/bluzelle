@@ -8,5 +8,6 @@
 <div id="app-container" style="height: 100%"></div>
 <script>
     window.electron = require('electron');
+    window.ipc = electron.ipcRenderer
     require('../web/dist/generated/js/index.js')
 </script>

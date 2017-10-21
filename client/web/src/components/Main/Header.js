@@ -7,7 +7,7 @@ const Header = () => (
     <header>
         {daemonUrl.get() && (
             <div style={{float: 'right', padding: 10}}>
-                <div>{socketStates[socketState.get()]} to {daemonUrl.get()}</div>
+                <div>{socketState.get()} to {daemonUrl.get()}</div>
                 <div>
                 <Button bsSize="xsmall" onClick={disconnect}>Disconnect</Button>
                 </div>
@@ -23,4 +23,3 @@ export default observer(Header);
 
 
 
-const socketStates = ['Connecting', 'Connected', 'Closing', 'Closed'];

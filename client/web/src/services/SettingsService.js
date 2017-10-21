@@ -5,7 +5,7 @@ export const settings = observable({
     maxNodes: 0
 });
 
-autorun(() => socketState.get() === WebSocket.OPEN && untracked(getAllSettings));
+autorun(() => socketState.get() === 'open' && untracked(getAllSettings));
 
 const getAllSettings = () => {
     sendCommand('getMaxNodes');
