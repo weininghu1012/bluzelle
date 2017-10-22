@@ -10,6 +10,10 @@ export default class DaemonSelector extends Component {
         daemonUrl.set(`${this.address.value}:${this.port.value}`);
     }
 
+    checkEnterKey(ev) {
+        ev.keyCode === 13 && this.go();
+    }
+
     componentDidMount() {
         this.address.focus();
     }
@@ -17,21 +21,21 @@ export default class DaemonSelector extends Component {
     render() {
         return (
             <CenterMiddle>
-                <div>
+                <div onKeyUp={this.checkEnterKey.bind(this)}>
                     <Header/>
                     <Panel style={{marginTop: 20}} header={<h3>Choose a Bluzelle node</h3>}>
                         <div style={{width: 400}}>
                             <div style={{float: 'right', width: '15%'}}>
                                 <label style={{display: 'block'}}>Port:</label>
-                                <input type="text" ref={r => this.port = r} style={{width: '100%'}} defaultValue="3000" />
+                                <input type="text" tabIndex="2" ref={r => this.port = r} style={{width: '100%'}} defaultValue="3000" />
                             </div>
                             <div style={{width: '80%'}}>
                                 <label style={{display: 'block'}}>Address:</label>
-                                <input type="text" ref={r => this.address = r} style={{width: '80%'}} placeholder="address" />
+                                <input type="text" tabIndex="1" ref={r => this.address = r} style={{width: '80%'}} placeholder="address" />
                             </div>
                             <div style={{marginTop: 10}}>
                                 {socketState.get() === 'closed' ? (
-                                    <Button onClick={this.go.bind(this)}>Go</Button>
+                                    <Button onClick={this.go.bind(this)} tabIndex="3">Go</Button>
                                 ) : (
                                     <Button onClick={disconnect}>Cancel</Button>
                                 )}
