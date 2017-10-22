@@ -1,5 +1,5 @@
 {
-  "name": "bluzelle-web",
+  "name": "Bluzelle",
   "version": "1.0.0",
   "scripts": {
     "prod-compile": "cd src; NODE_ENV=production webpack -p",

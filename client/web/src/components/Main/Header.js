@@ -1,13 +1,12 @@
-import {socketState} from 'services/CommunicationService'
 import logo from './logo-color.png'
-import {daemonUrl, disconnect} from "../../services/CommunicationService";
+import {daemonUrl, socketState, disconnect} from "../../services/CommunicationService";
 import Button from 'react-bootstrap/lib/Button'
 
 const Header = () => (
     <header>
-        {daemonUrl.get() && (
+        {socketState.get() === 'open' && (
             <div style={{float: 'right', padding: 10}}>
-                <div>{socketState.get()} to {daemonUrl.get()}</div>
+                <div>{daemonUrl.get()}</div>
                 <div>
                 <Button bsSize="xsmall" onClick={disconnect}>Disconnect</Button>
                 </div>

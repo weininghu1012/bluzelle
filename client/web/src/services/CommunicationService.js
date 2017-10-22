@@ -3,9 +3,12 @@ let seq = 0;
 let commandProcessors = [];
 const RETRY_TIME = 1000;
 
-export const socketState = observable(0);
+export const socketState = observable('closed');
 export const daemonUrl = observable(undefined);
-export const disconnect = () => daemonUrl.set(undefined);
+export const disconnect = () => {
+    daemonUrl.set(undefined);
+    socket.close();
+};
 
 autorun(() => daemonUrl.get() && startSocket(daemonUrl.get()));
 
@@ -26,10 +29,11 @@ const startSocket = (url) => {
 
     socket.onclose = () => {
         setSocketState()
-        setTimeout(() => startSocket(), RETRY_TIME);
+        setTimeout(() => daemonUrl.get() && startSocket(), RETRY_TIME);
     };
 
     socket.onerror = () => {
+        daemonUrl.set(undefined);
         setSocketState();
     };
 };

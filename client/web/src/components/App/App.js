@@ -1,11 +1,11 @@
 import {HashRouter, Route} from 'react-router-dom'
 import 'bootstrap/dist/css/bootstrap.css'
-import {daemonUrl} from 'services/CommunicationService'
+import {socketState} from 'services/CommunicationService'
 import Main from 'components/Main'
 import DaemonSelector from 'components/DaemonSelector'
 
 const App = () => {
-    const component = daemonUrl.get() ? Main : DaemonSelector;
+    const component = socketState.get() === 'open' ? Main : DaemonSelector;
     return (
         <HashRouter>
             <Route component={component} />
