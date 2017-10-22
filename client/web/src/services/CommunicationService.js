@@ -5,6 +5,7 @@ const RETRY_TIME = 1000;
 
 export const socketState = observable('closed');
 export const daemonUrl = observable(undefined);
+export const closeCode = observable(undefined);
 export const disconnect = () => {
     daemonUrl.set(undefined);
     socket.close();
@@ -19,6 +20,7 @@ const setSocketState = () => socketState.set(socketStates[socket.readyState]);
 const startSocket = (url) => {
     socket = new WebSocket(`ws://${url}`);
     setSocketState();
+    closeCode.set(undefined);
 
     socket.onopen = setSocketState;
 
@@ -27,12 +29,14 @@ const startSocket = (url) => {
         commandProcessors[msg.cmd] ? commandProcessors[msg.cmd](msg.data) : console.error(`${msg.cmd} has no command processor`)
     };
 
-    socket.onclose = () => {
-        setSocketState()
+    socket.onclose = (ev) => {
+        // the code according to https://tools.ietf.org/html/rfc6455#section-11.7
+        closeCode.set(ev.code);
+        setSocketState();
         setTimeout(() => daemonUrl.get() && startSocket(), RETRY_TIME);
     };
 
-    socket.onerror = () => {
+    socket.onerror = (ev) => {
         daemonUrl.set(undefined);
         setSocketState();
     };
