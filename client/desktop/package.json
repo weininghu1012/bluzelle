@@ -1,13 +1,16 @@
 {
-  "name": "bluzelle-desktop",
+  "name": "Bluzelle",
+  "productName": "Bluzelle",
   "version": "1.0.0",
   "main": "main.js",
   "dependencies": {
     "electron": "^1.7.9",
+    "electron-packager": "^9.1.0",
     "mobx": "^3.3.1"
   },
   "scripts": {
-    "start": "electron ."
+    "start": "electron ./src/index.html",
+    "package-mac": "electron-packager . --out=dist --platform=darwin --arch=x64 --icon=bluzelle.icns --overwrite --package-manager=yarn --asar"
   },
   "license": "UNLICENSED",
   "private": true
