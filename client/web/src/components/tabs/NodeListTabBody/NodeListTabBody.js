@@ -7,8 +7,23 @@ const ReactDataGrid = require('react-data-grid');
 @observer
 export default class NodeListTabBody extends Component {
 
+    constructor() {
+        super();
+        this.state = {nodes: []};
+    }
+
     rowGetter(i) {
-        return getNodes()[i];
+        return this.state.nodes[i];
+    }
+
+    componentDidMount() {
+        this.stop = autorun(() => {
+            this.setState({nodes: getNodes().map(n => Object.assign( {}, n))})
+        })
+    }
+
+    componentWillUnmount() {
+        this.stop();
     }
 
     render() {
@@ -16,7 +31,7 @@ export default class NodeListTabBody extends Component {
             <ReactDataGrid
                 columns={columns}
                 rowGetter={this.rowGetter.bind(this)}
-                rowsCount={getNodes().length}
+                rowsCount={this.state.nodes.length}
                 minHeight={500}
                 minColumnWidth={80}
             />        )
@@ -33,15 +48,15 @@ const columns = [{
     key: 'address',
     name: 'Address',
     resizable: true,
-    width: 150
+    width: 150,
 }, {
     key: 'nodeState',
     name: 'Status',
     resizable: true,
     width: 100,
-    formatter: StatusFormatter
+    formatter: StatusFormatter,
 }, {
     key: 'messages',
     name: 'Messages',
-    resizable: true
+    resizable: true,
 }];

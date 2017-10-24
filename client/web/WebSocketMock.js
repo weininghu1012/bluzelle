@@ -44,7 +44,7 @@ createNodes(10);
 
 const sendMessages = () => {
     const updatedNodes = _.times(10, () => {
-        const idx = Math.floor(Math.random() * 10);
+        const idx = Math.floor(Math.random() * nodes.length);
         nodes[idx].messages += 1
         return nodes[idx];
     });
