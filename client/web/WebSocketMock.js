@@ -42,23 +42,30 @@ const createNodes = num => nodes = _.times(num, () => ({
 
 createNodes(10);
 
-const sendToClients = (cmd) => sockets.forEach(socket => socket.send(JSON.stringify(cmd)));
+const sendToClients = (cmd, data) => sockets.forEach(socket => socket.send(JSON.stringify({cmd: cmd, data: data})));
 
 
 const sendMessages = () => {
     const updatedNodes = _.times(10, () => {
         const idx = Math.floor(Math.random() * nodes.length);
-        nodes[idx].messages += 1
+        nodes[idx].messages += 1;
         return nodes[idx];
     });
 
-    sendToClients({
-        cmd: 'updateNodes',
-        data: updatedNodes
+    sendToClients('updateNodes',updatedNodes);
+};
+
+const sendLogMessage = () => {
+    sendToClients('log', {
+        timer_no: 1,
+        entry_no: _.uniqueId(),
+        timestamp: new Date().toISOString(),
+        message: `message - ${_.uniqueId()}`
     });
 };
 
 setInterval(sendMessages, 1000);
+setInterval(sendLogMessage, 1000);
 
 
 const commandProcessors = {
