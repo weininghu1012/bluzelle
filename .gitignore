@@ -66,7 +66,7 @@ build
 
 # Scott
 workspace.xml
-/web/dist/generated
+/client/web/dist/generated
 node_modules
 .nyc_output
 coverage
