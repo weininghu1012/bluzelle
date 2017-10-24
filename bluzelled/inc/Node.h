@@ -7,6 +7,7 @@
 
 class Node
 {
+    // {"address":"0x00","nodeState":"alive","messages":20}
     boost::shared_ptr<Task>             _task;
     boost::shared_ptr<boost::thread>    _thread;
 public:

@@ -15,7 +15,8 @@ using namespace boost::chrono;
 #define RAND() ((double)rand() / RAND_MAX )
 
 
-class Task {
+class Task
+{
 public:
     enum  State { initializing, alive, dying, dead};
 
