@@ -6,6 +6,7 @@
 
 #include <boost/exception/all.hpp>
 #include <iostream>
+#include <boost/thread.hpp>
 
 static Nodes s_nodes;
 static boost::mutex *s_mutex = nullptr;
@@ -36,6 +37,12 @@ void add_nodes(const Nodes& nodes)
     s_nodes.insert(s_nodes.end(), nodes.begin(), nodes.end());
 }
 
+
+
+
+
+
+
 int main(/*int argc,char *argv[]*/)
 {
     const uint8_t MAX_TASKS = 25;
@@ -43,29 +50,32 @@ int main(/*int argc,char *argv[]*/)
     get_mutex();
 
 
-    auto const address = boost::asio::ip::address::from_string("127.0.0.1");
-    auto const port = static_cast<unsigned short>(std::atoi("3000"));
-    auto const threads = std::max<std::size_t>(1, std::atoi("1"));
-    // The io_service is required for all I/O
-    boost::asio::io_service ios{threads};
 
-    // Create and launch a listening port
-    std::make_shared<Listener>(ios, tcp::endpoint{address, port})->run();
+    auto start_websocket_service = []()
+        {
+        auto const address = boost::asio::ip::address::from_string("127.0.0.1");
+        auto const port = static_cast<unsigned short>(std::atoi("3000"));
+        auto const threads = std::max<std::size_t>(1, std::atoi("1"));
+        // The io_service is required for all I/O
+        boost::asio::io_service ios{threads};
 
-    // Run the I/O service on the requested number of threads
-    std::vector<std::thread> v;
-    v.reserve(threads - 1);
-    for(auto i = threads - 1; i > 0; --i)
-        v.emplace_back(
-                [&ios]
-                    {
-                    ios.run();
-                    });
-    ios.run();
+        // Create and launch a listening port
+        std::make_shared<Listener>(ios, tcp::endpoint{address, port})->run();
+
+        // Run the I/O service on the requested number of threads
+        std::vector<std::thread> v;
+        v.reserve(threads - 1);
+        for(auto i = threads - 1; i > 0; --i)
+            v.emplace_back(
+                    [&ios]
+                        {
+                        ios.run();
+                        });
+        ios.run();
+        };
 
 
-
-
+    boost::thread websocket(start_websocket_service);
 
     std::stringstream ss;
     try
@@ -101,10 +111,19 @@ int main(/*int argc,char *argv[]*/)
         std::cout << "caught exception\n";
         }
 
+
+
+
     return 0;
 }
 
 /////////
+
+
+Nodes *get_all_nodes()
+{
+    return &s_nodes;
+}
 
 Node* create_node()
 {

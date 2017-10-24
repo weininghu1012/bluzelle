@@ -1,6 +1,13 @@
 #ifndef KEPLER_SESSION_H
 #define KEPLER_SESSION_H
 
+#include "services/Services.h"
+#include "services/Ping.h"
+#include "services/GetAllNodes.h"
+
+
+#include <boost/property_tree/ptree.hpp>
+#include <boost/property_tree/json_parser.hpp>
 #include <boost/beast/core.hpp>
 #include <boost/beast/websocket.hpp>
 #include <boost/asio/strand.hpp>
@@ -16,14 +23,19 @@
 
 using tcp = boost::asio::ip::tcp;               // from <boost/asio/ip/tcp.hpp>
 namespace websocket = boost::beast::websocket;  // from <boost/beast/websocket.hpp>
+namespace pt = boost::property_tree;
+
+Nodes* get_all_nodes();
 
 void
 fail(boost::system::error_code ec, char const* what);
 
-class Session : public std::enable_shared_from_this<Session> {
+class Session : public std::enable_shared_from_this<Session>
+{
     websocket::stream<tcp::socket> ws_;
     boost::asio::io_service::strand strand_;
     boost::beast::multi_buffer buffer_;
+    Services                        services_;
 
 public:
     // Take ownership of the socket
@@ -32,6 +44,15 @@ public:
     : ws_(std::move(socket))
     , strand_(ws_.get_io_service())
     {
+        services_.add_service("ping", new Ping());
+        auto nodes = get_all_nodes();
+        services_.add_service("getAllNodes", new GetAllNodes(nodes));
+
+        //Nodes get_all_nodes()
+
+
+
+
     }
 
     // Start the asynchronous operation
@@ -83,33 +104,53 @@ public:
         if(ec)
             fail(ec, "read");
 
-        // Echo the message
-        ws_.text(ws_.got_text());
 
-
-
+        ///////////////////////////////////////////////////////////////////////
+        // Services handler
         std::stringstream ss;
         ss << boost::beast::buffers(buffer_.data());
 
-        std::string json_text = ss.str();
+        pt::ptree request;
+        pt::read_json(ss,request);
+
+        std::string command = request.get<std::string>("cmd");
+//        std::string data = request.get<std::string>("data");
+//        long seq = request.get<long>("seq");
+
+        std::string response = services_(command,ss.str());
 
 
 
 
 
         std::cout
-                << " ******* buffer data ["
-                << json_text
+                << " ******* response ["
+                << response
                 << "]\n";
 
 
         ws_.async_write(
-                buffer_.data(),
-                strand_.wrap(std::bind(
+                boost::asio::buffer(response),
+                std::bind(
                         &Session::on_write,
                         shared_from_this(),
                         std::placeholders::_1,
-                        std::placeholders::_2)));
+                        std::placeholders::_2));
+
+
+
+
+        ///////////////////////////////////////////////////////////////////////
+        // Echo the message
+        //ws_.text(ws_.got_text());
+
+//        ws_.async_write(
+//                buffer_.data(),
+//                strand_.wrap(std::bind(
+//                        &Session::on_write,
+//                        shared_from_this(),
+//                        std::placeholders::_1,
+//                        std::placeholders::_2)));
     }
 
     void

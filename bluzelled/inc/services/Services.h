@@ -6,6 +6,9 @@
 #include <string>
 #include <map>
 
+#define kNO_SERVICE_ERROR_MSG  "{\"error\":\"Service not found.\"}"
+
+
 class Services
 {
     // TODO:  make Service* a unique or shared ptr...
@@ -18,6 +21,10 @@ public:
 
     std::string operator()(const std::string &service_name, const std::string& json_string)
     {
+        if(_services.find(service_name) == _services.end())
+            {
+            return kNO_SERVICE_ERROR_MSG;
+            }
         Service* service = _services[service_name];
         return (*service)(json_string);
     }
