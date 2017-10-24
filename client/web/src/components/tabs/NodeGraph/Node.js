@@ -5,8 +5,8 @@ const Node = ({node, onMouseOver, selected}) => {
     const cx = 90 * xAngle + 100;
     const cy = 90 * yAngle + 100;
     return [
-        selected && <circle fill='white' stroke="black" strokeWidth="1" key={`circle-border=${address}`} cx={cx} cy={cy} r="4"/>,
-        <circle fill={nodeColors[nodeState]} onMouseOver={onMouseOver} key={`circle-${address}`} cx={cx} cy={cy} r="3"/>
+        <circle fill={nodeColors[nodeState]} onMouseOver={onMouseOver} key={`circle-${address}`} cx={cx} cy={cy} r={node.messageDelta ? '6' : '4'}/>,
+        selected && <circle fill='white' key={`circle-border=${address}`} cx={cx} cy={cy} r="2"/>
     ];
 };
 

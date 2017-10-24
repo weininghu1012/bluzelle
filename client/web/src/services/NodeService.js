@@ -5,6 +5,7 @@ import {socketState} from 'services/CommunicationService'
 
 
 const nodes = observable([]);
+global.nodes = nodes;
 
 addCommandProcessor('updateNodes', (nodes) => nodes.forEach(updateNode));
 addCommandProcessor('removeNodes', (addresses) => addresses.forEach(removeNodeByAddress));
@@ -20,6 +21,7 @@ export const getNodes = () => nodes;
 
 export const updateNode = node => {
     const foundNode = nodes.find(n => n.address === node.address);
+    foundNode && (foundNode.messageDelta = node.messages - foundNode.messages);
     foundNode ? extend(foundNode, node) : nodes.push(node);
 };
 
