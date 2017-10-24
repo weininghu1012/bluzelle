@@ -2,6 +2,11 @@ const _ = require('lodash');
 
 const DELAY = 500;
 let sockets = [];
+let nodes = [];
+let maxNodes = 10;
+let minNodes = 8;
+let baseAddress = 0;
+
 
 module.exports = SocketBase => class Socket extends SocketBase {
 
@@ -23,29 +28,31 @@ module.exports = SocketBase => class Socket extends SocketBase {
     }
 };
 
-let nodes = [];
-let baseAddress = 0
 
-const createNodes = num => nodes = _.times(num, () => ({
-    address: `0x${_.padStart((baseAddress++).toString(16), 2, '0')}`,
-    nodeState: ['alive', 'dead', 'new'][baseAddress % 3],
-    messages: 20
-}));
-
-createNodes(10);
+const createNodes = () => {
+    while(nodes.length < maxNodes) {
+        const node = {
+            address: `0x${_.padStart((baseAddress++).toString(16), 2, '0')}`,
+            messages: 0
+        };
+        nodes.push(node);
+        sendToClients('updateNodes', [node]);
+    }
+};
 
 const sendToClients = (cmd, data) => sockets.forEach(socket => socket.send(JSON.stringify({cmd: cmd, data: data})));
 
 
-const sendMessages = () => {
-    const updatedNodes = _.times(10, () => {
-        const list = nodes.filter(n => n.nodeState !== 'dead');
-        const n = list[Math.floor(Math.random() * list.length)];
-        n.messages += 1;
-        return n;
-    });
+const updateMessages = () => {
+    if(nodes.length) {
+        const updatedNodes = _.times(10, () => {
+            const n = nodes[Math.floor(Math.random() * nodes.length)];
+            n.messages += 1;
+            return n;
+        });
 
-    sendToClients('updateNodes',updatedNodes);
+        sendToClients('updateNodes', updatedNodes);
+    }
 };
 
 const sendLogMessage = () => {
@@ -57,19 +64,30 @@ const sendLogMessage = () => {
     });
 };
 
-setInterval(sendMessages, 1000);
-setInterval(sendLogMessage, 1000);
+const killANode = () => {
+    if(nodes.length) {
+        const node = nodes[Math.floor(Math.random() * nodes.length)];
+        _.remove(nodes, node);
+        sendToClients('removeNodes', [node.address]);
+    }
+};
+
+
+setInterval(updateMessages, 1000);
+setInterval(sendLogMessage, 10000);
+setInterval(killANode, 2000);
+setInterval(createNodes, 6000);
 
 
 const commandProcessors = {
     getAllNodes: () => sendToClients('updateNodes', nodes),
     getMaxNodes: () => sendToClients('setMaxNodes', nodes.length),
     setMaxNodes: (num) => {
-        const nodesToRemove = nodes.map(n => n.address);
-        nodesToRemove && sendToClients('removeNodes', nodesToRemove);
-
-        sendToClients('updateNodes', createNodes(num));
-
+        maxNodes = num;
         sendToClients('setMaxNodes', num);
+    },
+    setMinNodes: (num) => {
+        minNodes = num;
+        sendToClients('setMinNodes', num);
     }
 };

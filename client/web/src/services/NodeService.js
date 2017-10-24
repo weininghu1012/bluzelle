@@ -26,10 +26,26 @@ export const updateNode = node => {
         foundNode.messageDelta = node.messages - foundNode.messages
         setTimeout(() => foundNode.messageDelta = 0, 500);
     }
-    foundNode ? extend(foundNode, node) : nodes.push(node);
+    foundNode ? extend(foundNode, node) : addNewNode(node);
 };
 
-export const removeNodeByAddress = address => remove(nodes, n => n.address === address);
+const addNewNode = node => {
+    const newNode = {nodeState: 'new', ...node};
+    nodes.push(newNode);
+    setTimeout(() => {
+        const found = nodes.find(n => n.address === node.address);
+        console.log(found)
+        found && (found.nodeState = 'alive')
+    },3000);
+};
+
+export const removeNodeByAddress = address => {
+    const found = nodes.find(n => n.address === address);
+    found && (found.nodeState = 'dead');
+    setTimeout(() => {
+        remove(nodes, n => n.address === address);
+    }, 3000);
+};
 
 export const clearNodes = () => remove(nodes, () => true);
 

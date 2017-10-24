@@ -1,7 +1,7 @@
 const colors = {
     alive: 'green',
-    dead: 'blue',
-    'new': 'red'
+    'new': 'blue',
+    'dead': 'red'
 };
 
 export default colors;
