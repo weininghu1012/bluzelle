@@ -39,9 +39,10 @@ const sendToClients = (cmd, data) => sockets.forEach(socket => socket.send(JSON.
 
 const sendMessages = () => {
     const updatedNodes = _.times(10, () => {
-        const idx = Math.floor(Math.random() * nodes.length);
-        nodes[idx].messages += 1;
-        return nodes[idx];
+        const list = nodes.filter(n => n.nodeState !== 'dead');
+        const n = list[Math.floor(Math.random() * list.length)];
+        n.messages += 1;
+        return n;
     });
 
     sendToClients('updateNodes',updatedNodes);
