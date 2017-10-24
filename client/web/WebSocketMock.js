@@ -1,13 +1,13 @@
 const _ = require('lodash');
 
 const DELAY = 500;
-let socket;
+let sockets = [];
 
 module.exports = SocketBase => class Socket extends SocketBase {
 
     websocket(wss) {
         wss.on('connection', (ws, req) => {
-            socket = ws;
+            sockets.push(ws);
 
             ws.on('message', req => {
                 req = JSON.parse(req);
@@ -25,7 +25,7 @@ module.exports = SocketBase => class Socket extends SocketBase {
             })
 
             ws.on('close', () => {
-                socket = undefined;
+                _.remove(sockets, ws);
             })
         })
     }
@@ -42,16 +42,20 @@ const createNodes = num => nodes = _.times(num, () => ({
 
 createNodes(10);
 
+const sendToClients = (cmd) => sockets.forEach(socket => socket.send(JSON.stringify(cmd)));
+
+
 const sendMessages = () => {
     const updatedNodes = _.times(10, () => {
         const idx = Math.floor(Math.random() * nodes.length);
         nodes[idx].messages += 1
         return nodes[idx];
     });
-    socket && socket.send(JSON.stringify({
-        cmd: 'updateNodes', data: updatedNodes
-    }))
 
+    sendToClients({
+        cmd: 'updateNodes',
+        data: updatedNodes
+    });
 };
 
 setInterval(sendMessages, 1000);
