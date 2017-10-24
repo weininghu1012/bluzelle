@@ -21,7 +21,11 @@ export const getNodes = () => nodes;
 
 export const updateNode = node => {
     const foundNode = nodes.find(n => n.address === node.address);
-    foundNode && (foundNode.messageDelta = node.messages - foundNode.messages);
+
+    if(foundNode) {
+        foundNode.messageDelta = node.messages - foundNode.messages
+        setTimeout(() => foundNode.messageDelta = 0, 500);
+    }
     foundNode ? extend(foundNode, node) : nodes.push(node);
 };
 
