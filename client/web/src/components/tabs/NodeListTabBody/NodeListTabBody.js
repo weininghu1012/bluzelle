@@ -1,40 +1,24 @@
 import {getNodes} from 'services/NodeService'
 import 'src/ReactPre16Support'
 import statusColors from 'constants/nodeStatusColors';
-
+import clone from 'lodash/clone'
 const ReactDataGrid = require('react-data-grid');
 
 @observer
 export default class NodeListTabBody extends Component {
 
-    constructor() {
-        super();
-        this.state = {nodes: []};
-    }
-
-    rowGetter(i) {
-        return this.state.nodes[i];
-    }
-
-    componentDidMount() {
-        this.stop = autorun(() => {
-            this.setState({nodes: getNodes().map(n => Object.assign( {}, n))})
-        })
-    }
-
-    componentWillUnmount() {
-        this.stop();
-    }
-
     render() {
+        const nodes = getNodes().map(clone);
+
         return (
             <ReactDataGrid
                 columns={columns}
-                rowGetter={this.rowGetter.bind(this)}
-                rowsCount={this.state.nodes.length}
+                rowGetter={i => nodes[i]}
+                rowsCount={nodes.length}
                 minHeight={500}
                 minColumnWidth={80}
-            />        )
+            />
+        )
     }
 }
 
