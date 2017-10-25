@@ -1,4 +1,5 @@
 import Button from 'react-bootstrap/lib/Button'
+import ButtonGroup from 'react-bootstrap/lib/ButtonGroup'
 import invoke from 'lodash/invoke'
 
 export default class Row extends Component {
@@ -7,9 +8,10 @@ export default class Row extends Component {
         this.state = {editing: false};
     }
 
-    setEditing() {
-        this.setState({editing: true});
+    setEditing(v = true) {
+        this.setState({editing: v});
     }
+
 
     setValue() {
         const value = this.props.type === 'number' ? parseInt(this.input.value) : this.input.value;
@@ -27,27 +29,32 @@ export default class Row extends Component {
         const {editing, waitingForUpdateValue} = this.state;
 
         return (
-            <tbody id={id} style={{width: 450, display: 'block', paddingBottom: 3, borderBottom: '1px solid #ddd', marginBottom: 10}}>
-            <tr>
-                <th style={{paddingRight: 20, whiteSpace: 'nowrap'}}>{label}</th>
-                <td style={{width: '100%'}}>
-                    {editing ? (
-                        <input type={type} ref={r => this.input = r} defaultValue={value}/>
-                    ) : waitingForUpdateValue ? (
-                        <span style={{color: '#aaa'}}>{waitingForUpdateValue} (saving)</span>
-                    ) : (
-                        value
-                    )}
-                </td>
-                <td style={{paddingLeft: 20}}>
-                    {editing ? (
-                        <Button disabled={false} bsSize="small" onClick={this.setValue.bind(this)}>Set</Button>
-                    ) : (
-                        <Button bsSize="small" onClick={this.setEditing.bind(this)}>Edit</Button>
-                    )}
-                </td>
-            </tr>
-            </tbody>
+            <Fixed style={{height: 43, lineHeight: '42px', marginBottom: 5, width: 500, borderBottomWidth: 1, borderBottomStyle: 'solid'}}>
+                    <Layout type="">
+                        <Fixed style={{width: 100}}>
+                            <label>{label}</label>
+                        </Fixed>
+                        <Flex>
+                            {editing ? (
+                                <input type={type} ref={r => this.input = r} defaultValue={value}/>
+                            ) : waitingForUpdateValue ? (
+                                <span style={{color: '#aaa'}}>{waitingForUpdateValue} (saving)</span>
+                            ) : (
+                                value
+                            )}
+                        </Flex>
+                        <Fixed style={{width: 200}}>
+                            {editing ? (
+                                <ButtonGroup className="pull-right">
+                                    <Button bsSize="small" onClick={this.setValue.bind(this)}>Set</Button>
+                                    <Button bsSize="small" onClick={this.setEditing.bind(this, false)}>Cancel</Button>
+                                </ButtonGroup>
+                            ) : (
+                                <Button className="pull-right" bsSize="small" onClick={this.setEditing.bind(this)}>Edit</Button>
+                            )}
+                        </Fixed>
+                    </Layout>
+            </Fixed>
         )
     }
 }
