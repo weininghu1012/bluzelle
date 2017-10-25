@@ -88,6 +88,7 @@ module.exports = {
             autorun: ['mobx', 'autorun'],
             untracked: ['mobx', 'untracked'],
             computed: ['mobx', 'computed'],
+            transaction: ['mobx', 'transaction'],
 
             Session: [path.resolve('stores/SessionStore'), 'default'],
 

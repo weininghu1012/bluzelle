@@ -75,8 +75,8 @@ const killANode = () => {
 
 setInterval(updateMessages, 1000);
 setInterval(sendLogMessage, 10000);
-setInterval(killANode, 2000);
-setInterval(createNodes, 6000);
+setInterval(killANode, 5000);
+setInterval(createNodes, 10000);
 
 
 const commandProcessors = {

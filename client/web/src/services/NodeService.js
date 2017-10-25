@@ -17,7 +17,7 @@ const resetNodes = () => {
     clearNodes();
 };
 
-export const getNodes = () => nodes;
+export const getNodes = () => nodes.filter(n => n.address);
 
 export const updateNode = node => {
     const foundNode = nodes.find(n => n.address === node.address);
@@ -25,16 +25,18 @@ export const updateNode = node => {
     if(foundNode) {
         foundNode.messageDelta = node.messages - foundNode.messages
         setTimeout(() => foundNode.messageDelta = 0, 500);
+        extend(foundNode, node)
+    } else {
+        addNewNode(node);
     }
-    foundNode ? extend(foundNode, node) : addNewNode(node);
 };
 
 const addNewNode = node => {
     const newNode = {nodeState: 'new', ...node};
-    nodes.push(newNode);
+    const slot = nodes.find(n => n.address === undefined);
+    slot ? extend(slot, newNode) : nodes.push(newNode);
     setTimeout(() => {
         const found = nodes.find(n => n.address === node.address);
-        console.log(found)
         found && (found.nodeState = 'alive')
     },3000);
 };
@@ -43,7 +45,7 @@ export const removeNodeByAddress = address => {
     const found = nodes.find(n => n.address === address);
     found && (found.nodeState = 'dead');
     setTimeout(() => {
-        remove(nodes, n => n.address === address);
+        found.address = undefined;
     }, 3000);
 };
 

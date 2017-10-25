@@ -1,6 +1,6 @@
 import Node from './Node'
 import {getNodes} from 'services/NodeService'
-
+import clone from 'lodash/clone'
 @observer
 export default class NodeGraph extends Component {
     constructor() {
@@ -30,13 +30,13 @@ export default class NodeGraph extends Component {
 
     render() {
         const {selectedNodeAddress} = this.state;
-        const nodes = this.addAnglesToNodes(getNodes());
+        const nodes = this.addAnglesToNodes(getNodes()).map(clone).sort(n => n.address);
         const selectedNode = selectedNodeAddress ? this.findNodeByAddress(selectedNodeAddress) : undefined;
 
         return (
             <div style={{height: '100%', position: 'relative'}}>
                 <svg style={{height: '100%', width: '100%'}} viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-                    {nodes.map(node => <Node selected={selectedNode && node.address === selectedNode.address} onMouseOver={this.selectNode.bind(this, node)} key={node.address} node={node}/>)}
+                    {nodes.map(node => <Node selected={selectedNode && node.address === selectedNode.address} onMouseOver={this.selectNode.bind(this, node)} key={`node-${node.address}`} node={node}/>)}
                 </svg>
                 <div style={styles.nodeCount}>
                     {nodes.length} Nodes

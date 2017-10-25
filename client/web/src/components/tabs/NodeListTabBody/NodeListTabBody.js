@@ -8,7 +8,7 @@ const ReactDataGrid = require('react-data-grid');
 export default class NodeListTabBody extends Component {
 
     render() {
-        const nodes = getNodes().map(clone);
+        const nodes = getNodes().map(clone).sort(n => n.address);
 
         return (
             <ReactDataGrid
