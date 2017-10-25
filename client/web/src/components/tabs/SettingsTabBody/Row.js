@@ -36,7 +36,7 @@ export default class Row extends Component {
                         </Fixed>
                         <Flex>
                             {editing ? (
-                                <input type={type} ref={r => this.input = r} defaultValue={value}/>
+                                <input style={{lineHeight: '20px'}} type={type} ref={r => this.input = r} defaultValue={value}/>
                             ) : waitingForUpdateValue ? (
                                 <span style={{color: '#aaa'}}>{waitingForUpdateValue} (saving)</span>
                             ) : (
