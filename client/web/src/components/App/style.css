@@ -3,9 +3,9 @@
 }
 
 input {
-    background-color: white !important;
+    background-color: #ccc !important;
 }
 
 body {
-    color: white;
+    color: #bbb;
 }

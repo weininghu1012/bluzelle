@@ -1,7 +1,7 @@
 import {HashRouter, Route} from 'react-router-dom'
+import './bootstrap/css/darkly.css'
 import './style.css'
 //import 'bootstrap/dist/css/bootstrap.css'
-import './bootstrap/css/darkly.css'
 import {socketState} from 'services/CommunicationService'
 import Main from 'components/Main'
 import DaemonSelector from 'components/DaemonSelector'
