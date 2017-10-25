@@ -5,18 +5,42 @@ require('./ApplicationMenu');
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
-let win
+let win, splash
 
 function createWindow () {
-    // Create the browser window.
-    win = new BrowserWindow({width: 800, height: 600, icon: __dirname + '/bluzelle.png'});
+    splash = new BrowserWindow({
+        width: 300,
+        height: 500,
+        icon: __dirname + '/bluzelle.png',
+        transparent: true,
+        frame: false,
+        alwaysOnTop: true,
+    });
 
-    // and load the index.html of the app.
-    win.loadURL(url.format({
-        pathname: __dirname + '/index.html',
+    splash.loadURL(url.format({
+        pathname: __dirname + '/splash.html',
         protocol: 'file:',
         slashes: true
     }));
+
+
+    win = new BrowserWindow({
+        width: 800,
+        height: 600,
+        icon: __dirname + '/bluzelle.png',
+        show: false
+    });
+
+    win.loadURL(url.format({
+        pathname: __dirname + '/index.html',
+        protocol: 'file:',
+        slashes: true,
+    }));
+
+    win.once('ready-to-show', () => {
+        splash.destroy();
+        win.show();
+    });
 
     // Open the DevTools.
 //    win.webContents.openDevTools()
