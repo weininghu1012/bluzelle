@@ -45,10 +45,10 @@ export default class Row extends Component {
                         </Flex>
                         <Fixed style={{width: 200}}>
                             {editing ? (
-                                <ButtonGroup className="pull-right">
-                                    <Button bsSize="small" onClick={this.setValue.bind(this)}>Set</Button>
-                                    <Button bsSize="small" onClick={this.setEditing.bind(this, false)}>Cancel</Button>
-                                </ButtonGroup>
+                                [
+                                    <Button className="pull-right" key="set-btn" bsSize="small" onClick={this.setValue.bind(this)}>Set</Button>,
+                                    <Button className="pull-right" key="edit-btn" bsSize="small" onClick={this.setEditing.bind(this, false)} style={{marginRight: 10}}>Cancel</Button>
+                                ]
                             ) : (
                                 <Button className="pull-right" bsSize="small" onClick={this.setEditing.bind(this)}>Edit</Button>
                             )}

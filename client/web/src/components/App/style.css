@@ -9,3 +9,7 @@ input {
 body {
     color: #bbb;
 }
+
+.btn:hover {
+    border-color: white;
+}
