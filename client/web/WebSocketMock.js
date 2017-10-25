@@ -30,13 +30,16 @@ module.exports = SocketBase => class Socket extends SocketBase {
 
 
 const createNodes = () => {
+    let i = 0;
     while(nodes.length < maxNodes) {
         const node = {
             address: `0x${_.padStart((baseAddress++).toString(16), 2, '0')}`,
             messages: 0
         };
         nodes.push(node);
-        sendToClients('updateNodes', [node]);
+        setTimeout(() => {
+            sendToClients('updateNodes', [node]);
+        },(i++) * 600)
     }
 };
 
@@ -75,8 +78,8 @@ const killANode = () => {
 
 setInterval(updateMessages, 1000);
 setInterval(sendLogMessage, 10000);
-setInterval(killANode, 5000);
-setInterval(createNodes, 10000);
+setInterval(killANode, 6137);
+setInterval(createNodes, 10285);
 
 
 const commandProcessors = {

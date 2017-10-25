@@ -12,7 +12,7 @@ const Header = () => (
                 </div>
             </div>
         )}
-        <div style={{height: 50, padding: 2}}>
+        <div style={{height: 50, padding: 5}}>
             <img src={logo}/>
         </div>
     </header>

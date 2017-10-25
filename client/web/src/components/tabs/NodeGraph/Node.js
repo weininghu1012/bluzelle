@@ -7,7 +7,7 @@ const Node = ({node, onMouseOver, selected}) => {
     return [
         <radialGradient id={`gradient-${address}`} key={`gradient-${address}`}>
             <stop stopColor={nodeColors[nodeState]} offset="50%"/>
-            <stop stopColor="white" offset="100%"/>
+            <stop stopColor="#999" offset="100%"/>
         </radialGradient>,
         <circle fill={`url(#gradient-${address})`} onMouseOver={onMouseOver} key={`circle-${address}`} cx={cx} cy={cy} r={node.messageDelta ? '8' : '6'}/>,
         selected && <circle fill='white' key={`circle-border=${address}`} cx={cx} cy={cy} r="2"/>

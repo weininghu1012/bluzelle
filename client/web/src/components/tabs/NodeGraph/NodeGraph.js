@@ -30,7 +30,7 @@ export default class NodeGraph extends Component {
 
     render() {
         const {selectedNodeAddress} = this.state;
-        const nodes = this.addAnglesToNodes(getNodes()).map(clone).sort(n => n.address);
+        const nodes = this.addAnglesToNodes(getNodes());
         const selectedNode = selectedNodeAddress ? this.findNodeByAddress(selectedNodeAddress) : undefined;
 
         return (

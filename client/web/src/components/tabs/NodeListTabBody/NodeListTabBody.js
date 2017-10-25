@@ -1,14 +1,14 @@
 import {getNodes} from 'services/NodeService'
 import 'src/ReactPre16Support'
 import statusColors from 'constants/nodeStatusColors';
-import clone from 'lodash/clone'
 const ReactDataGrid = require('react-data-grid');
+import clone from 'lodash/clone'
 
 @observer
 export default class NodeListTabBody extends Component {
 
     render() {
-        const nodes = getNodes().map(clone).sort(n => n.address);
+        const nodes = getNodes().map(clone);
 
         return (
             <ReactDataGrid
@@ -24,7 +24,7 @@ export default class NodeListTabBody extends Component {
 
 const StatusFormatter = ({value}) => {
     return (
-        <div><span style={{display: 'inline-block', backgroundColor: statusColors[value], height: 15, width: 15}}/> {value}</div>
+        <div><svg style={{marginRight: 8}} width="15" height="15"><rect width="15" height="15" fill={statusColors[value]}/></svg> {value}</div>
     )
 };
 
