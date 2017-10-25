@@ -1,5 +1,7 @@
 import Node from './Node'
 import {getNodes} from 'services/NodeService'
+import NodeInfo from './NodeInfo'
+
 import clone from 'lodash/clone'
 @observer
 export default class NodeGraph extends Component {
@@ -41,42 +43,13 @@ export default class NodeGraph extends Component {
                 <div style={styles.nodeCount}>
                     {nodes.length} Nodes
                 </div>
-                {selectedNode &&
-                <table style={styles.infoBox}>
-                    <tbody>
-                    <tr>
-                        <th style={styles.tableCell}>Address</th>
-                        <td style={styles.tableCell}>{selectedNode.address}</td>
-                    </tr>
-                    <tr>
-                        <th style={styles.tableCell}>Messages</th>
-                        <td style={styles.tableCell}>{selectedNode.messages}</td>
-                    </tr>
-                    <tr>
-                        <th style={styles.tableCell}>Status</th>
-                        <td style={styles.tableCell}>{selectedNode.nodeState}</td>
-                    </tr>
-                    </tbody>
-                </table>
-                }
+                {selectedNode && <NodeInfo node={selectedNode} />}
             </div>
         )
     }
 }
 
 const styles = {
-    tableCell: {
-        padding: 5
-    },
-    infoBox: {
-        width: 200,
-        position: 'absolute',
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)',
-        borderWidth: 1,
-        borderStyle: 'solid'
-    },
     nodeCount: {
         position: 'absolute',
         top: '20%',
