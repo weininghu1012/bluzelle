@@ -40,6 +40,7 @@ const createNodes = () => {
         setTimeout(() => {
             sendToClients('updateNodes', [node]);
         },(i++) * 600)
+        log(`node ${node.address} has connected`);
     }
 };
 
@@ -58,12 +59,12 @@ const updateMessages = () => {
     }
 };
 
-const sendLogMessage = () => {
+const log = (message) => {
     sendToClients('log', {
         timer_no: 1,
         entry_no: _.uniqueId(),
         timestamp: new Date().toISOString(),
-        message: `message - ${_.uniqueId()}`
+        message: message
     });
 };
 
@@ -72,12 +73,12 @@ const killANode = () => {
         const node = nodes[Math.floor(Math.random() * nodes.length)];
         _.remove(nodes, node);
         sendToClients('removeNodes', [node.address]);
+        log(`node ${node.address} has died`);
     }
 };
 
 
 setInterval(updateMessages, 1000);
-setInterval(sendLogMessage, 10000);
 setInterval(killANode, 6137);
 setInterval(createNodes, 10285);
 
@@ -89,9 +90,11 @@ const commandProcessors = {
     setMaxNodes: (num) => {
         maxNodes = num;
         sendToClients('setMaxNodes', num);
+        log(`Changed max nodes to ${num}`)
     },
     setMinNodes: (num) => {
         minNodes = num;
         sendToClients('setMinNodes', num);
+        log(`changed min nodes to ${num}`);
     }
 };
