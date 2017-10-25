@@ -45,7 +45,7 @@ export const removeNodeByAddress = address => {
     const found = nodes.find(n => n.address === address);
     found && (found.nodeState = 'dead');
     setTimeout(() => {
-        found.address = undefined;
+        found && (found.address = undefined);
     }, 2000);
 };
 
