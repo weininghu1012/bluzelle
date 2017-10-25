@@ -27,10 +27,10 @@ export default class Row extends Component {
         const {editing, waitingForUpdateValue} = this.state;
 
         return (
-            <tbody id={id} style={{display: 'block', paddingBottom: 3, borderBottom: '1px solid #ddd'}}>
+            <tbody id={id} style={{width: 450, display: 'block', paddingBottom: 3, borderBottom: '1px solid #ddd', marginBottom: 10}}>
             <tr>
-                <th style={{paddingRight: 20}}>{label}</th>
-                <td style={{width: 300}}>
+                <th style={{paddingRight: 20, whiteSpace: 'nowrap'}}>{label}</th>
+                <td style={{width: '100%'}}>
                     {editing ? (
                         <input type={type} ref={r => this.input = r} defaultValue={value}/>
                     ) : waitingForUpdateValue ? (

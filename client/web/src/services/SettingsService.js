@@ -1,18 +1,21 @@
 import {socketState, addCommandProcessor, sendCommand} from 'services/CommunicationService'
 
+addCommandProcessor('setMaxNodes', num => settings.maxNodes = num);
+addCommandProcessor('setMinNodes', num => settings.minNodes = num);
 
 export const settings = observable({
-    maxNodes: 0
+    maxNodes: 0,
+    minNodes: 0
 });
 
 autorun(() => socketState.get() === 'open' && untracked(getAllSettings));
 
 const getAllSettings = () => {
-    sendCommand('getMaxNodes');
+    sendCommand('getMaxNodes', undefined);
+    sendCommand('getMinNodes', undefined)
 };
 
-addCommandProcessor('setMaxNodes', num => settings.maxNodes = num);
 
-export const setMaxNodes = num => {
-    sendCommand('setMaxNodes', num);
-};
+export const setMaxNodes = sendCommand('setMaxNodes');
+
+export const setMinNodes = sendCommand('setMinNodes');

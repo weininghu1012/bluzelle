@@ -84,7 +84,8 @@ setInterval(createNodes, 10285);
 
 const commandProcessors = {
     getAllNodes: () => sendToClients('updateNodes', nodes),
-    getMaxNodes: () => sendToClients('setMaxNodes', nodes.length),
+    getMaxNodes: () => sendToClients('setMaxNodes', maxNodes),
+    getMinNodes: () => sendToClients('setMinNodes', minNodes),
     setMaxNodes: (num) => {
         maxNodes = num;
         sendToClients('setMaxNodes', num);

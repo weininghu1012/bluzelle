@@ -1,3 +1,5 @@
+import curry from 'lodash/fp/curry'
+
 let socket;
 let seq = 0;
 let commandProcessors = [];
@@ -42,13 +44,13 @@ const startSocket = (url) => {
     };
 };
 
-export const sendCommand = (cmd, data) => {
+export const sendCommand = curry((cmd, data) => {
     socket && socket.readyState === WebSocket.OPEN ? (
         socket.send(JSON.stringify({cmd: cmd, data: data, seq: seq++}))
     ) : (
         setTimeout(() => sendCommand(cmd, data), 100)
     )
-};
+});
 
 export const addCommandProcessor = (name, fn) => commandProcessors[name] = fn;
 
