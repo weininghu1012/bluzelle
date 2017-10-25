@@ -46,7 +46,7 @@ export const removeNodeByAddress = address => {
     found && (found.nodeState = 'dead');
     setTimeout(() => {
         found.address = undefined;
-    }, 3000);
+    }, 2000);
 };
 
 export const clearNodes = () => remove(nodes, () => true);
