@@ -89,7 +89,12 @@ module.exports = {
 
             Session: [path.resolve('stores/SessionStore'), 'default'],
 
-            sinon: 'sinon'
+            sinon: 'sinon',
+
+            '$j': 'jquery',
+
+            Maybe: ['monet', 'Maybe'],
+            Either: ['monet', 'Either']
 
 
         }),

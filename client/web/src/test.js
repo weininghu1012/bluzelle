@@ -6,8 +6,7 @@ import chaiEnzyme from 'chai-enzyme'
 import sinonChai from 'sinon-chai'
 
 import Adapter from 'enzyme-adapter-react-16';
-import each from 'lodash/each'
-
+import {Maybe} from 'monet'
 
 Enzyme.configure({ adapter: new Adapter() });
 chai.use(chaiEnzyme());
@@ -31,23 +30,28 @@ componentsContext.keys().forEach(componentsContext);
 const servicesContext = require.context('./services', true, /\/.js$/);
 servicesContext.keys().forEach(servicesContext);
 
-// each({'.': /\.specs\.js$/, './components': /\.js$/, './services': /\.js$/, constants: /\.js$/}, (regex, directory) => {
-//     const context = require.context(directory, true, regex);
-//     context.keys().forEach(context);
-// });
-
 
 //Mock WebSocket
 global.WebSocket = function() {
     return {}
 };
 
-beforeEach(() => document.querySelector('#show') && (document.querySelector('#show').innerHTML = ''));
+beforeEach(() => Maybe.fromNull(document.querySelector('#show'))
+    .map(el => el.innerHTML = '')
+);
+
 global.shallowShow = (...args) => {
     const out = shallow(...args);
     document.querySelector('#show').innerHTML = out.html();
     return out;
 };
+
+global.renderShow = (...args) => {
+    const out = render(...args);
+    document.querySelector('#show').innerHTML = out.html();
+    return out;
+};
+
 
 
 //window.location.host = window.location.host || (window.location.host = 'localhost');

@@ -1,5 +1,4 @@
 import {settings, setMaxNodes, setMinNodes} from 'services/SettingsService'
-import Table from './Table'
 import Row from './Row'
 
 @observer

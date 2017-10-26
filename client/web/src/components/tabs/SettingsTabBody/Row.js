@@ -1,5 +1,4 @@
 import Button from 'react-bootstrap/lib/Button'
-import ButtonGroup from 'react-bootstrap/lib/ButtonGroup'
 import invoke from 'lodash/invoke'
 
 export default class Row extends Component {
