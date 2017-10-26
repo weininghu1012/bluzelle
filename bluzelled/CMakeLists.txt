@@ -25,11 +25,14 @@ elseif(APPLE)
     add_compile_options(-Wall -Wextra -Wpedantic)
 endif()
 
-find_package(Boost 1.64.0 REQUIRED COMPONENTS system coroutine thread REQUIRED)
+#set(BOOST_ROOT /Volumes/Development/Clients/Bluzelle/gitRepos/kepler/boost)
+#  /usr/local/Cellar/boost/1.65.1
+find_package(Boost 1.65.0 REQUIRED COMPONENTS system coroutine thread REQUIRED)
 if(Boost_FOUND)
-    if(NOT EXISTS "${ROOT}/configuration/${customer}/configuration.${project_name}.xml")
+    message(STATUS "**** ${Boost_INCLUDE_DIRS} ****")
+    #if(NOT EXISTS "${ROOT}/configuration/${customer}/configuration.${project_name}.xml")
         file(COPY ../third_party/boost/beast/include/boost/ DESTINATION ${Boost_INCLUDE_DIRS}/boost)
-    endif()
+    #endif()
     include_directories(${Boost_INCLUDE_DIRS})
 endif()
 
@@ -60,9 +63,9 @@ set(SOURCE_FILES
         inc/services/Ping.h
         src/services/GetAllNodes.cpp
         inc/services/GetAllNodes.h
-        src/web_sockets/WebSocket.h
-        src/web_sockets/WebSocket.cpp
-        )
+        inc/web_sockets/WebSocket.h
+        inc/services/CountNodes.h
+        inc/services/SetMaxNodes.h)
 
 add_executable(bluzelled ${SOURCE_FILES})
 target_link_libraries(
@@ -108,7 +111,7 @@ set(SOURCE_FILES
         inc/web_sockets/Listener.h
         src/web_sockets/Session.cpp
         inc/web_sockets/Session.h
-        src/web_sockets/web_socket_tests.cpp src/services/Services.cpp inc/services/Services.h src/services/Service.cpp inc/services/Service.h src/services/Ping.cpp inc/services/Ping.h src/services/GetAllNodes.cpp inc/services/GetAllNodes.h src/services/service_tests.cpp)
+        src/web_sockets/web_socket_tests.cpp src/services/Services.cpp inc/services/Services.h src/services/Service.cpp inc/services/Service.h src/services/Ping.cpp inc/services/Ping.h src/services/GetAllNodes.cpp inc/services/GetAllNodes.h src/services/service_tests.cpp inc/services/CountNodes.h inc/services/SetMaxNodes.h)
 
 file(COPY assets/words.txt DESTINATION ${CMAKE_BINARY_DIR})
 add_executable(bluzelled_test ${SOURCE_FILES})

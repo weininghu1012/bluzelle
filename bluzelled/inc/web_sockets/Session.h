@@ -4,7 +4,8 @@
 #include "services/Services.h"
 #include "services/Ping.h"
 #include "services/GetAllNodes.h"
-
+#include "services/CountNodes.h"
+#include "services/SetMaxNodes.h"
 
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
@@ -32,7 +33,7 @@ fail(boost::system::error_code ec, char const* what);
 
 class Session : public std::enable_shared_from_this<Session>
 {
-    websocket::stream<tcp::socket> ws_;
+    websocket::stream<tcp::socket>  ws_;
     boost::asio::io_service::strand strand_;
     boost::beast::multi_buffer buffer_;
     Services                        services_;
@@ -44,9 +45,11 @@ public:
     : ws_(std::move(socket))
     , strand_(ws_.get_io_service())
     {
-        services_.add_service("ping", new Ping());
         auto nodes = get_all_nodes();
+        services_.add_service("ping", new Ping());
         services_.add_service("getAllNodes", new GetAllNodes(nodes));
+        services_.add_service("countNodes", new CountNodes(nodes));
+        services_.add_service("setMaxNodes", new SetMaxNodes());
 
         //Nodes get_all_nodes()
 

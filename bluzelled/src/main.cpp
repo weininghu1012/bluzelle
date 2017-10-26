@@ -8,6 +8,7 @@
 #include <iostream>
 #include <boost/thread.hpp>
 
+static long max_nodes = 25;
 static Nodes s_nodes;
 static boost::mutex *s_mutex = nullptr;
 void print_message(const std::string &msg);
@@ -37,19 +38,16 @@ void add_nodes(const Nodes& nodes)
     s_nodes.insert(s_nodes.end(), nodes.begin(), nodes.end());
 }
 
-
-
-
-
+void set_max_nodes(long max)
+{
+    max_nodes = max;
+}
 
 
 int main(/*int argc,char *argv[]*/)
 {
-    const uint8_t MAX_TASKS = 25;
     uint8_t numTasks = 2;
     get_mutex();
-
-
 
     auto start_websocket_service = []()
         {
@@ -90,7 +88,7 @@ int main(/*int argc,char *argv[]*/)
 
             // add new tasks + threads as old task/threads die to keep a constant
             // how many new threads do we need? Proportional
-            int num_of_new_nodes = number_of_nodes_to_create( MAX_TASKS, s_nodes.size());
+            int num_of_new_nodes = number_of_nodes_to_create( max_nodes, s_nodes.size());
             if (num_of_new_nodes > 0)
                 {
                 Nodes nodes = create_nodes(num_of_new_nodes);
