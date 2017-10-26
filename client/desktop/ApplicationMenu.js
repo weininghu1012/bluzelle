@@ -3,7 +3,8 @@ const BrowserWindow = electron.BrowserWindow
 const Menu = electron.Menu
 const app = electron.app
 
-let template = [{
+
+const editMenu = {
     label: 'Edit',
     submenu: [{
         label: 'Undo',
@@ -32,7 +33,9 @@ let template = [{
         accelerator: 'CmdOrCtrl+A',
         role: 'selectall'
     }]
-}, {
+};
+
+const viewMenu = {
     label: 'View',
     submenu: [{
         label: 'Reload',
@@ -79,23 +82,10 @@ let template = [{
                 focusedWindow.toggleDevTools()
             }
         }
-    }, {
-        type: 'separator'
-    }, {
-        label: 'App Menu Demo',
-        click: function (item, focusedWindow) {
-            if (focusedWindow) {
-                const options = {
-                    type: 'info',
-                    title: 'Application Menu Demo',
-                    buttons: ['Ok'],
-                    message: 'This demo is for the Menu section, showing how to create a clickable menu item in the application menu.'
-                }
-                electron.dialog.showMessageBox(focusedWindow, options, function () {})
-            }
-        }
     }]
-}, {
+};
+
+const windowMenu = {
     label: 'Window',
     role: 'window',
     submenu: [{
@@ -117,16 +107,21 @@ let template = [{
             app.emit('activate')
         }
     }]
-}, {
+};
+
+const helpMenu = {
     label: 'Help',
     role: 'help',
     submenu: [{
         label: 'Learn More',
         click: function () {
-            electron.shell.openExternal('http://electron.atom.io')
+            electron.shell.openExternal('http://bluzelle.com')
         }
     }]
-}]
+}
+
+const template = [
+    /*editMenu,*/ viewMenu, windowMenu, helpMenu]
 
 function addUpdateMenuItems (items, position) {
     if (process.mas) return
@@ -154,7 +149,7 @@ function addUpdateMenuItems (items, position) {
         click: function () {
             require('electron').autoUpdater.quitAndInstall()
         }
-    }]
+    }];
 
     items.splice.apply(items, [position, 0].concat(updateItems))
 }
@@ -214,7 +209,7 @@ if (process.platform === 'darwin') {
     })
 
     // Window menu.
-    template[3].submenu.push({
+    template[2].submenu.push({
         type: 'separator'
     }, {
         label: 'Bring All to Front',
