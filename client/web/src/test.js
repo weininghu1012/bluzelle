@@ -42,5 +42,12 @@ global.WebSocket = function() {
     return {}
 };
 
+beforeEach(() => document.querySelector('#show').innerHTML = '');
+global.shallowShow = (...args) => {
+    const out = shallow(...args);
+    document.querySelector('#show').innerHTML = out.html();
+    return out;
+}
+
 
 //window.location.host = window.location.host || (window.location.host = 'localhost');
