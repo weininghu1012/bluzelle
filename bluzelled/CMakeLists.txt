@@ -65,7 +65,7 @@ set(SOURCE_FILES
         inc/services/GetAllNodes.h
         inc/web_sockets/WebSocket.h
         inc/services/CountNodes.h
-        inc/services/SetMaxNodes.h)
+        inc/services/SetMaxNodes.h src/NodeManager.cpp inc/NodeManager.h inc/services/Quit.h)
 
 add_executable(bluzelled ${SOURCE_FILES})
 target_link_libraries(
@@ -111,7 +111,7 @@ set(SOURCE_FILES
         inc/web_sockets/Listener.h
         src/web_sockets/Session.cpp
         inc/web_sockets/Session.h
-        src/web_sockets/web_socket_tests.cpp src/services/Services.cpp inc/services/Services.h src/services/Service.cpp inc/services/Service.h src/services/Ping.cpp inc/services/Ping.h src/services/GetAllNodes.cpp inc/services/GetAllNodes.h src/services/service_tests.cpp inc/services/CountNodes.h inc/services/SetMaxNodes.h)
+        src/web_sockets/web_socket_tests.cpp src/services/Services.cpp inc/services/Services.h src/services/Service.cpp inc/services/Service.h src/services/Ping.cpp inc/services/Ping.h src/services/GetAllNodes.cpp inc/services/GetAllNodes.h src/services/service_tests.cpp inc/services/CountNodes.h inc/services/SetMaxNodes.h src/NodeManager.cpp inc/NodeManager.h inc/services/Quit.h)
 
 file(COPY assets/words.txt DESTINATION ${CMAKE_BINARY_DIR})
 add_executable(bluzelled_test ${SOURCE_FILES})
