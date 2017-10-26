@@ -1,4 +1,4 @@
-const config = require('./webpack.config.js');
+const config = require('./webpack-base-config.js');
 const path = require('path');
 
 config.entry = {test: path.resolve('./test.js')};
