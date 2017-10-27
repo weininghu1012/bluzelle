@@ -120,6 +120,13 @@ public:
 //        std::string data = request.get<std::string>("data");
 //        long seq = request.get<long>("seq");
 
+
+        std::cout<< " **** command:" << command << "\n";
+
+
+
+
+
         std::string response = services_(command,ss.str());
 
 
