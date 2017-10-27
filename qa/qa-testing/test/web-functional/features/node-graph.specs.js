@@ -1,4 +1,5 @@
 const _ = require('lodash');
+import {addNode, updateNode} from "../CommunicationService";
 
 describe('Node graph tab', () => {
     require('../getBaseElement')('body');
@@ -8,14 +9,15 @@ describe('Node graph tab', () => {
         browser.click('=Node Graph');
     });
 
-    describe('individual nodes', () => {
-        _.each({green: ['alive', '0x00'], blue: ['dead', '0x01'], red: ['new', '0x02']}, (values,color) => {
-            const [state,address] = values;
+    describe('@watch individual nodes', () => {
+        _.each({green: 'alive', red: 'dead', blue: 'new'}, (state, color) => {
             it(`should display specs when mouseover on ${color} node`, () => {
-                browser.waitForExist(`circle[fill="${color}"]`, 2000);
-                browser.moveToObject(`circle[fill="${color}"]`);
+                const nodeInfo = addNode({nodeState: state});
+                updateNode(nodeInfo.address, {nodeState: state});
+                browser.waitForExist(`g#node-${nodeInfo.address}`);
+                browser.moveToObject(`g#node-${nodeInfo.address}`);
                 browser.waitForExist(`td=${state}`, 2000);
-                browser.waitForExist(`td=${address}`, 2000);
+                browser.waitForExist(`td=${nodeInfo.address}`, 2000);
             });
         });
     });

@@ -4,6 +4,7 @@ import NodeListTabBody from 'components/tabs/NodeListTabBody'
 import LogTabBody from 'components/tabs/LogTabBody'
 import SettingsTabBody from 'components/tabs/SettingsTabBody'
 import Header from './Header'
+import QAHandle from 'components/QAHandle'
 
 export default class Main extends Component {
 
@@ -14,6 +15,11 @@ export default class Main extends Component {
     render() {
         return (
             <Layout type="column">
+                {/\?functional-testing/.test(window.location.href) && (
+                    <Fixed>
+                        <div><QAHandle /></div>
+                    </Fixed>
+                )}
                 <Fixed>
                     <Header />
                     <div style={{height: 6}}/>

@@ -10,7 +10,7 @@ const App = () => {
     const component = socketState.get() === 'open' ? Main : DaemonSelector;
     return (
         <HashRouter>
-            <Route component={component} />
+            <Route component={component}/>
         </HashRouter>
     )
 };

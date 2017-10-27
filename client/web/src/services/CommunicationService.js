@@ -2,8 +2,11 @@ import curry from 'lodash/fp/curry'
 
 let socket;
 let seq = 0;
-let commandProcessors = [];
+const commandProcessors = [];
+
 const RETRY_TIME = 1000;
+
+const offline = /\?functional-testing/.test(window.location.href);
 
 export const socketState = observable('closed');
 export const daemonUrl = observable(undefined);
@@ -19,6 +22,11 @@ autorun(() => daemonUrl.get() && startSocket(daemonUrl.get()));
 
 const setSocketState = () => socketState.set(socketStates[socket.readyState]);
 
+export const receiveMessage = (data) => {
+    const msg = JSON.parse(data);
+    commandProcessors[msg.cmd] ? commandProcessors[msg.cmd](msg.data) : console.error(`${msg.cmd} has no command processor`)
+};
+
 const startSocket = (url) => {
     socket = new WebSocket(`ws://${url}`);
     setSocketState();
@@ -26,10 +34,7 @@ const startSocket = (url) => {
 
     socket.onopen = setSocketState;
 
-    socket.onmessage = (ev) => {
-        const msg = JSON.parse(ev.data);
-        commandProcessors[msg.cmd] ? commandProcessors[msg.cmd](msg.data) : console.error(`${msg.cmd} has no command processor`)
-    };
+    socket.onmessage = (ev) => offline || receiveMessage(ev.data);
 
     socket.onclose = (ev) => {
         // the code according to https://tools.ietf.org/html/rfc6455#section-11.7
