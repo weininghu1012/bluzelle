@@ -1,12 +1,13 @@
 #include "Node.h"
 #include "NodeUtilities.h"
+#include "web_sockets/WebSocketServer.h"
 #include "web_sockets/WebSocket.h"
 #include "web_sockets/Listener.h"
 #include "web_sockets/Session.h"
 
+
 #include <boost/exception/all.hpp>
 #include <iostream>
-#include <boost/thread.hpp>
 
 static long max_nodes = 25;
 static Nodes s_nodes;
@@ -47,71 +48,6 @@ void set_max_nodes(long max)
 }
 
 
-//auto websocket_service()
-//{
-////    WebSocketService wss("172.0.0.1", 3001, 1);
-////    wss();
-//    auto const address = boost::asio::ip::address::from_string("127.0.0.1");
-//    auto const port = static_cast<unsigned short>(std::atoi("3000"));
-//    auto const threads = std::max<std::size_t>(1, std::atoi("1"));
-//    // The io_service is required for all I/O
-//    boost::asio::io_service ios{threads};
-//
-//    // Create and launch a listening port
-//    std::make_shared<Listener>(ios, tcp::endpoint{address, port})->run();
-//
-//    // Run the I/O service on the requested number of threads
-//    std::vector<std::thread> v;
-//    v.reserve(threads - 1);
-//    for (auto i = threads - 1; i > 0; --i)
-//        v.emplace_back(
-//                [&ios]
-//                    {
-//                    ios.run();
-//                    });
-//    ios.run();
-//};
-
-class WebSocketService
-{
-    boost::asio::ip::address    address_;
-    unsigned short              port_;
-    unsigned short              threads_;
-public:
-    WebSocketService(std::string ip_address, unsigned short port, unsigned short threads)
-            //:address_(boost::asio::ip::address::from_string(ip_address)),port_(port),threads_(threads)
-    {
-
-        address_ = boost::asio::ip::address::from_string("127.0.0.1");
-        port_ = static_cast<unsigned short>(std::atoi("3000"));
-//        threads_ = std::max<std::size_t>(1, std::atoi("1"));
-    }
-
-
-    void operator()()
-    {
-
-        //auto const address = boost::asio::ip::address::from_string("127.0.0.1");
-        //auto const port = static_cast<unsigned short>(std::atoi("3000"));
-        auto const threads = std::max<std::size_t>(1, std::atoi("1"));
-        // The io_service is required for all I/O
-        boost::asio::io_service ios{threads};
-
-        // Create and launch a listening port
-        std::make_shared<Listener>(ios, tcp::endpoint{address_, port_})->run();
-
-        // Run the I/O service on the requested number of threads
-        std::vector<std::thread> v;
-        v.reserve(threads - 1);
-        for (auto i = threads - 1; i > 0; --i)
-            v.emplace_back(
-                    [&ios]
-                        {
-                        ios.run();
-                        });
-        ios.run();
-    }
-};
 
 auto start_http_service()
 {
@@ -122,7 +58,7 @@ int main(/*int argc,char *argv[]*/) {
     uint8_t numTasks = 2;
     get_mutex();
 
-    WebSocketService wss("172.0.0.1", 3000, 1);
+    WebSocketServer wss("127.0.0.1", 3000, 1);
     boost::thread websocket(wss);
 
     std::stringstream ss;

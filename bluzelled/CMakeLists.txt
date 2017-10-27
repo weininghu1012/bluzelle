@@ -70,7 +70,7 @@ set(SOURCE_FILES
         inc/NodeManager.h
         inc/services/Quit.h
         inc/services/GetMaxNodes.h
-        )
+        inc/web_sockets/WebSocketServer.h)
 
 add_executable(bluzelled ${SOURCE_FILES})
 target_link_libraries(
@@ -132,7 +132,7 @@ set(SOURCE_FILES
         inc/NodeManager.h
         inc/services/Quit.h
         inc/services/GetMaxNodes.h
-        )
+        inc/web_sockets/WebSocketServer.h)
 
 file(COPY assets/words.txt DESTINATION ${CMAKE_BINARY_DIR})
 add_executable(bluzelled_test ${SOURCE_FILES})

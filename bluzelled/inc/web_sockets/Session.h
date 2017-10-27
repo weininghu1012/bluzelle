@@ -51,11 +51,6 @@ public:
         services_.add_service("countNodes", new CountNodes(nodes));
         services_.add_service("setMaxNodes", new SetMaxNodes());
 
-        //Nodes get_all_nodes()
-
-
-
-
     }
 
     // Start the asynchronous operation

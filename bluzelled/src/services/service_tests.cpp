@@ -79,7 +79,7 @@ BOOST_FIXTURE_TEST_SUITE(websocket_services_tests, F)
         // req {"cmd":"getAllNodes","seq":0}
         // res {"cmd":"updateNodes","data":[{"address":"0x00","nodeState":"alive","messages":20},{"address":"0x01","nodeState":"dead","messages":20}],"seq":4}
         Nodes nodes;
-        GetAllNodes sut(nodes);
+        GetAllNodes sut(&nodes);
 
         pt::ptree request_tree = string_to_ptree("{\"cmd\":\"getAllNodes\",\"seq\":0}");
         pt::ptree accepted_tree = string_to_ptree("{\"cmd\":\"updateNodes\",\"data\":\"\",\"seq\":0}");
