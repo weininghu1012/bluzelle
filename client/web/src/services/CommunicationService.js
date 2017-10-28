@@ -1,12 +1,12 @@
 import curry from 'lodash/fp/curry'
+import {isTestMode} from "../testHooks";
+
 
 let socket;
 let seq = 0;
 const commandProcessors = [];
 
 const RETRY_TIME = 1000;
-
-const offline = /\?functional-testing/.test(window.location.href);
 
 export const socketState = observable('closed');
 export const daemonUrl = observable(undefined);
@@ -34,7 +34,7 @@ const startSocket = (url) => {
 
     socket.onopen = setSocketState;
 
-    socket.onmessage = (ev) => offline || receiveMessage(ev.data);
+    socket.onmessage = (ev) => isTestMode() || receiveMessage(ev.data);
 
     socket.onclose = (ev) => {
         // the code according to https://tools.ietf.org/html/rfc6455#section-11.7
