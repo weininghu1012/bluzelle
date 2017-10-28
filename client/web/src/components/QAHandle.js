@@ -2,16 +2,16 @@ import {receiveMessage} from "../services/CommunicationService";
 
 export default class QAHandle extends Component {
 
-    constructor(){
+    constructor() {
         super();
-        this.state={value:""};
+        this.state = {value: ""};
     }
 
     onChange(ev) {
-        this.setState({value:ev.target.value})
+        this.setState({value: ev.target.value})
     }
 
-    submit(ev){
+    submit(ev) {
         receiveMessage(this.textarea.value);
         this.textarea.value = "";
     }
@@ -19,8 +19,8 @@ export default class QAHandle extends Component {
     render() {
         return (
             <div id="test-message-receiver">
-            <textarea ref={r => this.textarea = r} onChange={this.onChange.bind(this)} value={this.state.value} />
-                <button onClick={this.submit.bind(this)} />
+                <textarea ref={r => this.textarea = r} onChange={this.onChange.bind(this)} value={this.state.value}/>
+                <button onClick={this.submit.bind(this)}/>
             </div>
         )
     }

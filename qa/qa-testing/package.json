@@ -1,7 +1,8 @@
 {
   "scripts": {
     "run-tests": "mocha --recursive --use_strict mocha-setup test",
-    "run-web-functional-tests": "cd test/web-functional; chimp --mocha"
+    "run-web-functional-tests": "cd test/web-functional; chimp --mocha",
+    "run-web-functional-tests-watch": "cd test/web-functional; chimp --mocha --watch"
   },
   "dependencies": {
     "async-wait-until": "^1.1.5",
