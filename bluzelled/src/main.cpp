@@ -23,7 +23,8 @@ boost::mutex &get_mutex();
 
 Nodes create_nodes(int number_of_nodes);
 
-unsigned number_of_nodes_to_create(unsigned max_tasks, unsigned current_number_of_tasks) {
+unsigned number_of_nodes_to_create(unsigned max_tasks, unsigned current_number_of_tasks)
+{
     auto proportional = [](int max_tasks, int current_number_of_tasks)
         {
         return (
@@ -50,9 +51,8 @@ void set_max_nodes(long max)
 
 
 auto start_http_service()
-{
+{}
 
-}
 
 int main(/*int argc,char *argv[]*/) {
     uint8_t numTasks = 2;

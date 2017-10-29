@@ -9,8 +9,8 @@
 class WebSocketServer
 {
     boost::asio::ip::address    address_;
-    unsigned short              port_;
-    unsigned short              threads_;
+    unsigned short                port_;
+    size_t                      threads_;
 public:
     WebSocketServer(const char* ip_address, unsigned short port, unsigned short threads)
     //:address_(boost::asio::ip::address::from_string(ip_address)),port_(port),threads_(threads)

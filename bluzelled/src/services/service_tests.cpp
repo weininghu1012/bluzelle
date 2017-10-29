@@ -38,15 +38,13 @@ public:
 BOOST_FIXTURE_TEST_SUITE(websocket_services_tests, F)
 
 // --run_test=websocket_services_tests/test_service
-    BOOST_AUTO_TEST_CASE(test_service)
-    {
+    BOOST_AUTO_TEST_CASE(test_service) {
         TestService sut;
         BOOST_CHECK(0 == sut("{\"test\":1}").compare("{\"test\":1}"));
     }
 
 // --run_test=websocket_services_tests/test_service
-    BOOST_AUTO_TEST_CASE(test_services)
-    {
+    BOOST_AUTO_TEST_CASE(test_services) {
         std::string json_string("{\"test\":1}");
         Services sut;
         sut.add_service("test", new TestService());
@@ -74,8 +72,7 @@ BOOST_FIXTURE_TEST_SUITE(websocket_services_tests, F)
     }
 
 // --run_test=websocket_services_tests/test_get_all_nodes
-    BOOST_AUTO_TEST_CASE(test_get_all_nodes)
-    {
+    BOOST_AUTO_TEST_CASE(test_get_all_nodes) {
         // req {"cmd":"getAllNodes","seq":0}
         // res {"cmd":"updateNodes","data":[{"address":"0x00","nodeState":"alive","messages":20},{"address":"0x01","nodeState":"dead","messages":20}],"seq":4}
         Nodes nodes;
@@ -118,14 +115,24 @@ BOOST_FIXTURE_TEST_SUITE(websocket_services_tests, F)
             delete n;
             }
     }
+
     //--run_test=websocket_services_tests/test_no_service
-    BOOST_AUTO_TEST_CASE( test_no_service )
-    {
+    BOOST_AUTO_TEST_CASE(test_no_service) {
         std::string accepted("{\"error\":\"Service not found.\"}");
         Services sut;
         sut.add_service("test", new TestService());
         auto result = sut("test0", "{\"cmd\":\"test0\"}");
         BOOST_CHECK_MESSAGE(0 == result.compare(accepted), result);
+    }
+
+    //--run_test=websocket_services_tests/test_fix_json_str
+    BOOST_AUTO_TEST_CASE(test_fix_json_str)
+    {
+        TestService sut;
+        std::string json_str_in ="{\"cmd\":\"test\",\"data\":{\"integer\":\"283\",\"float\":\"34.433\"}";
+        std::string json_str_accepted ="{\"cmd\":\"test\",\"data\":{\"integer\":283,\"float\":34.433}";
+        std::string json_str_actual = sut.fix_json_numbers(json_str_in);
+        BOOST_CHECK_EQUAL(json_str_accepted, json_str_actual);
     }
 
 BOOST_AUTO_TEST_SUITE_END()
