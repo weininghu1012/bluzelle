@@ -4,6 +4,7 @@
 #include "services/Services.h"
 #include "services/Ping.h"
 #include "services/GetAllNodes.h"
+#include "services/CountNodes.h"
 
 #include <sstream>
 #include <boost/property_tree/ptree.hpp>
@@ -133,6 +134,17 @@ BOOST_FIXTURE_TEST_SUITE(websocket_services_tests, F)
         std::string json_str_accepted ="{\"cmd\":\"test\",\"data\":{\"integer\":283,\"float\":34.433}";
         std::string json_str_actual = sut.fix_json_numbers(json_str_in);
         BOOST_CHECK_EQUAL(json_str_accepted, json_str_actual);
+    }
+
+    //--run_test=websocket_services_tests/test_count_nodes_service
+    BOOST_AUTO_TEST_CASE(test_count_nodes_service)
+    {
+        Nodes nodes;
+        CountNodes sut(&nodes);
+        std::string cmd("{\"cmd\":\"countNodes\",\"seq\":345}");
+        std::string accepted("{\"cmd\": \"nodeCount\",\"count\": 0,\"seq\":345}");
+        std::string actual(sut(cmd));
+        BOOST_CHECK(string_to_ptree(accepted) == string_to_ptree(actual));
     }
 
 BOOST_AUTO_TEST_SUITE_END()

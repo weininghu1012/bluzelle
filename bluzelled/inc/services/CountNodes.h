@@ -64,7 +64,7 @@ public:
             out_tree.put("error", e.what());
             std::cerr << e.what();
             }
-        return tree_to_response(out_tree);
+        return fix_json_numbers(tree_to_response(out_tree));
     }
 };
 
