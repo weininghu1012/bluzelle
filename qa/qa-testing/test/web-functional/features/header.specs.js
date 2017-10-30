@@ -1,8 +1,7 @@
 describe('web page header', () => {
-    const header = require('../getBaseElement')('#app-container>div>div>div>div');
+    const header = require('../getBaseElement')('header');
 
     it('should exist', () => {
-        header().waitForExist('img');
-        expect(header().getAttribute('img', 'src')).to.contain('data');
+        expect(header().getAttribute('div>img', 'src')).to.contain('data');
     });
 });

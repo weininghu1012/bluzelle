@@ -9,7 +9,7 @@ describe('Node graph tab', () => {
         browser.click('=Node Graph');
     });
 
-    describe('@watch individual nodes', () => {
+    describe('individual nodes', () => {
         _.each({green: 'alive', red: 'dead', blue: 'new'}, (state, color) => {
             it(`should display specs when mouseover on ${color} node`, () => {
                 const nodeInfo = addNode({nodeState: state});

@@ -3,6 +3,9 @@ module.exports = (selector) => {
         browser.url('http://localhost:3000?functional-testing');
     });
 
-    return () => browser.element(selector);
+    return () => {
+        browser.waitForExist(selector, 2000);
+        return browser.element(selector);
+    };
 };
 
