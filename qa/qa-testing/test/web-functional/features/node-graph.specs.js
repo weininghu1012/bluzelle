@@ -1,7 +1,7 @@
 const _ = require('lodash');
 import {addNode, updateNode} from "../CommunicationService";
 
-describe('Node graph tab', () => {
+describe('@watch Node graph tab', () => {
     require('../getBaseElement')('body');
 
     beforeEach(() => {
