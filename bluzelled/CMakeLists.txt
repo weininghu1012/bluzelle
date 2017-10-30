@@ -27,7 +27,7 @@ endif()
 
 #set(BOOST_ROOT /Volumes/Development/Clients/Bluzelle/gitRepos/kepler/boost)
 #  /usr/local/Cellar/boost/1.65.1
-find_package(Boost 1.65.0 REQUIRED COMPONENTS system coroutine thread regex REQUIRED)
+find_package(Boost 1.65.0 REQUIRED COMPONENTS system coroutine chrono thread regex REQUIRED)
 if(Boost_FOUND)
     message(STATUS "**** ${Boost_INCLUDE_DIRS} ****")
     #if(NOT EXISTS "${ROOT}/configuration/${customer}/configuration.${project_name}.xml")
@@ -73,10 +73,16 @@ set(SOURCE_FILES
         inc/web_sockets/WebSocketServer.h)
 
 add_executable(bluzelled ${SOURCE_FILES})
-target_link_libraries(
-        bluzelled
+
+target_link_libraries(bluzelled
         ${Boost_LIBRARIES}
-)
+        )
+target_link_libraries(bluzelled
+        ${Boost_CHRONO_LIBRARY}
+        )
+target_link_libraries(bluzelled
+        pthread
+        )
 
 
 ###############################################################################

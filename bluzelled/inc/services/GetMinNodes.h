@@ -1,5 +1,5 @@
-#ifndef KEPLER_GETMAXNODES_H
-#define KEPLER_GETMAXNODES_H
+#ifndef KEPLER_GETMINNODES_H
+#define KEPLER_GETMINNODES_H
 
 #include "services/Service.h"
 #include "Node.h"
@@ -10,9 +10,10 @@
 
 namespace pt = boost::property_tree;
 
+void set_max_nodes(long max);
 long get_max_nodes();
 
-class GetMaxNodes : public Service {
+class GetMinNodes : public Service {
     pt::ptree parse_input(const std::string& json_str)
     {
         pt::ptree in_tree;
@@ -22,18 +23,19 @@ class GetMaxNodes : public Service {
         return in_tree;
     }
 
-    pt::ptree nodes_to_tree(long seq, long max_nodes)
+    pt::ptree nodes_to_tree(long seq, long new_min_nodes)
     {
         pt::ptree out_tree;
-        out_tree.put<long>("getMaxNodes",max_nodes);
+        set_max_nodes(new_min_nodes);
+        out_tree.put<long>("getMinNodes",new_min_nodes);
         out_tree.put<long>("seq", seq);
         return out_tree;
     }
 
     std::string tree_to_response(const pt::ptree& out_tree)
     {
-        auto r = boost::format("{\"getMaxNodes\": %d, \"seq\": %d}")
-                 % out_tree.get<long>("getMaxNodes") % out_tree.get<long>("seq");
+        auto r = boost::format("{\"getMinNodes\": %d, \"seq\": %d}")
+                 % out_tree.get<long>("getMinNodes") % out_tree.get<long>("seq");
 
         return boost::str(r);
     }
@@ -47,7 +49,7 @@ public:
         {
             pt::ptree in_tree;
             in_tree = parse_input(request);
-            out_tree = nodes_to_tree(in_tree.get<long>("seq"), get_max_nodes());
+            out_tree = nodes_to_tree(in_tree.get<long>("seq"), 0);
         }
         catch(std::exception& e)
         {
@@ -58,4 +60,5 @@ public:
     }
 };
 
-#endif //KEPLER_GETMAXNODES_H
+
+#endif //KEPLER_GETMINNODES_H

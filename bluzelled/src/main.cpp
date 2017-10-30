@@ -48,7 +48,10 @@ void set_max_nodes(long max)
     max_nodes = max;
 }
 
-
+long get_max_nodes()
+{
+    return max_nodes;
+}
 
 auto start_http_service()
 {}
@@ -154,7 +157,7 @@ boost::mutex &get_mutex() {
         s_mutex = new boost::mutex();
         }
     return *s_mutex;
-};
+}
 
 void print_message(const std::string &msg) {
     //boost::unique_lock<boost::mutex> guard(*s_mutex, boost::defer_lock);
