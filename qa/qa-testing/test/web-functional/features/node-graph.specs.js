@@ -1,7 +1,7 @@
 const _ = require('lodash');
 import {addNode, updateNode} from "../CommunicationService";
 
-describe('@watch Node graph tab', () => {
+describe('Node graph tab', () => {
     require('../getBaseElement')('body');
 
     beforeEach(() => {
@@ -15,7 +15,7 @@ describe('@watch Node graph tab', () => {
                 const nodeInfo = addNode({nodeState: state});
                 updateNode(nodeInfo.address, {nodeState: state});
                 checkInfoTable(nodeInfo.address, state);
-                browser.waitForExist(`td=${nodeInfo.address}`, 2000);
+                checkInfoTable(nodeInfo.address, nodeInfo.address);
             });
         });
         it('should show the number of messages on mouse over', () => {
