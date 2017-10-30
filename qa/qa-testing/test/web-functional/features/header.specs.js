@@ -1,5 +1,5 @@
 describe('web page header', () => {
-    const header = require('../getBaseElement')('#app-container>div>div');
+    const header = require('../getBaseElement')('#app-container>div>div>div>div');
 
     it('should exist', () => {
         header().waitForExist('img');
