@@ -70,6 +70,7 @@ set(SOURCE_FILES
         inc/NodeManager.h
         inc/services/Quit.h
         inc/services/GetMaxNodes.h
+        inc/services/GetMinNodes.h
         inc/web_sockets/WebSocketServer.h
         inc/http/server/connection.hpp
         inc/http/server/connection_manager.hpp

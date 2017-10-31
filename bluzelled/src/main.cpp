@@ -17,7 +17,7 @@
 #include <iostream>
 #include <string>
 
-static long max_nodes = 25;
+static unsigned long s_max_nodes = 25;
 static Nodes s_nodes;
 static boost::mutex *s_mutex = nullptr;
 
@@ -51,9 +51,14 @@ void add_nodes(const Nodes &nodes) {
     s_nodes.insert(s_nodes.end(), nodes.begin(), nodes.end());
 }
 
-void set_max_nodes(long max)
+void set_max_nodes(unsigned long max)
 {
-    max_nodes = max;
+    s_max_nodes = max;
+}
+
+unsigned long get_max_nodes()
+{
+    return s_max_nodes;
 }
 
 void http_service()
@@ -64,6 +69,8 @@ void http_service()
     http::server::server s(address, port, doc_root);
     s.run();
 }
+
+
 
 int main(/*int argc,char *argv[]*/) {
     uint8_t numTasks = 2;
@@ -86,7 +93,7 @@ int main(/*int argc,char *argv[]*/) {
 
             // add new tasks + threads as old task/threads die to keep a constant
             // how many new threads do we need? Proportional
-            int num_of_new_nodes = number_of_nodes_to_create(max_nodes, s_nodes.size());
+            int num_of_new_nodes = number_of_nodes_to_create(s_max_nodes, s_nodes.size());
             if (num_of_new_nodes > 0)
                 {
                 Nodes nodes = create_nodes(num_of_new_nodes);

@@ -1,7 +1,3 @@
-//
-// Created by Rich Nistuk on 2017-10-25.
-//
-
 #ifndef KEPLER_SETMAXNODES_H
 #define KEPLER_SETMAXNODES_H
 
@@ -14,7 +10,7 @@
 
 namespace pt = boost::property_tree;
 
-void set_max_nodes(long max);
+void set_max_nodes(unsigned long max);
 
 class SetMaxNodes : public Service {
     pt::ptree parse_input(const std::string& json_str)

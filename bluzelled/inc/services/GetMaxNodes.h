@@ -10,7 +10,7 @@
 
 namespace pt = boost::property_tree;
 
-long get_max_nodes();
+unsigned long get_max_nodes();
 
 class GetMaxNodes : public Service {
     pt::ptree parse_input(const std::string& json_str)

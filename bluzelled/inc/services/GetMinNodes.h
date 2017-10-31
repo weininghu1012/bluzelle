@@ -10,8 +10,7 @@
 
 namespace pt = boost::property_tree;
 
-void set_max_nodes(long max);
-long get_max_nodes();
+void set_max_nodes(unsigned long max);
 
 class GetMinNodes : public Service {
     pt::ptree parse_input(const std::string& json_str)
@@ -23,7 +22,7 @@ class GetMinNodes : public Service {
         return in_tree;
     }
 
-    pt::ptree nodes_to_tree(long seq, long new_min_nodes)
+    pt::ptree nodes_to_tree(long seq, unsigned long new_min_nodes)
     {
         pt::ptree out_tree;
         set_max_nodes(new_min_nodes);
