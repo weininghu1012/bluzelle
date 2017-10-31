@@ -4,10 +4,18 @@
 #include "web_sockets/WebSocket.h"
 #include "web_sockets/Listener.h"
 #include "web_sockets/Session.h"
-
+#include "server/server.hpp"
 
 #include <boost/exception/all.hpp>
+#include <boost/beast/core.hpp>
+#include <boost/beast/http.hpp>
+#include <boost/beast/version.hpp>
+//#include <boost/asio/bind_executor.hpp>
+#include <boost/asio/ip/tcp.hpp>
+#include <boost/asio/strand.hpp>
+#include <boost/config.hpp>
 #include <iostream>
+#include <string>
 
 static long max_nodes = 25;
 static Nodes s_nodes;
@@ -48,21 +56,22 @@ void set_max_nodes(long max)
     max_nodes = max;
 }
 
-long get_max_nodes()
+void http_service()
 {
-    return max_nodes;
+    const std::string address("127.0.0.1");
+    const std::string port("8081");
+    std::string const doc_root = "../web/";
+    http::server::server s(address, port, doc_root);
+    s.run();
 }
-
-auto start_http_service()
-{}
-
 
 int main(/*int argc,char *argv[]*/) {
     uint8_t numTasks = 2;
     get_mutex();
 
     WebSocketServer wss("127.0.0.1", 3000, 1);
-    boost::thread websocket(wss);
+    boost::thread websocket_thread(wss);
+    boost::thread http_thread(http_service);
 
     std::stringstream ss;
     try
@@ -97,6 +106,12 @@ int main(/*int argc,char *argv[]*/) {
         {
         std::cout << "caught exception\n";
         }
+
+    // clean up
+    http_thread.join();
+    websocket_thread.join();
+
+
     return 0;
 }
 

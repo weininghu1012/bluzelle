@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.7)
+cmake_minimum_required(VERSION 3.9)
 
 function(list_cmake_properties)
     get_cmake_property(_variableNames VARIABLES)
@@ -25,9 +25,8 @@ elseif(APPLE)
     add_compile_options(-Wall -Wextra -Wpedantic)
 endif()
 
-#set(BOOST_ROOT /Volumes/Development/Clients/Bluzelle/gitRepos/kepler/boost)
-#  /usr/local/Cellar/boost/1.65.1
-find_package(Boost 1.65.0 REQUIRED COMPONENTS system coroutine chrono thread regex REQUIRED)
+
+find_package(Boost 1.65.0 REQUIRED COMPONENTS system coroutine thread regex REQUIRED)
 if(Boost_FOUND)
     message(STATUS "**** ${Boost_INCLUDE_DIRS} ****")
     #if(NOT EXISTS "${ROOT}/configuration/${customer}/configuration.${project_name}.xml")
@@ -39,6 +38,7 @@ endif()
 include_directories(
         inc
         inc/containers
+        inc/http
 )
 
 set(SOURCE_FILES
@@ -70,7 +70,25 @@ set(SOURCE_FILES
         inc/NodeManager.h
         inc/services/Quit.h
         inc/services/GetMaxNodes.h
-        inc/web_sockets/WebSocketServer.h)
+        inc/web_sockets/WebSocketServer.h
+        inc/http/server/connection.hpp
+        inc/http/server/connection_manager.hpp
+        inc/http/server/header.hpp
+        inc/http/server/mime_types.hpp
+        inc/http/server/reply.hpp
+        inc/http/server/request.hpp
+        inc/http/server/request_handler.hpp
+        inc/http/server/request_parser.hpp
+        inc/http/server/server.hpp
+        src/http/server/connection.cpp
+        src/http/server/connection_manager.cpp
+        src/http/server/mime_types.cpp
+        src/http/server/reply.cpp
+        src/http/server/request_handler.cpp
+        src/http/server/request_parser.cpp
+        src/http/server/server.cpp
+
+        )
 
 add_executable(bluzelled ${SOURCE_FILES})
 
@@ -138,7 +156,8 @@ set(SOURCE_FILES
         inc/NodeManager.h
         inc/services/Quit.h
         inc/services/GetMaxNodes.h
-        inc/web_sockets/WebSocketServer.h)
+        inc/web_sockets/WebSocketServer.h
+        )
 
 file(COPY assets/words.txt DESTINATION ${CMAKE_BINARY_DIR})
 add_executable(bluzelled_test ${SOURCE_FILES})
