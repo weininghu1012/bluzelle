@@ -13,12 +13,10 @@ class Ping : public Service
 public:
     std::string operator()(const std::string& json_string) override
     {
-        std::stringstream ss;
-        ss << json_string;
         pt::ptree tree;
-        pt::read_json(ss, tree);
-        tree.put("cmd", "pong");
-        ss.str("");
+        tree = parse_input(json_string);
+        tree.put("cmd","pong");
+        std::stringstream ss;
         pt::write_json(ss,tree);
         return ss.str();
     }

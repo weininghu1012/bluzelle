@@ -13,15 +13,6 @@ namespace pt = boost::property_tree;
 class CountNodes : public Service {
     Nodes* _nodes;
 
-    pt::ptree parse_input(const std::string& json_str)
-    {
-        pt::ptree in_tree;
-        std::stringstream ss;
-        ss << json_str;
-        pt::read_json(ss, in_tree);\
-        return in_tree;
-    }
-
     pt::ptree nodes_to_tree(long seq = 0)
     {
         pt::ptree out_tree;

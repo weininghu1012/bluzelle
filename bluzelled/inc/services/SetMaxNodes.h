@@ -13,14 +13,6 @@ namespace pt = boost::property_tree;
 void set_max_nodes(unsigned long max);
 
 class SetMaxNodes : public Service {
-    pt::ptree parse_input(const std::string& json_str)
-    {
-        pt::ptree in_tree;
-        std::stringstream ss;
-        ss << json_str;
-        pt::read_json(ss, in_tree);\
-        return in_tree;
-    }
 
     pt::ptree nodes_to_tree(long seq, long new_max_nodes)
     {

@@ -1,10 +1,12 @@
 //#define BOOST_TEST_DYN_LINK
-#define BOOST_USE_VALGRIND
 
 #include "services/Services.h"
 #include "services/Ping.h"
 #include "services/GetAllNodes.h"
 #include "services/CountNodes.h"
+#include "services/GetMaxNodes.h"
+#include "services/GetMinNodes.h"
+#include "services/SetMaxNodes.h"
 
 #include <sstream>
 #include <boost/property_tree/ptree.hpp>
@@ -147,6 +149,20 @@ BOOST_FIXTURE_TEST_SUITE(websocket_services_tests, F)
         BOOST_CHECK(string_to_ptree(accepted) == string_to_ptree(actual));
     }
 
+    //--run_test=websocket_services_tests/test_get_max_nodes_service
+    BOOST_AUTO_TEST_CASE(test_get_max_nodes_service)
+    {
+        GetMaxNodes sut;
+        std::string actual = sut("{\"cmd\":\"getMaxNodes\",\"seq\":222}");
+        std::cout << actual << "\n";
+        BOOST_CHECK_EQUAL
+        (
+                "{\“cmd\”:\“updateMaxNodes\”, \“data\”: 42, \“seq\”: 222}",
+                actual
+        );
+
+    }
+
 BOOST_AUTO_TEST_SUITE_END()
 
 
@@ -164,5 +180,10 @@ std::string ptree_to_string(const pt::ptree &tree) {
     std::stringstream ss;
     pt::write_json(ss, tree);
     return ss.str();
+}
+
+extern unsigned long get_max_nodes()
+{
+    return 42;
 }
 
