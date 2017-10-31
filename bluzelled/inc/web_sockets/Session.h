@@ -6,6 +6,8 @@
 #include "services/GetAllNodes.h"
 #include "services/CountNodes.h"
 #include "services/SetMaxNodes.h"
+#include "services/GetMaxNodes.h"
+#include "services/GetMinNodes.h"
 
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
@@ -50,6 +52,8 @@ public:
         services_.add_service("getAllNodes", new GetAllNodes(nodes));
         services_.add_service("countNodes", new CountNodes(nodes));
         services_.add_service("setMaxNodes", new SetMaxNodes());
+        services_.add_service("getMaxNodes", new GetMaxNodes());
+        services_.add_service("getMinNodes", new GetMinNodes());
 
     }
 
@@ -123,10 +127,6 @@ public:
 
 
         std::string response = services_(command,ss.str());
-
-
-
-
 
         std::cout
                 << " ******* response ["
