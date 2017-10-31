@@ -1,3 +1,6 @@
+import {sendLogMessage} from "../CommunicationService";
+import _ from 'lodash'
+
 describe('log tab', () => {
     describe('Table Headers', () =>{
 
@@ -8,5 +11,10 @@ describe('log tab', () => {
                 header().waitForExist (`div.widget-HeaderCell__value*=${text}`);
             });
         });
+
+
+        it('@watch should display a log entry when one is received', () =>  {
+            _.times(100, (num) => sendLogMessage(`some message ${num}`));
+        })
     });
 });

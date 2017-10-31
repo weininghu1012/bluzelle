@@ -16,3 +16,7 @@ export const updateNode = (address, data = {}) => {
     sendCommand('updateNodes', [{address: address, ...data}]);
 };
 
+export const sendLogMessage = (message) => {
+    sendCommand('log', {timestamp: 'some time here', timer_no: 1, entry_no: _.uniqueId(), message: message});
+};
+

@@ -24,7 +24,7 @@ export default class LogTabBody extends Component {
     }
 
     componentDidUpdate() {
-        this.isAtBottom && (this.canvas.scrollTop = this.canvas.querySelector('div').clientHeight)
+        this.isAtBottom && (this.canvas.scrollTop = this.canvas.querySelector('div').clientHeight);
     }
 
     componentWillUnmount() {

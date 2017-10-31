@@ -1,0 +1,11 @@
+.row-selected {
+    background: red;
+}
+
+.react-grid-Cell, .react-grid-HeaderCell, .react-grid-Canvas {
+    background: #222
+}
+
+.react-grid-Row:hover {
+    background: red
+}
