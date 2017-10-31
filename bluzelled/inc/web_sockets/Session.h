@@ -30,6 +30,15 @@ namespace pt = boost::property_tree;
 
 Nodes* get_all_nodes();
 
+enum class SessionState
+{
+    Unknown,
+    Starting,
+    Started,
+    Finishing,
+    Finished,
+};
+
 void
 fail(boost::system::error_code ec, char const* what);
 
@@ -39,6 +48,9 @@ class Session : public std::enable_shared_from_this<Session>
     boost::asio::io_service::strand strand_;
     boost::beast::multi_buffer buffer_;
     Services                        services_;
+
+    SessionState state_ = SessionState::Unknown;
+    size_t seq = 0;
 
 public:
     // Take ownership of the socket
@@ -116,15 +128,8 @@ public:
         pt::read_json(ss,request);
 
         std::string command = request.get<std::string>("cmd");
-//        std::string data = request.get<std::string>("data");
-//        long seq = request.get<long>("seq");
-
 
         std::cout<< " **** command:" << command << "\n";
-
-
-
-
 
         std::string response = services_(command,ss.str());
 
@@ -132,7 +137,6 @@ public:
                 << " ******* response ["
                 << response
                 << "]\n";
-
 
         ws_.async_write(
                 boost::asio::buffer(response),
@@ -143,19 +147,8 @@ public:
                         std::placeholders::_2));
 
 
-
-
-        ///////////////////////////////////////////////////////////////////////
-        // Echo the message
-        //ws_.text(ws_.got_text());
-
-//        ws_.async_write(
-//                buffer_.data(),
-//                strand_.wrap(std::bind(
-//                        &Session::on_write,
-//                        shared_from_this(),
-//                        std::placeholders::_1,
-//                        std::placeholders::_2)));
+        state_ = set_state(request);
+        seq = request.get<int>("seq");
     }
 
     void
@@ -171,8 +164,57 @@ public:
         // Clear the buffer
         buffer_.consume(buffer_.size());
 
+        if (state_ == SessionState::Started)
+            boost::async(boost::bind(&Session::update_all_nodes, this));
+
         // Do another read
         do_read();
+    }
+
+    SessionState set_state(const pt::ptree& request)
+    {
+        if (request.get<std::string>("cmd") == "getMaxNodes")
+            return SessionState::Starting;
+
+        if (request.get<std::string>("cmd") == "getMinNodes")
+            return SessionState::Started;
+
+        return state_;
+    }
+
+
+    void timer_start(std::function<void(void)> func, unsigned int interval)
+    {
+        std::thread([func, interval]() {
+            while (true)
+            {
+                func();
+                std::this_thread::sleep_for(std::chrono::milliseconds(interval));
+            }
+        }).detach();
+    }
+
+
+    void update_all_nodes()
+    {
+        auto request = boost::format("{\"seq\": %d}") % ++seq ;
+        std::string response = services_("getAllNodes", boost::str(request));
+
+        std::cout << " ******* updateAllNodes " << std::endl << response << std::endl;
+
+        ws_.write(boost::asio::buffer(response));
+
+        //timer_start(std::bind(&Session::update_nodes, shared_from_this()), 5000);
+    }
+
+    void update_nodes()
+    {
+        auto request = boost::format("{\"seq\": %d}") % ++seq;
+        std::string response = services_("getAllNodes", boost::str(request));
+
+        std::cout << " ******* updateSomeNodes " << std::endl << response << std::endl;
+
+        ws_.write(boost::asio::buffer(response));
     }
 };
 
