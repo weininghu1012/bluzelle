@@ -1,47 +1,24 @@
 import {getNodes} from 'services/NodeService'
 import statusColors from 'constants/nodeStatusColors';
-import DataGrid from 'components/DataGrid'
+import RowSelectDataGrid from 'components/RowSelectDataGrid'
 import clone from 'lodash/clone'
-import getProp from 'lodash/get'
 
-@observer
-export default class NodeListTabBody extends Component {
-    constructor() {
-        super();
-        this.state = {};
-    }
+const NodeListTabBody = () => {
+    const nodes = getNodes().map(clone);
 
-    ensureSelectedNodeStillExists() {
-        !this.state.selectedNode ||
-        getNodes().some(node => node.address === this.state.selectedNode.address) ||
-        this.setState({selectedNode: undefined});
-    }
+    return (
+        <RowSelectDataGrid
+            selectByKey="address"
+            columns={columns}
+            rows={nodes}
+            rowsCount={nodes.length}
+            minHeight={500}
+            minColumnWidth={80}
+        />
+    )
+};
 
-    componentWillUpdate() {
-        this.ensureSelectedNodeStillExists();
-    }
-
-    render() {
-        const nodes = getNodes().map(clone);
-        const {selectedNode} = this.state;
-
-        return (
-            <DataGrid
-                columns={columns}
-                rowGetter={i => nodes[i]}
-                rowsCount={nodes.length}
-                minHeight={500}
-                minColumnWidth={80}
-                rowSelection={{
-                    selectBy: {keys: {rowKey: 'address', values: [getProp(selectedNode, 'address')]}},
-                    showCheckbox: false
-                }}
-                onRowClick={(idx) => this.setState({selectedNode: nodes[idx]})}
-
-            />
-        )
-    }
-}
+export default observer(NodeListTabBody);
 
 const StatusFormatter = ({value}) => {
     return (

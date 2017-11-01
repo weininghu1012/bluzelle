@@ -1,6 +1,2 @@
-import 'src/ReactPre16Support'
-
-const ReactDataGrid = require('react-data-grid');
-require('./data-grid.css')
-
+import ReactDataGrid from 'react-data-grid'
 export default ReactDataGrid
