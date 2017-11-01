@@ -24,6 +24,7 @@ private:
     thread_clock::time_point    _birth;
     State                       _state;
     CSet<boost::thread::id>*    _friends;
+    system_clock::time_point    _state_changed;
 
 public:
     ~Task()
@@ -91,12 +92,18 @@ public:
         _state=dying;
     }
 
+    system_clock::time_point get_last_change()
+    {
+        return _state_changed;
+    }
+
     unsigned long friendCount() { return _friends != nullptr ? _friends->size() : 0 ;}
 
 private:
     void setup()
     {
         _birth = thread_clock::now();
+        _state_changed = system_clock::now();
         srand(time(0));
         _state = initializing;
         _friends = new CSet<boost::thread::id>();
@@ -104,6 +111,7 @@ private:
 
     void life()
     {
+        _state_changed = system_clock::now();
         _state = alive;
         while( state() == alive )
             {
@@ -121,6 +129,7 @@ private:
     void death()
     {
         _state = dead;
+        _state_changed = system_clock::now();
     }
 
     //

@@ -11,6 +11,7 @@
 namespace pt = boost::property_tree;
 
 class GetAllNodes : public Service {
+protected:
     Nodes* _nodes;
 
     pt::ptree nodes_to_tree(long seq = 0)
@@ -22,7 +23,7 @@ class GetAllNodes : public Service {
         for(auto node : *_nodes)
             {
             pt::ptree child1;
-            child1.put("address", node->get_thread_id());
+            child1.put("address", node->name());
             child1.put("nodeState", node->state());
             child1.put<long>("messages", node->state());
             array.push_back(std::make_pair("", child1));

@@ -8,6 +8,7 @@
 class Node
 {
     // {"address":"0x00","nodeState":"alive","messages":20}
+    std::string                         _name;
     boost::shared_ptr<Task>             _task;
     boost::shared_ptr<boost::thread>    _thread;
 public:
@@ -27,6 +28,8 @@ public:
                         thread_function,
                         _task.get()
                 ));
+
+        _name = boost::lexical_cast<std::string>(get_thread_id());
     }
 
     boost::thread::id get_thread_id()
@@ -49,6 +52,11 @@ public:
         return _task->state();
     }
 
+    std::string name()
+    {
+        return _name;
+    }
+
     bool is_joinable()
     {
         return _thread->joinable();
@@ -59,10 +67,12 @@ public:
         _task->ping(other);
     }
 
+    system_clock::time_point last_change()
+    {
+        return _task->get_last_change();
+    }
 
 private:
-
-
 
 };
 

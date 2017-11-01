@@ -21,6 +21,13 @@ static unsigned long s_max_nodes = 25;
 static Nodes s_nodes;
 static boost::mutex *s_mutex = nullptr;
 
+// List of nodes that were died and need to be reported to GUI.
+static Nodes s_removed_nodes;
+static boost::mutex s_removed_nodes_mutex;
+Nodes* get_removed_nodes() { return &s_removed_nodes; }
+boost::mutex& get_removed_nodes_mutex() { return s_removed_nodes_mutex; }
+
+
 void print_message(const std::string &msg);
 
 void kill_and_join_all_nodes(Nodes &nodes);

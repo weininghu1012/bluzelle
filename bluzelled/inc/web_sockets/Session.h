@@ -8,6 +8,8 @@
 #include "services/SetMaxNodes.h"
 #include "services/GetMaxNodes.h"
 #include "services/GetMinNodes.h"
+#include "services/UpdateNodes.h"
+#include "services/RemoveNodes.h"
 
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
@@ -29,6 +31,7 @@ namespace websocket = boost::beast::websocket;  // from <boost/beast/websocket.h
 namespace pt = boost::property_tree;
 
 Nodes* get_all_nodes();
+Nodes* get_removed_nodes();
 
 enum class SessionState
 {
@@ -52,6 +55,8 @@ class Session : public std::enable_shared_from_this<Session>
     SessionState state_ = SessionState::Unknown;
     size_t seq = 0;
 
+    const unsigned int send_interval_millisecs_ = 500;
+
 public:
     // Take ownership of the socket
     explicit
@@ -60,12 +65,16 @@ public:
     , strand_(ws_.get_io_service())
     {
         auto nodes = get_all_nodes();
+        auto removedNodes = get_removed_nodes();
+
         services_.add_service("ping", new Ping());
         services_.add_service("getAllNodes", new GetAllNodes(nodes));
         services_.add_service("countNodes", new CountNodes(nodes));
         services_.add_service("setMaxNodes", new SetMaxNodes());
         services_.add_service("getMaxNodes", new GetMaxNodes());
         services_.add_service("getMinNodes", new GetMinNodes());
+        services_.add_service("updateNodes", new UpdateNodes(nodes));
+        services_.add_service("removeNode", new RemoveNodes(removedNodes));
 
     }
 
@@ -204,16 +213,25 @@ public:
 
         ws_.write(boost::asio::buffer(response));
 
-        //timer_start(std::bind(&Session::update_nodes, shared_from_this()), 5000);
+        timer_start(std::bind(&Session::update_nodes, shared_from_this()), send_interval_millisecs_);
     }
 
     void update_nodes()
     {
         auto request = boost::format("{\"seq\": %d}") % ++seq;
-        std::string response = services_("getAllNodes", boost::str(request));
+        std::string response = services_("updateNodes", boost::str(request));
 
-        std::cout << " ******* updateSomeNodes " << std::endl << response << std::endl;
+        std::cout << " ******* updateNodes " << std::endl << response << std::endl;
 
+        // Send updated status.
+        ws_.write(boost::asio::buffer(response));
+
+        request = boost::format("{\"seq\": %d}") % ++seq;
+        response = services_("removeNodes", boost::str(request));
+
+        std::cout << " ******* removeNodes " << std::endl << response << std::endl;
+
+        // Send removed nodes.
         ws_.write(boost::asio::buffer(response));
     }
 };
