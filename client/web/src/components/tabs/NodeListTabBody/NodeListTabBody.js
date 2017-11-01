@@ -24,11 +24,9 @@ export default class NodeListTabBody extends Component {
     render() {
         const nodes = getNodes().map(clone);
         const {selectedNode} = this.state;
-        console.log(selectedNode);
 
         return (
             <DataGrid
-                style={{backgroundColor: 'red'}}
                 columns={columns}
                 rowGetter={i => nodes[i]}
                 rowsCount={nodes.length}
