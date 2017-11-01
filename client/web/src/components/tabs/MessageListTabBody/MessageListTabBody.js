@@ -13,7 +13,6 @@ const MessageListTabBody = () => {
             selectByKey="srcAddr"
             columns={columns}
             rows={messages}
-            minHeight={500}
             minColumnWidth={80}
         />
     )

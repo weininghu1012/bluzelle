@@ -12,7 +12,6 @@ const NodeListTabBody = () => {
             columns={columns}
             rows={nodes}
             rowsCount={nodes.length}
-            minHeight={500}
             minColumnWidth={80}
         />
     )
