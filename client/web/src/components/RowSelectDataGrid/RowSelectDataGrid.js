@@ -29,12 +29,13 @@ export default class RowSelectDataGrid extends Component {
     }
 
     render() {
-        const {selectByKey, rowGetter, rows, ...props} = this.props;
+        const {selectByKey, rowGetter = this.rowGetter.bind(this), rows, ...props} = this.props;
         const {selectedRow} = this.state;
         return (
             <DataGrid
                 {...props}
-                rowGetter={this.rowGetter.bind(this)}
+                rowsCount ={rows.length}
+                rowGetter={rowGetter}
                 rowSelection={{
                     selectBy: {keys: {rowKey: selectByKey, values: [getProp(selectedRow, selectByKey)]}},
                     showCheckbox: false

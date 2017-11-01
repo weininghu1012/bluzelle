@@ -1,5 +1,6 @@
 import Tabs from './MainTabs'
 import NodeGraph from 'components/tabs/NodeGraph'
+import MessageListTabBody from 'components/tabs/MessageListTabBody'
 import NodeListTabBody from 'components/tabs/NodeListTabBody'
 import LogTabBody from 'components/tabs/LogTabBody'
 import SettingsTabBody from 'components/tabs/SettingsTabBody'
@@ -31,6 +32,7 @@ export default class Main extends Component {
                 </Fixed>
                 <Flex style={{overflow: 'auto', borderTop: '1px solid #555'}}>
                     <Switch>
+                        <Route path="/message-list" component={MessageListTabBody} />
                         <Route path="/node-graph" component={NodeGraph}/>
                         <Route path="/node-list" component={NodeListTabBody}/>
                         <Route path="/settings" component={SettingsTabBody}/>

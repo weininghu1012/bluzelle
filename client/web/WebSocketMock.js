@@ -33,8 +33,7 @@ const createNodes = () => {
     let i = 0;
     while(nodes.length < maxNodes) {
         const node = {
-            address: `0x${_.padStart((baseAddress++).toString(16), 2, '0')}`,
-            messages: 0
+            address: `0x${_.padStart((baseAddress++).toString(16), 2, '0')}`
         };
         nodes.push(node);
         setTimeout(() => {
@@ -46,16 +45,13 @@ const createNodes = () => {
 
 const sendToClients = (cmd, data) => sockets.forEach(socket => socket.send(JSON.stringify({cmd: cmd, data: data})));
 
+const getRandomNode = () => nodes[Math.floor(Math.random() * nodes.length)];
 
 const updateMessages = () => {
     if(nodes.length) {
-        const updatedNodes = _.times(10, () => {
-            const n = nodes[Math.floor(Math.random() * nodes.length)];
-            n.messages += 1;
-            return n;
-        });
-
-        sendToClients('updateNodes', updatedNodes);
+        sendToClients('messages', [
+            {srcAddr: getRandomNode().address, dstAddr: getRandomNode().address, timestamp: new Date().toISOString(), body: {something: `sent - ${_.uniqueId()}`}},
+        ]);
     }
 };
 

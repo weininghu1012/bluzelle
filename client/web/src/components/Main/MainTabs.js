@@ -15,6 +15,7 @@ class MainTabs extends Component {
         return (
             <Nav bsStyle="tabs" onSelect={this.handleSelect.bind(this)}>
                 <NavItem eventKey="/" active={this.isActive('/')}>Log</NavItem>
+                <NavItem eventKey="/message-list" active={this.isActive('/message-list')}>Message List</NavItem>
                 <NavItem eventKey="/node-list" active={this.isActive('/node-list')}>Node List</NavItem>
                 <NavItem eventKey="/node-graph"  active={this.isActive('/node-graph')}>Node Graph</NavItem>
                 <NavItem eventKey="/settings" active={this.isActive('/settings')}>Settings</NavItem>

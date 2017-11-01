@@ -5,7 +5,6 @@ import {socketState} from 'services/CommunicationService'
 
 
 const nodes = observable([]);
-global.nodes = nodes;
 
 addCommandProcessor('updateNodes', (nodes) => nodes.forEach(updateNode));
 addCommandProcessor('removeNodes', (addresses) => addresses.forEach(removeNodeByAddress));
@@ -13,7 +12,7 @@ addCommandProcessor('removeNodes', (addresses) => addresses.forEach(removeNodeBy
 autorun(() => socketState.get() === 'open' && untracked(resetNodes));
 
 const resetNodes = () => {
-    sendCommand("getAllNodes");
+    sendCommand("getAllNodes", undefined);
     clearNodes();
 };
 
