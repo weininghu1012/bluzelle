@@ -4,26 +4,28 @@ import clone from 'lodash/clone'
 import defaults from 'lodash/defaults'
 import pipe from 'lodash/fp/pipe'
 
-const MessageListTabBody = ({address}) => {
-    const messages = address ? getMessages().filter(m => [m.srcAddr, m.dstAddre].includes(address)) : getMessages().map(clone);
+@observer
+export default class MessageListTabBody extends Component {
 
-    return (
-        <RowSelectDataGrid
-            rowGetter={rowGetter}
-            selectByKey="srcAddr"
-            columns={columns}
-            rows={messages}
-            minColumnWidth={80}
-        />
-    )
-};
+    rowGetter(idx) {
+        const message = this.messages[idx];
+        console.log('xxxx', message);
+    return defaults({body: JSON.stringify(message.body)}, message)
+}
+    render() {
+        const {address} = this.props.match.params;
+        this.messages = address ? getMessages().filter(m => console.log([m.srcAddr, m.dstAddr].includes(address), address, m.srcAddr, m.dstAddr) || [m.srcAddr, m.dstAddr].includes(address)) : getMessages().map(clone);
 
-const rowGetter = pipe(
-    idx => getMessages()[idx],
-    message => defaults({body: JSON.stringify(message.body)}, message)
-);
-
-export default observer(MessageListTabBody);
+        return (
+            <RowSelectDataGrid
+                selectByKey="srcAddr"
+                columns={columns}
+                rows={this.messages}
+                rowGetter={this.rowGetter.bind(this)}
+            />
+        )
+    }
+}
 
 const columns = [{
     key: 'srcAddr',
