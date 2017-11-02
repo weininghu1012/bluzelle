@@ -1,17 +1,16 @@
 import {getNodes} from 'services/NodeService'
 import statusColors from 'constants/nodeStatusColors';
-import RowSelectDataGrid from 'components/RowSelectDataGrid'
+import DataGrid from 'components/DataGrid'
 import clone from 'lodash/clone'
 
 const NodeListTabBody = () => {
     const nodes = getNodes().map(n => clone);
 
     return (
-        <RowSelectDataGrid
+        <DataGrid
             selectByKey="address"
             columns={columns}
             rowGetter={rowGetter}
-            rows={nodes}
             rowsCount={nodes.length}
             minColumnWidth={80}
         />
