@@ -12,7 +12,11 @@ class MessageListTabBody extends Component {
     }
 
     addressFormatter({value, dependentValue}) {
-        return <span style={{color: this.props.address === value ? 'white' : undefined}}>{value}</span>;
+        return this.props.address === value ? (
+            <span style={{color: 'white'}}>{value}</span>
+        ) : (
+            <Link to={`/message-list/filtered-by-address/${value}`}>{value}</Link>
+        );
     }
 
     getColumns() {
