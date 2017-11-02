@@ -19,26 +19,23 @@
 using tcp = boost::asio::ip::tcp;               // from <boost/asio/ip/tcp.hpp>
 
 void
-fail(boost::system::error_code ec, char const* what);
+fail(boost::system::error_code ec, char const *what);
 
 // Accepts incoming connections and launches the sessions
-class Listener : public std::enable_shared_from_this<Listener>
-{
+class Listener : public std::enable_shared_from_this<Listener> {
     tcp::acceptor acceptor_;
     tcp::socket socket_;
 
 public:
     Listener(
-            boost::asio::io_service& ios,
-    tcp::endpoint endpoint)
-    : acceptor_(ios)
-    , socket_(ios)
-    {
+            boost::asio::io_service &ios,
+            tcp::endpoint endpoint)
+            : acceptor_(ios), socket_(ios) {
         boost::system::error_code ec;
 
         // Open the acceptor
         acceptor_.open(endpoint.protocol(), ec);
-        if(ec)
+        if (ec)
             {
             fail(ec, "open");
             return;
@@ -46,7 +43,7 @@ public:
 
         // Bind to the server address
         acceptor_.bind(endpoint, ec);
-        if(ec)
+        if (ec)
             {
             fail(ec, "bind");
             return;
@@ -55,7 +52,7 @@ public:
         // Start listening for connections
         acceptor_.listen(
                 boost::asio::socket_base::max_connections, ec);
-        if(ec)
+        if (ec)
             {
             fail(ec, "listen");
             return;
@@ -64,16 +61,14 @@ public:
 
     // Start accepting incoming connections
     void
-    run()
-    {
-        if(! acceptor_.is_open())
+    run() {
+        if (!acceptor_.is_open())
             return;
         do_accept();
     }
 
     void
-    do_accept()
-    {
+    do_accept() {
         acceptor_.async_accept(
                 socket_,
                 std::bind(
@@ -83,9 +78,8 @@ public:
     }
 
     void
-    on_accept(boost::system::error_code ec)
-    {
-        if(ec)
+    on_accept(boost::system::error_code ec) {
+        if (ec)
             {
             fail(ec, "accept");
             }
