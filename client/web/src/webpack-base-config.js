@@ -70,6 +70,8 @@ module.exports = {
 
             Component: 'components/Component',
 
+            LinkBtn: ['components/LinkBtn', 'default'],
+
             Layout: 'react-layout-pane/lib/Layout',
             Fixed: 'react-layout-pane/lib/Fixed',
             Flex: 'react-layout-pane/lib/Flex',

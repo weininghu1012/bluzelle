@@ -4,8 +4,8 @@ import clone from 'lodash/clone'
 import defaults from 'lodash/defaults'
 import pipe from 'lodash/fp/pipe'
 
-const MessageListTabBody = () => {
-    const messages = getMessages().map(clone);
+const MessageListTabBody = ({address}) => {
+    const messages = address ? getMessages().filter(m => [m.srcAddr, m.dstAddre].includes(address)) : getMessages().map(clone);
 
     return (
         <RowSelectDataGrid
