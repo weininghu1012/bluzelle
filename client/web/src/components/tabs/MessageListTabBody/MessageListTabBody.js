@@ -15,7 +15,7 @@ class MessageListTabBody extends Component {
         return this.props.address === value ? (
             <span style={{color: 'white'}}>{value}</span>
         ) : (
-            <Link to={`/message-list/filtered-by-address/${value}`}>{value}</Link>
+            <Link style={{color: '#aaa'}} to={`/message-list/filtered-by-address/${value}`}>{value}</Link>
         );
     }
 
