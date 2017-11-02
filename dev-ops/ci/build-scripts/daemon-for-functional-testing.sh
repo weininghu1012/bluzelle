@@ -1,9 +1,7 @@
 #!/usr/bin/env bash
-PID=`ps ax |grep 'Daemon_For_Functional_Testing/client/web/node_modules' | cut -d' ' -f2`
-echo "**** PID ***** $PID"
-if [ $PID ]; then
-    kill -9 $PID || true
-fi
+PID=`ps ax |grep '/var/lib/jenkins/workspace/Kepler/Daemon_For_Functional_Testing/client/web/node_modules/.bin/ws' | grep -v grep | cut -d' ' -f2`
+
+kill -9 $PID || true
 
 cd $WORKSPACE/client/web
 yarn
