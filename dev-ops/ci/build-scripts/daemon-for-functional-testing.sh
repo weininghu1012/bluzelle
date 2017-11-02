@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 PID=`ps ax |grep 'Daemon_For_Functional_Testing/client/web/node_modules' | cut -d' ' -f1`
-
+echo "**** PID ***** $PID"
 if [ $PID ]; then
     kill -9 $PID || true
 fi
