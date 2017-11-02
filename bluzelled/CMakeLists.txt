@@ -137,8 +137,6 @@ set(SOURCE_FILES
         inc/containers/CSet.h
         src/Task.cpp
         inc/Task.h
-        inc/NodeUtilities.h
-        src/NodeUtilities.cpp
         src/cmap_test.cpp
         src/node_test.cpp
         src/web_sockets/Listener.cpp

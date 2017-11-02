@@ -73,48 +73,48 @@ BOOST_FIXTURE_TEST_SUITE(websocket_services_tests, F)
     }
 
 // --run_test=websocket_services_tests/test_get_all_nodes
-    BOOST_AUTO_TEST_CASE(test_get_all_nodes) {
-        // req {"cmd":"getAllNodes","seq":0}
-        // res {"cmd":"updateNodes","data":[{"address":"0x00","nodeState":"alive","messages":20},{"address":"0x01","nodeState":"dead","messages":20}],"seq":4}
-        Nodes nodes;
-        GetAllNodes sut(&nodes);
-
-        auto request_tree = string_to_ptree(R"({"cmd":"getAllNodes","seq":0})");
-        auto accepted_tree = string_to_ptree(R"({"cmd":"updateNodes","data":"","seq":0})");
-
-        long seq = rand() % 125000;
-        request_tree.put("seq", seq);
-        accepted_tree.put("seq", seq);
-        pt::ptree actual_tree = string_to_ptree(sut(ptree_to_string(request_tree)));
-        BOOST_CHECK(actual_tree == accepted_tree);
-
-        nodes.emplace_back(new Node());
-        nodes.emplace_back(new Node());
-        nodes.emplace_back(new Node());
-
-        actual_tree = string_to_ptree(sut(ptree_to_string(request_tree)));
-        pt::ptree child = actual_tree.get_child("data");
-
-
-        long count = 0;
-        BOOST_FOREACH(const pt::ptree::value_type &c, child)
-                        {
-                        ++count;
-                        }
-        BOOST_CHECK_EQUAL(count, nodes.size());
-
-
-        for (auto n : nodes)
-            {
-            n->kill();
-            n->join();
-            }
-
-        for (auto n : nodes)
-            {
-            delete n;
-            }
-    }
+//    BOOST_AUTO_TEST_CASE(test_get_all_nodes) {
+//        // req {"cmd":"getAllNodes","seq":0}
+//        // res {"cmd":"updateNodes","data":[{"address":"0x00","nodeState":"alive","messages":20},{"address":"0x01","nodeState":"dead","messages":20}],"seq":4}
+//        Nodes nodes;
+//        GetAllNodes sut(&nodes);
+//
+//        auto request_tree = string_to_ptree(R"({"cmd":"getAllNodes","seq":0})");
+//        auto accepted_tree = string_to_ptree(R"({"cmd":"updateNodes","data":"","seq":0})");
+//
+//        long seq = rand() % 125000;
+//        request_tree.put("seq", seq);
+//        accepted_tree.put("seq", seq);
+//        pt::ptree actual_tree = string_to_ptree(sut(ptree_to_string(request_tree)));
+//        BOOST_CHECK(actual_tree == accepted_tree);
+//
+//        nodes.emplace_back(new Node());
+//        nodes.emplace_back(new Node());
+//        nodes.emplace_back(new Node());
+//
+//        actual_tree = string_to_ptree(sut(ptree_to_string(request_tree)));
+//        pt::ptree child = actual_tree.get_child("data");
+//
+//
+//        long count = 0;
+//        BOOST_FOREACH(const pt::ptree::value_type &c, child)
+//                        {
+//                        ++count;
+//                        }
+//        BOOST_CHECK_EQUAL(count, nodes.size());
+//
+//
+//        for (auto n : nodes)
+//            {
+//            n->kill();
+//            n->join();
+//            }
+//
+//        for (auto n : nodes)
+//            {
+//            delete n;
+//            }
+//    }
 
     //--run_test=websocket_services_tests/test_no_service
     BOOST_AUTO_TEST_CASE(test_no_service) {

@@ -64,7 +64,7 @@ unsigned long get_min_nodes()
 void http_service()
 {
     const std::string address("127.0.0.1");
-    const std::string port("2999chrome");
+    const std::string port("2999");
     std::string const doc_root = "../web/";
     http::server::server s(address, port, doc_root);
     s.run();
