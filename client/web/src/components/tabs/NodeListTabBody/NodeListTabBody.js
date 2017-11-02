@@ -35,9 +35,9 @@ const StatusFormatter = ({value}) => (
 );
 
 
-const ActionFormatter = ({value}) => (
+const ActionFormatter = ({value:address}) => (
     <div>
-        <LinkBtn to={`/message-list/filtered-by-address/${value}`}>Messages</LinkBtn>
+        <LinkBtn to={`/message-list/filtered-by-address/${address}`}>Messages</LinkBtn>
     </div>
 );
 
