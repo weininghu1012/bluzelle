@@ -3,40 +3,42 @@ import statusColors from 'constants/nodeStatusColors';
 import DataGrid from 'components/DataGrid'
 import clone from 'lodash/clone'
 
-const NodeListTabBody = () => {
-    const nodes = getNodes().map(n => clone);
+@observer
+export default class NodeListTabBody extends Component {
 
-    return (
-        <DataGrid
-            selectByKey="address"
-            columns={columns}
-            rowGetter={rowGetter}
-            rowsCount={nodes.length}
-            minColumnWidth={80}
-        />
-    )
-};
+    rowGetter(idx) {
+        const node = this.nodes[idx];
+        return {actionAddress: node.address, ...node};
+    }
 
-export default observer(NodeListTabBody);
-
-const rowGetter = idx => {
-    const node = getNodes()[idx];
-    return {actionAddress: node.address, ...node};
-};
+    render() {
+        this.nodes = getNodes().map(clone);
+        return (
+            <DataGrid
+                selectByKey="address"
+                columns={columns}
+                rowGetter={this.rowGetter.bind(this)}
+                rowsCount={getNodes().length}
+                minColumnWidth={80}
+            />
+        )
+    }
+}
 
 const StatusFormatter = ({value}) => (
-        <div>
-            <svg style={{marginRight: 8}} width="15" height="15">
-                <rect width="15" height="15" fill={statusColors[value]}/>
-            </svg>
-            {value}</div>
-    );
+    <div>
+        <svg style={{marginRight: 8}} width="15" height="15">
+            <rect width="15" height="15" fill={statusColors[value]}/>
+        </svg>
+        {value}
+    </div>
+);
 
 
 const ActionFormatter = ({value}) => (
     <div>
         <LinkBtn to={`/message-list/filtered-by-address/${value}`}>Messages</LinkBtn>
-        </div>
+    </div>
 );
 
 const columns = [{
