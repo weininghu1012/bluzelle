@@ -71,6 +71,7 @@ module.exports = {
             Component: 'components/Component',
 
             LinkBtn: ['components/LinkBtn', 'default'],
+            withParams: ['components/withParams', 'default'],
 
             Layout: 'react-layout-pane/lib/Layout',
             Fixed: 'react-layout-pane/lib/Fixed',

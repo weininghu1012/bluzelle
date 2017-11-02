@@ -4,7 +4,7 @@ import clone from 'lodash/clone'
 import defaults from 'lodash/defaults'
 
 @observer
-export default class MessageListTabBody extends Component {
+class MessageListTabBody extends Component {
 
     rowGetter(idx) {
         const message = this.messages[idx];
@@ -12,26 +12,31 @@ export default class MessageListTabBody extends Component {
     }
 
     getColumns() {
+        const filterMark = this.props.address ? '*' : '';
         return [{
             key: 'srcAddr',
-            name: `Source Addr`,
+            name: `${filterMark} Source Addr`,
             resizable: true,
             width: 150,
         }, {
             key: 'dstAddr',
-            name: 'Destination Addr',
+            name: `${filterMark} Destination Addr`,
             resizable: true,
             width: 150,
         }, {
             key: 'body',
             name: 'Message',
             resizable: true,
-        }]
+        }];
     }
 
     render() {
-        const {address} = this.props.match.params;
-        this.messages = address ? getMessages().filter(m => [m.srcAddr, m.dstAddr].includes(address)) : getMessages().map(clone);
+        const {address} = this.props;
+        this.messages = address ? (
+            getMessages().filter(m => [m.srcAddr, m.dstAddr].includes(address))
+        ) : (
+            getMessages().map(clone)
+        );
 
         return (
             <RowSelectDataGrid
@@ -43,4 +48,7 @@ export default class MessageListTabBody extends Component {
         )
     }
 }
+
+export default withParams(MessageListTabBody)
+
 
