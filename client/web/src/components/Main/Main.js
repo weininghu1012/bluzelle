@@ -32,7 +32,7 @@ export default class Main extends Component {
                 </Fixed>
                 <Flex style={{overflow: 'auto', borderTop: '1px solid #555'}}>
                     <Switch>
-                        <Route path="/message-list/:address" component={MessageListTabBody} />
+                        <Route path="/message-list/filtered-by-address/:address" component={MessageListTabBody} />
                         <Route path="/message-list" component={MessageListTabBody} />
                         <Route path="/node-graph" component={NodeGraph}/>
                         <Route path="/node-list" component={NodeListTabBody}/>
