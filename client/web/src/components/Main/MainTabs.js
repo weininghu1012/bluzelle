@@ -8,7 +8,7 @@ class MainTabs extends Component {
     }
 
     isActive(path) {
-        return this.props.location.pathname === path
+        return path === '/' ? this.props.location === path : this.props.location.pathname.startsWith(path);
     }
 
     render() {
