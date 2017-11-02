@@ -3,6 +3,12 @@
 #include <algorithm>
 #include <iostream>
 
+Nodes* get_removed_nodes();
+boost::mutex& get_removed_nodes_mutex();
+
+boost::mutex& get_mutex();
+
+
 bool all_nodes_alive(const Nodes& nodes)
 {
     for(auto node : nodes)
@@ -36,17 +42,20 @@ void join_dead_tasks(Nodes *nodes)
 
 void remove_dead_nodes(Nodes *nodes)
 {
-    auto is_task_dead = [](auto n) {return (n->state() == Task::dead);};
-    auto r = std::remove_if
-            (
-                    nodes->begin(),
-                    nodes->end(),
-                    is_task_dead
-            );
-    if(r != nodes->end())
-        {
-        nodes->erase(r,nodes->end());
-        }
+    boost::mutex::scoped_lock nlock(get_mutex());
+    boost::mutex::scoped_lock rnlock(get_removed_nodes_mutex());
+
+    std::vector<Node*>* rnodes = get_removed_nodes();
+
+    auto is_task_dead = [](Node* n) {return (n->state() != Task::dead);};
+
+    auto it = std::stable_partition(nodes->begin(), nodes->end(), is_task_dead);
+    rnodes->insert(rnodes->end(), std::make_move_iterator(it), std::make_move_iterator(nodes->end()));
+
+    nodes->erase(it, nodes->end());
+
+    if (rnodes->size() > 0)
+        std::cout << "dead nodes: " << rnodes->size() << std::endl;
 }
 
 

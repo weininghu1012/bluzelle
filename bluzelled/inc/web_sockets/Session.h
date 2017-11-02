@@ -55,7 +55,7 @@ class Session : public std::enable_shared_from_this<Session>
     SessionState state_ = SessionState::Unknown;
     size_t seq = 0;
 
-    const unsigned int send_interval_millisecs_ = 500;
+    const unsigned int send_interval_millisecs_ = 2000;
 
 public:
     // Take ownership of the socket
@@ -73,8 +73,8 @@ public:
         services_.add_service("setMaxNodes", new SetMaxNodes());
         services_.add_service("getMaxNodes", new GetMaxNodes());
         services_.add_service("getMinNodes", new GetMinNodes());
-        services_.add_service("updateNodes", new UpdateNodes(nodes));
-        services_.add_service("removeNode", new RemoveNodes(removedNodes));
+        services_.add_service("updateNodes", new GetAllNodes(nodes));
+        services_.add_service("removeNodes", new RemoveNodes(removedNodes));
 
     }
 
@@ -174,7 +174,8 @@ public:
         buffer_.consume(buffer_.size());
 
         if (state_ == SessionState::Started)
-            boost::async(boost::bind(&Session::update_all_nodes, this));
+            timer_start(std::bind(&Session::update_nodes, this), send_interval_millisecs_);
+            //boost::async(boost::bind(&Session::update_nodes, this));
 
         // Do another read
         do_read();
@@ -203,36 +204,23 @@ public:
         }).detach();
     }
 
-
-    void update_all_nodes()
-    {
-        auto request = boost::format("{\"seq\": %d}") % ++seq ;
-        std::string response = services_("getAllNodes", boost::str(request));
-
-        std::cout << " ******* updateAllNodes " << std::endl << response << std::endl;
-
-        ws_.write(boost::asio::buffer(response));
-
-        timer_start(std::bind(&Session::update_nodes, shared_from_this()), send_interval_millisecs_);
-    }
-
     void update_nodes()
     {
         auto request = boost::format("{\"seq\": %d}") % ++seq;
-        std::string response = services_("updateNodes", boost::str(request));
+        std::string response = services_("getAllNodes", boost::str(request));
 
-        std::cout << " ******* updateNodes " << std::endl << response << std::endl;
-
-        // Send updated status.
-        ws_.write(boost::asio::buffer(response));
+        if (response.length() > 0) { // Send updated nodes status.
+            std::cout << " ******* " << std::endl << response << std::endl;
+            ws_.write(boost::asio::buffer(response));
+        }
 
         request = boost::format("{\"seq\": %d}") % ++seq;
         response = services_("removeNodes", boost::str(request));
 
-        std::cout << " ******* removeNodes " << std::endl << response << std::endl;
-
-        // Send removed nodes.
-        ws_.write(boost::asio::buffer(response));
+        if (response.length() > 0) { // Send removed nodes.
+            std::cout << " ******* " << std::endl << response << std::endl;
+            ws_.write(boost::asio::buffer(response));
+        }
     }
 };
 

@@ -113,23 +113,21 @@ private:
     {
         _state_changed = system_clock::now();
         _state = alive;
-        while( state() == alive )
-            {
+        while( state() == alive ) {
             thread_clock::duration age = thread_clock::now().time_since_epoch() - _birth.time_since_epoch();
-            if(age > boost::chrono::seconds(20))
-                {
-                if(RAND() < 0.25)
-                    {
+            if (age > boost::chrono::seconds(20)) {
+                if (RAND() < 0.25) {
                     _state = Task::dying;
-                    }
                 }
             }
+        }
     }
 
     void death()
     {
         _state = dead;
         _state_changed = system_clock::now();
+        std::cout << "task dead" << std::endl;
     }
 
     //

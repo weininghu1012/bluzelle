@@ -12,7 +12,8 @@ namespace pt = boost::property_tree;
 
 class GetAllNodes : public Service {
 protected:
-    Nodes* _nodes;
+    Nodes*                      nodes_;
+    system_clock::time_point    last_update_;
 
     pt::ptree nodes_to_tree(long seq = 0)
     {
@@ -20,16 +21,22 @@ protected:
         out_tree.put("cmd","updateNodes");
 
         pt::ptree array;
-        for(auto node : *_nodes)
+        for(auto node : *nodes_)
             {
-            pt::ptree child1;
-            child1.put("address", node->name());
-            child1.put("nodeState", node->state());
-            child1.put<long>("messages", node->state());
-            array.push_back(std::make_pair("", child1));
+                if (node->last_change() > last_update_)
+                    {
+                    pt::ptree child1;
+                    child1.put("address", node->name());
+                    child1.put("nodeState", node->state());
+                    child1.put<long>("messages", node->state());
+                    array.push_back(std::make_pair("", child1));
+                    }
             }
         out_tree.add_child("data", array);
-        out_tree.put("seq", seq);// in_tree.get<long>("seq"));
+        out_tree.put("seq", seq);
+
+        last_update_ = system_clock::now();
+
         return out_tree;
     }
 
@@ -37,13 +44,18 @@ protected:
     {
         std::stringstream ss;
         ss.str("");
-        pt::write_json(ss,out_tree);
+        auto d = out_tree.get_child("data.");
+        if (d.size() != 0) {
+            pt::write_json(ss,out_tree);
+        }
+
         return ss.str();
     }
 
 public:
-    GetAllNodes(Nodes* nodes) : _nodes(nodes)
+    GetAllNodes(Nodes* nodes) : nodes_(nodes)
     {
+        //last_update_ = system_clock::now();
     }
 
     std::string operator()(const std::string& request) override
@@ -57,7 +69,7 @@ public:
         return tree_to_response(out_tree);
     }
 
-    void set_nodes(Nodes* nodes) {_nodes = nodes;}
+    void set_nodes(Nodes* nodes) {nodes_ = nodes;}
 };
 
 #endif //KEPLER_GETALLNODES_H

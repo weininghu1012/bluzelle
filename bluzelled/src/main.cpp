@@ -17,7 +17,7 @@
 #include <iostream>
 #include <string>
 
-static unsigned long s_max_nodes = 25;
+static unsigned long s_max_nodes = 5;
 static Nodes s_nodes;
 static boost::mutex *s_mutex = nullptr;
 
