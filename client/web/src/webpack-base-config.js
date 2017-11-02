@@ -78,7 +78,7 @@ module.exports = {
             Flex: 'react-layout-pane/lib/Flex',
 
             withRouter: ['react-router-dom/withRouter', 'default'],
-            Link: ['react-router-dom/link', 'default'],
+            Link: ['react-router-dom/Link', 'default'],
             Route: ['react-router-dom/Route', 'default'],
             Switch: ['react-router-dom/Switch', 'default'],
 
