@@ -6,6 +6,7 @@
 #include "CSet.h"
 #include "Node.h"
 #include "NodeUtilities.h"
+#include "NodeManager.h"
 
 #include <vector>
 #include <boost/test/unit_test.hpp>
@@ -26,6 +27,30 @@ boost::mutex mutex;
 
 static const unsigned long MAX_WORDS = 2000;
 static const char *WORDS_FILENAME = "../words.txt";
+
+
+//  --run_test=test_number_of_nodes_to_create
+BOOST_AUTO_TEST_CASE(test_number_of_nodes_to_create)
+{
+    const unsigned long k_min_nodes = 5;
+    const unsigned long k_max_nodes = 25;
+    unsigned long total_nodes = 0;
+    unsigned long actual = number_of_nodes_to_create(k_min_nodes, k_max_nodes, total_nodes);
+    total_nodes += actual;
+    BOOST_CHECK_EQUAL(actual, 5);
+    while(total_nodes < k_max_nodes)
+        {
+        actual = number_of_nodes_to_create(k_min_nodes, k_max_nodes, total_nodes);
+        BOOST_CHECK_EQUAL(actual, 1);
+        total_nodes += actual;
+        }
+    actual = number_of_nodes_to_create(k_min_nodes, k_max_nodes, total_nodes);
+    BOOST_CHECK_EQUAL(actual, 0);
+
+    total_nodes = k_max_nodes * 2;
+    actual = number_of_nodes_to_create(k_min_nodes, k_max_nodes, total_nodes);
+    BOOST_CHECK_EQUAL(actual, 0);
+}
 
 
 BOOST_AUTO_TEST_CASE(cset_concurrent_insert)

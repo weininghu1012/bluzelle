@@ -42,9 +42,13 @@ include_directories(
 )
 
 set(SOURCE_FILES
-        inc/Node.h
+
         inc/containers/CMap.h
         inc/containers/CSet.h
+        inc/Node.h
+        inc/services/GetMinNodes.h
+        inc/services/RemoveNodes.h
+        inc/services/UpdateNodes.h
         src/main.cpp
         src/Node.cpp
         src/Task.cpp

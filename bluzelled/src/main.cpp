@@ -5,19 +5,20 @@
 #include "web_sockets/Listener.h"
 #include "web_sockets/Session.h"
 #include "server/server.hpp"
+#include "NodeManager.h"
 
 #include <boost/exception/all.hpp>
 #include <boost/beast/core.hpp>
 #include <boost/beast/http.hpp>
 #include <boost/beast/version.hpp>
-//#include <boost/asio/bind_executor.hpp>
 #include <boost/asio/ip/tcp.hpp>
 #include <boost/asio/strand.hpp>
 #include <boost/config.hpp>
 #include <iostream>
 #include <string>
 
-static unsigned long s_max_nodes = 5;
+static unsigned long s_max_nodes = 25;
+static unsigned long s_min_nodes = 5;
 static Nodes s_nodes;
 static boost::mutex *s_mutex = nullptr;
 
@@ -38,22 +39,9 @@ boost::mutex &get_mutex();
 
 Nodes create_nodes(int number_of_nodes);
 
-unsigned number_of_nodes_to_create(unsigned max_tasks, unsigned current_number_of_tasks)
-{
-    auto proportional = [](int max_tasks, int current_number_of_tasks)
-        {
-        return (
-                       std::max((int) 0, (int) (max_tasks - current_number_of_tasks))
-               ) / 2;
-        };
-    auto integral = []()
-        { return 0; };
-    auto derivative = []()
-        { return 0; };
-    return proportional(max_tasks, current_number_of_tasks) + integral() + derivative();
-}
 
-void add_nodes(const Nodes &nodes) {
+void add_nodes(const Nodes &nodes)
+{
     boost::mutex::scoped_lock lock(*s_mutex);
     s_nodes.insert(s_nodes.end(), nodes.begin(), nodes.end());
 }
@@ -68,16 +56,19 @@ unsigned long get_max_nodes()
     return s_max_nodes;
 }
 
+unsigned long get_min_nodes()
+{
+    return s_min_nodes;
+}
+
 void http_service()
 {
     const std::string address("127.0.0.1");
-    const std::string port("8081");
+    const std::string port("2999chrome");
     std::string const doc_root = "../web/";
     http::server::server s(address, port, doc_root);
     s.run();
 }
-
-
 
 int main(/*int argc,char *argv[]*/) {
     uint8_t numTasks = 2;
@@ -97,10 +88,8 @@ int main(/*int argc,char *argv[]*/) {
         while (!s_nodes.empty())
             {
             reaper(&s_nodes);
+            int num_of_new_nodes = number_of_nodes_to_create(s_min_nodes, s_max_nodes, s_nodes.size());
 
-            // add new tasks + threads as old task/threads die to keep a constant
-            // how many new threads do we need? Proportional
-            int num_of_new_nodes = number_of_nodes_to_create(s_max_nodes, s_nodes.size());
             if (num_of_new_nodes > 0)
                 {
                 Nodes nodes = create_nodes(num_of_new_nodes);
@@ -132,15 +121,18 @@ int main(/*int argc,char *argv[]*/) {
 /////////
 
 
-Nodes *get_all_nodes() {
+Nodes *get_all_nodes()
+{
     return &s_nodes;
 }
 
-Node *create_node() {
+Node *create_node()
+{
     return new Node();
 }
 
-Nodes create_nodes(int number_of_nodes) {
+Nodes create_nodes(int number_of_nodes)
+{
     Nodes nodes;
     for (int i = 0; i < number_of_nodes; ++i)
         {
@@ -149,26 +141,30 @@ Nodes create_nodes(int number_of_nodes) {
     return nodes;
 }
 
-void kill_nodes(const Nodes &nodes) {
+void kill_nodes(const Nodes &nodes)
+{
     for (auto node : nodes)
         {
         node->kill();
         }
 }
 
-void join_node_threads(const Nodes &nodes) {
+void join_node_threads(const Nodes &nodes)
+{
     for (auto node : nodes)
         {
         node->join();
         }
 }
 
-void kill_and_join_all_nodes(Nodes &nodes) {
+void kill_and_join_all_nodes(Nodes &nodes)
+{
     kill_nodes(nodes);
     join_node_threads(nodes);
 }
 
-void make_introductions(const Nodes &nodes) {
+void make_introductions(const Nodes &nodes)
+{
     Node *last_node = nullptr;
     for (auto node : nodes)
         {
@@ -180,7 +176,8 @@ void make_introductions(const Nodes &nodes) {
         }
 }
 
-boost::mutex &get_mutex() {
+boost::mutex &get_mutex()
+{
     if (nullptr == s_mutex)
         {
         s_mutex = new boost::mutex();
@@ -188,7 +185,8 @@ boost::mutex &get_mutex() {
     return *s_mutex;
 }
 
-void print_message(const std::string &msg) {
+void print_message(const std::string &msg)
+{
     //boost::unique_lock<boost::mutex> guard(*s_mutex, boost::defer_lock);
     //guard.lock();
     std::cout << msg;

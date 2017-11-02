@@ -63,7 +63,7 @@ public:
         in_tree = parse_input(request);
         out_tree = nodes_to_tree(in_tree.get<long>("seq"));
 
-        return tree_to_response(out_tree);
+        return fix_json_numbers(tree_to_response(out_tree));
     }
 
     void set_nodes(Nodes *nodes) { nodes_ = nodes; }

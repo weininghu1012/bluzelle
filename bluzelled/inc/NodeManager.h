@@ -1,7 +1,5 @@
 #ifndef KEPLER_NODEMANAGER_H
 #define KEPLER_NODEMANAGER_H
-
-
 #include "Node.h"
 
 class NodeManager {
@@ -107,5 +105,6 @@ private:
 
 };
 
+unsigned long number_of_nodes_to_create(unsigned long min_nodes, unsigned long max_nodes, unsigned current_number_of_nodes);
 
 #endif //KEPLER_NODEMANAGER_H
