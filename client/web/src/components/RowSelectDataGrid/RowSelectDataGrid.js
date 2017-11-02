@@ -1,4 +1,3 @@
-import 'src/ReactPre16Support'
 import DataGrid from 'components/DataGrid';
 import getProp from 'lodash/get'
 import './row-select-grid.css'

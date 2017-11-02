@@ -1,5 +1,5 @@
 import {getMessages} from 'services/MessageService'
-import RowSelectDataGrid from 'components/RowSelectDataGrid'
+import DataGrid from 'components/DataGrid'
 import clone from 'lodash/clone'
 import defaults from 'lodash/defaults'
 
@@ -11,6 +11,10 @@ class MessageListTabBody extends Component {
         return defaults({body: JSON.stringify(message.body)}, message)
     }
 
+    addressFormatter({value, dependentValue}) {
+        return <span style={{color: this.props.address === value ? 'white' : undefined}}>{value}</span>;
+    }
+
     getColumns() {
         const filterMark = this.props.address ? '*' : '';
         return [{
@@ -18,15 +22,17 @@ class MessageListTabBody extends Component {
             name: `${filterMark} Source Addr`,
             resizable: true,
             width: 150,
+            formatter: this.addressFormatter.bind(this)
         }, {
             key: 'dstAddr',
             name: `${filterMark} Destination Addr`,
             resizable: true,
             width: 150,
+            formatter: this.addressFormatter.bind(this)
         }, {
             key: 'body',
             name: 'Message',
-            resizable: true,
+            resizable: true
         }];
     }
 
@@ -39,10 +45,9 @@ class MessageListTabBody extends Component {
         );
 
         return (
-            <RowSelectDataGrid
-                selectByKey="srcAddr"
+            <DataGrid
                 columns={this.getColumns()}
-                rows={this.messages}
+                rowsCount={this.messages.length}
                 rowGetter={this.rowGetter.bind(this)}
             />
         )

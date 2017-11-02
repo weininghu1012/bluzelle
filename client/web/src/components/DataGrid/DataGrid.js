@@ -1,3 +1,4 @@
+import 'src/ReactPre16Support'
 import ReactDataGrid from 'react-data-grid'
 import $j from 'jquery'
 import './data-grid.css';
