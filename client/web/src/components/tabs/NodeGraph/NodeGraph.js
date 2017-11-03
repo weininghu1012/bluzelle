@@ -2,7 +2,6 @@ import Node from './Node'
 import {getNodes} from 'services/NodeService'
 import NodeInfo from './NodeInfo'
 
-import clone from 'lodash/clone'
 @observer
 export default class NodeGraph extends Component {
     @observable selectedNodeAddress;
