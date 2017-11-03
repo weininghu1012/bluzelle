@@ -2,7 +2,8 @@
   "scripts": {
     "run-tests": "mocha --recursive --use_strict mocha-setup test",
     "run-web-functional-tests": "cd test/web-functional; ../../node_modules/.bin/chimp --mocha",
-    "run-web-functional-tests-watch": "cd test/web-functional; ../../node_modules/.bin/chimp --mocha --watch"
+    "run-web-functional-tests-watch": "cd test/web-functional; ../../node_modules/.bin/chimp --mocha --watch",
+    "run-web-functional-ci": "cd test/web-functional; ../../node_modules/.bin/chimp --browser=phantomjs --mocha"
   },
   "dependencies": {
     "async-wait-until": "^1.1.5",
