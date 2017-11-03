@@ -49,9 +49,9 @@ const getRandomNode = () => nodes[Math.floor(Math.random() * nodes.length)];
 
 const updateMessages = () => {
     if(nodes.length) {
-        sendToClients('messages', [
-            {srcAddr: getRandomNode().address, dstAddr: getRandomNode().address, timestamp: new Date().toISOString(), body: {something: `sent - ${_.uniqueId()}`}},
-        ]);
+        sendToClients('messages', _.times(10, () => (
+            {srcAddr: getRandomNode().address, dstAddr: getRandomNode().address, timestamp: new Date().toISOString(), body: {something: `sent - ${_.uniqueId()}`}}
+        )));
     }
 };
 
