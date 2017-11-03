@@ -22,7 +22,7 @@ protected:
         pt::ptree array;
         for (auto node : *nodes_)
             {
-            if (node->last_change() > last_update_)
+            //if (node->last_change() > last_update_)
                 {
                 pt::ptree child1;
                 child1.put("address", node->name());
