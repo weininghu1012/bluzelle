@@ -8,7 +8,7 @@ describe('Node List tab', () => {
             browser.click('=Node List');
         });
        it('should contain table headers', () => {
-          ['Address', 'Status', 'Messages'].forEach(text => {
+          ['Address', 'Status', 'Actions'].forEach(text => {
             header().waitForExist(`div.widget-HeaderCell__value*=${text}`);
           });
        });

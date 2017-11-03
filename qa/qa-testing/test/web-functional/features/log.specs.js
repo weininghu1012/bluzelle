@@ -14,7 +14,7 @@ describe('log tab', () => {
 
 
         it('@watch should display a log entry when one is received', () =>  {
-            _.times(100, (num) => sendLogMessage(`some message ${num}`));
+            _.times(5, (num) => sendLogMessage(`some message ${num}`));
         })
     });
 });
