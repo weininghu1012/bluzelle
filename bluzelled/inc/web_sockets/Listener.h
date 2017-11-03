@@ -27,6 +27,9 @@ class Listener : public std::enable_shared_from_this<Listener> {
     tcp::socket socket_;
 
 public:
+    std::vector<std::weak_ptr<Session>> sessions_;
+
+public:
     Listener(
             boost::asio::io_service &ios,
             tcp::endpoint endpoint)
@@ -86,7 +89,9 @@ public:
         else
             {
             // Create the session and run it
-            std::make_shared<Session>(std::move(socket_))->run();
+            auto s = std::make_shared<Session>(std::move(socket_));
+            s->run();
+            sessions_.push_back(s);
             }
 
         // Accept another connection

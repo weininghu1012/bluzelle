@@ -28,6 +28,8 @@ static boost::mutex s_removed_nodes_mutex;
 Nodes* get_removed_nodes() { return &s_removed_nodes; }
 boost::mutex& get_removed_nodes_mutex() { return s_removed_nodes_mutex; }
 
+std::shared_ptr<Listener> g_listener; // Listener object from WebSocketServer.
+
 
 void print_message(const std::string &msg);
 
@@ -37,7 +39,7 @@ void make_introductions(const Nodes &nodes);
 
 boost::mutex &get_mutex();
 
-Nodes create_nodes(int number_of_nodes);
+Nodes create_nodes(int number_of_nodes, std::shared_ptr<Listener> l);
 
 
 void add_nodes(const Nodes &nodes)
@@ -74,14 +76,13 @@ int main(/*int argc,char *argv[]*/) {
     uint8_t numTasks = 2;
     get_mutex();
 
-    WebSocketServer wss("127.0.0.1", 3000, 1);
-    boost::thread websocket_thread(wss);
+    boost::thread websocket_thread(WebSocketServer("127.0.0.1", 3000, 1));
     boost::thread http_thread(http_service);
 
     std::stringstream ss;
     try
         {
-        s_nodes = create_nodes(numTasks);
+        s_nodes = create_nodes(numTasks, g_listener);
         wait_for_all_nodes_to_start(s_nodes);
         make_introductions(s_nodes);
 
@@ -92,7 +93,7 @@ int main(/*int argc,char *argv[]*/) {
 
             if (num_of_new_nodes > 0)
                 {
-                Nodes nodes = create_nodes(num_of_new_nodes);
+                Nodes nodes = create_nodes(num_of_new_nodes, g_listener);
                 add_nodes(nodes);
                 }
             }
@@ -128,17 +129,17 @@ Nodes *get_all_nodes()
     return &s_nodes;
 }
 
-Node *create_node()
+Node *create_node(std::shared_ptr<Listener> l)
 {
-    return new Node();
+    return new Node(l);
 }
 
-Nodes create_nodes(int number_of_nodes)
+Nodes create_nodes(int number_of_nodes, std::shared_ptr<Listener> l)
 {
     Nodes nodes;
     for (int i = 0; i < number_of_nodes; ++i)
         {
-        nodes.emplace_back(create_node());
+        nodes.emplace_back(create_node(l));
         }
     return nodes;
 }

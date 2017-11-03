@@ -6,6 +6,8 @@
 #include <boost/asio.hpp>
 #include <boost/thread.hpp>
 
+extern std::shared_ptr<Listener> g_listener;
+
 class WebSocketServer
 {
     boost::asio::ip::address    address_;
@@ -26,7 +28,8 @@ public:
         boost::asio::io_service ios{threads_};
 
         // Create and launch a listening port
-        std::make_shared<Listener>(ios, tcp::endpoint{address_, port_})->run();
+        g_listener = std::make_shared<Listener>(ios, tcp::endpoint{address_, port_});
+        g_listener->run();
 
         // Run the I/O service on the requested number of threads
         std::vector<std::thread>    v_;
