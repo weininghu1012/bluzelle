@@ -8,11 +8,28 @@
 #include <boost/test/unit_test.hpp>
 #include <numeric>
 
+std::shared_ptr<Listener> l;
+
 Nodes* create_test_nodes(int n);
 unsigned count_alive(const Nodes nodes);
 unsigned count_dead(const Nodes nodes)
 {
     return nodes.size() - count_alive(nodes);
+}
+
+
+static Nodes s_nodes;
+
+Nodes *get_all_nodes()
+{
+    return &s_nodes;
+}
+
+unsigned long s_max_nodes = 25;
+
+void set_max_nodes(unsigned long max)
+{
+    s_max_nodes = max;
 }
 
 
@@ -23,7 +40,7 @@ BOOST_AUTO_TEST_CASE( test_node_death )
         {
         time_t elapsed = 0;
         time_t start = 0;
-        Node sut( actual, prob);
+        Node sut(l, actual, prob);
         while(sut.state() !=  Task::State::alive){}
         start = time(nullptr);
         BOOST_CHECK_EQUAL(sut.state(), Task::State::alive);
@@ -125,7 +142,7 @@ Nodes* create_test_nodes(int n)
     Nodes* nodes = new Nodes();
     for(int i = 0; i < n ; ++i)
         {
-        nodes->emplace_back(new Node());
+        nodes->emplace_back(new Node(l));
         }
     return nodes;
 }
