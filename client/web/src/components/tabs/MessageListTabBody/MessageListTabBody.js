@@ -45,7 +45,7 @@ class MessageListTabBody extends Component {
         this.messages = address ? (
             getMessages().filter(m => [m.srcAddr, m.dstAddr].includes(address))
         ) : (
-            getMessages().map(clone)
+            getMessages()
         );
 
         return (

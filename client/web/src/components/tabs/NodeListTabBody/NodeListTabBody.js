@@ -1,7 +1,9 @@
 import {getNodes} from 'services/NodeService'
 import statusColors from 'constants/nodeStatusColors';
 import DataGrid from 'components/DataGrid'
-import clone from 'lodash/clone'
+import {strafeObject} from 'src/Utils'
+
+
 
 @observer
 export default class NodeListTabBody extends Component {
@@ -12,13 +14,13 @@ export default class NodeListTabBody extends Component {
     }
 
     render() {
-        this.nodes = getNodes().map(clone);
+        this.nodes = getNodes().map(strafeObject);
         return (
             <DataGrid
                 selectByKey="address"
                 columns={columns}
                 rowGetter={this.rowGetter.bind(this)}
-                rowsCount={getNodes().length}
+                rowsCount={this.nodes.length}
                 minColumnWidth={80}
             />
         )
