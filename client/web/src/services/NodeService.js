@@ -6,8 +6,8 @@ import {socketState} from 'services/CommunicationService'
 
 const nodes = observable([]);
 
-addCommandProcessor('updateNodes', action((nodes) => nodes.forEach(updateNode)));
-addCommandProcessor('removeNodes', action((addresses) => addresses.forEach(removeNodeByAddress)));
+addCommandProcessor('updateNodes', action('updateNodes', (nodes) => nodes.forEach(updateNode)));
+addCommandProcessor('removeNodes', action('removeNodes', (addresses) => addresses.forEach(removeNodeByAddress)));
 
 autorun(() => socketState.get() === 'open' && untracked(resetNodes));
 
@@ -18,7 +18,7 @@ const resetNodes = () => {
 
 export const getNodes = () => nodes.filter(n => n.address);
 
-export const updateNode = node => {
+export const updateNode = action(node => {
     const foundNode = nodes.find(n => n.address === node.address);
 
     if(foundNode) {
@@ -28,7 +28,7 @@ export const updateNode = node => {
     } else {
         addNewNode(node);
     }
-};
+});
 
 const addNewNode = node => {
     const newNode = {nodeState: 'new', ...node};
@@ -40,13 +40,13 @@ const addNewNode = node => {
     },3000);
 };
 
-export const removeNodeByAddress = address => {
+export const removeNodeByAddress = action(address => {
     const found = nodes.find(n => n.address === address);
     found && (found.nodeState = 'dead');
     setTimeout(() => {
         found && (found.address = undefined);
     }, 2000);
-};
+});
 
 export const clearNodes = () => remove(nodes, () => true);
 
