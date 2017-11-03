@@ -12,7 +12,7 @@ class Node
     boost::shared_ptr<Task>             _task;
     boost::shared_ptr<boost::thread>    _thread;
 public:
-    Node()
+    Node(uint32_t lifespan = 20, double death_probablity = 0.05)
     {
         auto thread_function = []
                 (
@@ -22,7 +22,7 @@ public:
             task->run();
             };
 
-        _task.reset(new Task());
+        _task.reset(new Task(lifespan,death_probablity));
         _thread.reset(new boost::thread
                 (
                         thread_function,

@@ -15,6 +15,33 @@ unsigned count_dead(const Nodes nodes)
     return nodes.size() - count_alive(nodes);
 }
 
+
+// --run_test=test_node_death
+BOOST_AUTO_TEST_CASE( test_node_death )
+{
+    auto test = [](time_t actual, double prob)
+        {
+        time_t elapsed = 0;
+        time_t start = 0;
+        Node sut( actual, prob);
+        while(sut.state() !=  Task::State::alive){}
+        start = time(nullptr);
+        BOOST_CHECK_EQUAL(sut.state(), Task::State::alive);
+        while(sut.state() ==  Task::State::alive){}
+        while(sut.state() ==  Task::State::dying){}
+
+        BOOST_CHECK_EQUAL(sut.state(), Task::State::dead);
+        elapsed = time(nullptr) - start;
+        BOOST_CHECK( abs(elapsed - actual) < 1 );
+        sut.join();
+        };
+    test( 1, 1.0);
+    test( 2, 1.0);
+    test( 3, 1.0);
+    // TODO: How to test the probability?
+}
+
+
 //  --run_test=test_reaper
 //BOOST_AUTO_TEST_CASE( test_reaper )
 //{

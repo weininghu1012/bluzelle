@@ -9,45 +9,61 @@
 #include <boost/chrono.hpp>
 #include <iostream>
 
-
 using namespace boost::chrono;
 
 #define RAND() ((double)rand() / RAND_MAX )
 
-
-class Task {
+class Task
+{
 public:
     enum State {
         initializing, alive, dying, dead
     };
 
+    std::string state_string(State s)
+    {
+        return (const char*[]){"initializing", "alive", "dying", "dead"}[s];
+    }
+
 private:
-    thread_clock::time_point _birth;
-    State _state;
-    CSet<boost::thread::id> *_friends;
-    system_clock::time_point _state_changed;
+    double                      death_probability_;
+    thread_clock::duration      lifespan_;
+    thread_clock::time_point    birth_;
+    State state_;
+    CSet<boost::thread::id>     *peers_;
+    system_clock::time_point    state_changed_;
 
 public:
-    ~Task() {
-        if (_friends != nullptr)
+    Task(uint32_t lifespan = 20, double death_prob = 0.05)
+    {
+        lifespan_ = boost::chrono::seconds(lifespan);
+        death_probability_ = death_prob;
+    }
+
+    ~Task()
+    {
+        if (peers_ != nullptr)
             {
-            _friends->clear();
-            delete _friends;
-            _friends = nullptr;
+            peers_->clear();
+            delete peers_;
+            peers_ = nullptr;
             }
     }
 
-    void run() {
+    void run()
+    {
         setup();
         life();
         death();
     }
 
-    void operator()() {
+    void operator()()
+    {
         run();
     }
 
-    void ping(const boost::thread::id &src_id) {
+    void ping(const boost::thread::id &src_id)
+    {
         (void) src_id;
 
 //        std::stringstream s;
@@ -79,49 +95,64 @@ public:
 //        print_message(s.str().c_str());
     }
 
-    State state() {
-        return _state;
+    State state()
+    {
+        return state_;
     }
 
-    void kill() {
-        _state = dying;
+    void kill()
+    {
+        state_ = dying;
     }
 
-    system_clock::time_point get_last_change() {
-        return _state_changed;
+    system_clock::time_point get_last_change()
+    {
+        return state_changed_;
     }
 
-    unsigned long friendCount() { return _friends != nullptr ? _friends->size() : 0; }
+    unsigned long peer_count()
+    { return peers_ != nullptr ? peers_->size() : 0; }
 
 private:
-    void setup() {
-        _birth = thread_clock::now();
-        _state_changed = system_clock::now();
+    void setup()
+    {
+        birth_ = thread_clock::now();
+        state_changed_ = system_clock::now();
         srand(time(0));
-        _state = initializing;
-        _friends = new CSet<boost::thread::id>();
+        state_ = initializing;
+        peers_ = new CSet<boost::thread::id>();
     }
 
-    void life() {
-        _state_changed = system_clock::now();
-        _state = alive;
+    void life()
+    {
+        state_changed_ = system_clock::now();
+        state_ = alive;
         while (state() == alive)
             {
-            thread_clock::duration age = thread_clock::now().time_since_epoch() - _birth.time_since_epoch();
-            if (age > boost::chrono::seconds(20) && (RAND() < 0.25))
-                {
-                    _state = Task::dying;
-                }
+            state_ = (check_for_natural_death() ? Task::dying : state_);
             }
     }
 
-    void death() {
-        _state = dead;
-        _state_changed = system_clock::now();
+    void death()
+    {
+        state_ = dead;
+        state_changed_ = system_clock::now();
     }
 
+
+    ///////////////////////////////////////
+    bool check_for_natural_death()
+    {
+        thread_clock::duration age = thread_clock::now().time_since_epoch() - birth_.time_since_epoch();
+        bool lifespan_end = (age > lifespan_);
+        bool death_p = (RAND() < death_probability_);
+        return lifespan_end && death_p;
+    }
+
+
     //
-    void interact() {
+    void interact()
+    {
 //        _friends.iterate(
 //                [
 //                        this
