@@ -89,6 +89,7 @@ module.exports = {
             untracked: ['mobx', 'untracked'],
             computed: ['mobx', 'computed'],
             transaction: ['mobx', 'transaction'],
+            action: ['mobx', 'action'],
 
             Session: [path.resolve('stores/SessionStore'), 'default'],
 

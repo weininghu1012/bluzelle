@@ -56,12 +56,12 @@ const updateMessages = () => {
 };
 
 const log = (message) => {
-    sendToClients('log', {
+    sendToClients('log', [{
         timer_no: 1,
         entry_no: _.uniqueId(),
         timestamp: new Date().toISOString(),
         message: message
-    });
+    }]);
 };
 
 const killANode = () => {

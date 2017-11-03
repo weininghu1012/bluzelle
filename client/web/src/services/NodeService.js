@@ -6,8 +6,8 @@ import {socketState} from 'services/CommunicationService'
 
 const nodes = observable([]);
 
-addCommandProcessor('updateNodes', (nodes) => nodes.forEach(updateNode));
-addCommandProcessor('removeNodes', (addresses) => addresses.forEach(removeNodeByAddress));
+addCommandProcessor('updateNodes', action((nodes) => nodes.forEach(updateNode)));
+addCommandProcessor('removeNodes', action((addresses) => addresses.forEach(removeNodeByAddress)));
 
 autorun(() => socketState.get() === 'open' && untracked(resetNodes));
 

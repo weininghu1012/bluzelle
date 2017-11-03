@@ -3,10 +3,7 @@ import {addCommandProcessor} from "./CommunicationService";
 
 const logEntries = observable([]);
 
-addCommandProcessor('log', logEntries.push.bind(logEntries));
-
-const dateFormatter = DateTimeFormatter.ofPattern("MM-dd-yyyy HH:mm:ss")
-
+addCommandProcessor('log', action(entries => entries.forEach(l => logEntries.push(l))));
 
 export const getLogEntries = () => logEntries;
 
