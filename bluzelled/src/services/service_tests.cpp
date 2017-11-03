@@ -169,7 +169,7 @@ BOOST_FIXTURE_TEST_SUITE(websocket_services_tests, F)
         ss.str("");
 
 
-        std::string accepted(R"({"cmd": "nodeCount","count": 4,"seq":345})");
+        //std::string accepted(R"({"cmd": "nodeCount","count": 4,"seq":345})");
 
 
 
