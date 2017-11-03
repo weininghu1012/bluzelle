@@ -5,13 +5,10 @@ import NodeInfo from './NodeInfo'
 import clone from 'lodash/clone'
 @observer
 export default class NodeGraph extends Component {
-    constructor() {
-        super();
-        this.state = {};
-    }
+    @observable selectedNodeAddress;
 
     selectNode(node) {
-        this.setState({selectedNodeAddress: node.address})
+        this.selectedNodeAddress = node.address;
     }
 
     findNodeByAddress(address) {
@@ -31,9 +28,8 @@ export default class NodeGraph extends Component {
 
 
     render() {
-        const {selectedNodeAddress} = this.state;
         const nodes = this.addAnglesToNodes(getNodes());
-        const selectedNode = selectedNodeAddress ? this.findNodeByAddress(selectedNodeAddress) : undefined;
+        const selectedNode = this.selectedNodeAddress ? this.findNodeByAddress(this.selectedNodeAddress) : undefined;
 
         return (
             <div style={{height: '100%', position: 'relative'}}>
