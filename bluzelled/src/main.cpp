@@ -101,10 +101,12 @@ int main(/*int argc,char *argv[]*/) {
         print_message("The app is ending\n");
         kill_and_join_all_nodes(s_nodes);
         }
+
     catch (const std::exception &e)
         {
         std::cout << "Caught exception: [" << e.what() << "]\n";
         }
+
     catch (...)
         {
         std::cout << "caught exception\n";

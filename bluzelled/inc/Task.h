@@ -130,6 +130,9 @@ private:
         while (state() == alive)
             {
             state_ = (check_for_natural_death() ? Task::dying : state_);
+
+
+
             }
     }
 
