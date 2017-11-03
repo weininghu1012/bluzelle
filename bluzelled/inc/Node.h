@@ -24,36 +24,31 @@ class Node {
 
 public:
     Node(std::shared_ptr<Listener> l, uint32_t lifespan = 20, double death_probablity = 0.05)
-        : listener_(l)
-    {
+            : listener_(l) {
         auto thread_function = [this]
                 (
                         Task *task
-                )
-            {
+                ) {
             task->run();
 
             auto lp = listener_.lock();
-            if (lp !=  nullptr) {
-                for (auto s : lp->sessions_)
-                    {
+            if (lp != nullptr) {
+                for (auto s : lp->sessions_) {
                     auto sp = s.lock();
                     if (!sp)  // corresponding shared_ptr is destroyed (session closed).
-                        {
+                    {
                         lp->sessions_.erase(
                                 std::find_if(
                                         lp->sessions_.begin(),
                                         lp->sessions_.end(),
-                                        [&sp](auto n)
-                                            { return sp == n.lock(); }));
-                        }
-                    else
+                                        [&sp](auto n) { return sp == n.lock(); }));
+                    } else
                         sp->send_remove_nodes(name_);
-                    }
                 }
-            };
+            }
+        };
 
-        task_.reset(new Task(lifespan,death_probablity));
+        task_.reset(new Task(lifespan, death_probablity));
         thread_.reset(new boost::thread
                               (
                                       thread_function,
@@ -64,23 +59,20 @@ public:
         std::cout << "Node created: " << name_ << std::endl;
 
         auto lp = listener_.lock();
-        if (lp !=  nullptr) {
-            for (auto s : lp->sessions_)
-                {
+        if (lp != nullptr) {
+            for (auto s : lp->sessions_) {
                 auto sp = s.lock();
                 if (!sp)  // corresponding shared_ptr is destroyed (session closed).
-                    {
+                {
                     lp->sessions_.erase(
                             std::find_if(
                                     lp->sessions_.begin(),
                                     lp->sessions_.end(),
-                                    [&sp](auto n)
-                                        { return sp == n.lock(); }));
-                    }
-                else
+                                    [&sp](auto n) { return sp == n.lock(); }));
+                } else
                     sp->send_update_nodes(name_);
-                }
             }
+        }
 
     }
 
@@ -119,7 +111,7 @@ public:
     std::string generate_name() {
         std::string bucket = "0123456789abcdef";
         std::string name;
-        for (int i = 0; i < 10; ++ i) {
+        for (int i = 0; i < 10; ++i) {
             name += bucket[rand() % bucket.size()];
         }
 
