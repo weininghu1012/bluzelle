@@ -58,9 +58,9 @@ public:
         name_ = generate_name(); //boost::lexical_cast<std::string>(get_thread_id());
         std::cout << "Node created: " << name_ << std::endl;
 
-        auto lp = listener_.lock();
-        if (lp != nullptr) {
-            for (auto s : lp->sessions_) {
+    auto lp = listener_.lock();
+    if (lp != nullptr){
+        for (auto s : lp->sessions_) {
                 auto sp = s.lock();
                 if (!sp)  // corresponding shared_ptr is destroyed (session closed).
                 {
@@ -68,11 +68,11 @@ public:
                             std::find_if(
                                     lp->sessions_.begin(),
                                     lp->sessions_.end(),
-                                    [&sp](auto n) { return sp == n.lock(); }));
+                                    [&sp](auto n) {return sp == n.lock(); }));
                 } else
                     sp->send_update_nodes(name_);
             }
-        }
+    }
 
     }
 

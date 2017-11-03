@@ -18,12 +18,7 @@ class CountNodes : public Service {
         pt::ptree out_tree;
         out_tree.put("cmd","nodeCount");
         pt::ptree array;
-        long count = 0;
-        for(auto node : *_nodes)
-            {
-            ++count;
-            }
-        out_tree.put<long>("count", count);
+        out_tree.put<long>("count", _nodes->size());
         out_tree.put<long>("seq", seq);// in_tree.get<long>("seq"));
         return out_tree;
     }
