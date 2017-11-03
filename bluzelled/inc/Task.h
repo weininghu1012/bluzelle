@@ -29,7 +29,7 @@ private:
     double                      death_probability_;
     thread_clock::duration      lifespan_;
     thread_clock::time_point    birth_;
-    State state_;
+    State                       state_;
     CSet<boost::thread::id>     *peers_;
     system_clock::time_point    state_changed_;
 
