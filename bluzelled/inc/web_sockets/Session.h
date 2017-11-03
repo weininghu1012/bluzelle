@@ -75,6 +75,10 @@ public:
     void
     send_remove_nodes(
             const std::string &name);
+
+    void
+    send_update_nodes(
+            const std::string &name);
 };
 
 

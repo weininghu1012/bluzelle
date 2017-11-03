@@ -156,9 +156,29 @@ Session::send_remove_nodes(
         const std::string &name) {
     auto request = boost::format("{\"seq\": %d}") % ++seq;
     RemoveNodes removeNodesCmd(name);
-    std::string response = removeNodesCmd.operator()(boost::str(request));
+    //std::string response = removeNodesCmd.operator()(boost::str(request));
+
+    // {"cmd":"removeNodes","data":["0x07"]}
+    auto f = boost::format("{\"cmd\":\"removeNodes\", \"data\":[\"%s\"]}") % name;
+    std::string response = boost::str(f);
 
     if (response.length() > 0) // Send removed nodes.
+        {
+        std::cout << " ******* " << std::endl << response << std::endl;
+        ws_.write(boost::asio::buffer(response));
+        }
+}
+
+void
+Session::send_update_nodes(
+        const std::string &name) {
+    auto request = boost::format("{\"seq\": %d}") % ++seq;
+
+    // {"cmd":"updateNodes","data":[{"address":"0x0e"}]}
+    auto f = boost::format("{\"cmd\":\"updateNodes\",\"data\":[{\"address\":\"%s\"}]}") % name;
+    std::string response = boost::str(f);
+
+    if (response.length() > 0)
         {
         std::cout << " ******* " << std::endl << response << std::endl;
         ws_.write(boost::asio::buffer(response));
