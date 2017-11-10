@@ -33,7 +33,7 @@ std::shared_ptr<Listener> g_listener; // Listener object from WebSocketServer.
 
 static unsigned int s_uint_minimum_balance_to_run_node = 100;
 static unsigned int s_uint_bzn_token_decimal_digits = 18;
-static const std::string s_str_bzn_token_contract_address = "0xbbb";
+static const std::string s_str_bzn_token_contract_address = "0x2ba35056580b505690c03dfb1df58bc6b6cd9f89";
 
 
 void print_message(const std::string &msg);
