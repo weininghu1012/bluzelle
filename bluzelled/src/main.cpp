@@ -10,6 +10,7 @@
 #include <boost/exception/all.hpp>
 #include <boost/beast/core.hpp>
 #include <boost/beast/http.hpp>
+#include <boost/program_options.hpp>
 #include <boost/beast/version.hpp>
 #include <boost/asio/ip/tcp.hpp>
 #include <boost/asio/strand.hpp>
@@ -72,7 +73,38 @@ void http_service()
     s.run();
 }
 
-int main(/*int argc,char *argv[]*/) {
+int main(int argc, char *argv[]) {
+    boost::program_options::options_description desc("Allowed options: ");
+    desc.add_options()
+            ("help", "This message")
+            ("address", boost::program_options::value<std::string>(), "Hexadecimal Ethererum address (Ropsten network)");
+
+    boost::program_options::variables_map vm;
+    boost::program_options::store(boost::program_options::parse_command_line(argc, argv, desc), vm);
+    boost::program_options::notify(vm);
+
+    if (vm.count("help"))
+        {
+        std::cout << desc << "\n";
+        return 0;
+        }
+
+    if (vm.count("address"))
+        {
+        auto addr =  vm["address"];
+        /*EthereumApi api(addr);
+        if (100 > api.token_balance(addr, EthereumToken("0xdeadbeef", 18)))
+            {
+            std::cout << "Insufficient balance to run daemon" << std::endl;
+            return 0;
+            }
+        }*/
+    else
+        {
+        std::cout << "Please provide your account Ethereum address" << std::endl;
+        return 0;
+        }
+
     uint8_t numTasks = 2;
     get_mutex();
 

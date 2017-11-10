@@ -26,7 +26,7 @@ elseif(APPLE)
 endif()
 
 
-find_package(Boost 1.65.0 REQUIRED COMPONENTS system coroutine thread regex chrono random REQUIRED)
+find_package(Boost 1.65.0 REQUIRED COMPONENTS system coroutine thread regex chrono random program_options REQUIRED)
 if(Boost_FOUND)
     message(STATUS "**** ${Boost_INCLUDE_DIRS} ****")
     #if(NOT EXISTS "${ROOT}/configuration/${customer}/configuration.${project_name}.xml")
@@ -105,6 +105,9 @@ target_link_libraries(bluzelled
         )
 target_link_libraries(bluzelled
         ${Boost_RANDOM_LIBRARIES}
+        )
+target_link_libraries(bluzelled
+        ${Boost_PROGRAM_OPTIONS_LIBRARIES}
         )
 target_link_libraries(bluzelled
         pthread
