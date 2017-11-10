@@ -31,6 +31,10 @@ boost::mutex& get_removed_nodes_mutex() { return s_removed_nodes_mutex; }
 
 std::shared_ptr<Listener> g_listener; // Listener object from WebSocketServer.
 
+static unsigned int s_uint_minimum_balance_to_run_node = 100;
+static unsigned int s_uint_bzn_token_decimal_digits = 18;
+static const std::string s_str_bzn_token_contract_address = "0xbbb";
+
 
 void print_message(const std::string &msg);
 
@@ -73,35 +77,38 @@ void http_service()
     s.run();
 }
 
-int main(int argc, char *argv[]) {
+bool handle_command_line(int argc, char *argv[], boost::program_options::variables_map& vm) {
     boost::program_options::options_description desc("Allowed options: ");
     desc.add_options()
             ("help", "This message")
             ("address", boost::program_options::value<std::string>(), "Hexadecimal Ethererum address (Ropsten network)");
 
-    boost::program_options::variables_map vm;
     boost::program_options::store(boost::program_options::parse_command_line(argc, argv, desc), vm);
     boost::program_options::notify(vm);
 
-    if (vm.count("help"))
+    if (vm.count("help") || vm.count("address") == 0)
         {
         std::cout << desc << "\n";
-        return 0;
+        return false;
         }
 
-    if (vm.count("address"))
-        {
-        auto addr =  vm["address"];
-        /*EthereumApi api(addr);
-        if (100 > api.token_balance(addr, EthereumToken("0xdeadbeef", 18)))
-            {
-            std::cout << "Insufficient balance to run daemon" << std::endl;
-            return 0;
-            }
-        }*/
-    else
-        {
-        std::cout << "Please provide your account Ethereum address" << std::endl;
+    return true;
+}
+
+int main(int argc, char *argv[]) {
+    boost::program_options::variables_map vm;
+
+    if (!handle_command_line(argc, argv, vm))
+        return 0;
+
+    //EthereumApi api(vm["address"]);
+    auto balance = 120; //api.token_balance(EthereumToken(s_str_bzn_token_contract_address,
+                        //            s_uint_bzn_token_decimal_digits)));
+
+    if (balance < s_uint_minimum_balance_to_run_node) {
+        std::cout << "Insufficient balance: " << balance
+                  << ". You need at least " << s_uint_minimum_balance_to_run_node
+                  << " to run node." << std::endl;
         return 0;
         }
 
