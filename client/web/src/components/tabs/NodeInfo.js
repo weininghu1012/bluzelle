@@ -25,7 +25,10 @@ const NodeInfo = ({node: selectedNode}) => {
             </tr>
             <tr>
                 <th style={styles.tableCell}>Used</th>
-                <td style={styles.tableCell}>{node.used} MB</td>
+                <td style={styles.tableCell}>
+                    {node.used} MB
+                    <span style={{paddingLeft: 20}}>({Math.floor(node.used / node.available * 100)}%)</span>
+                </td>
             </tr>
             </tbody>
         </table>
@@ -37,7 +40,8 @@ export default observer(NodeInfo)
 
 const styles = {
     tableCell: {
-        padding: 5
+        padding: 5,
+        whiteSpace: 'nowrap'
     },
     infoBox: {
         width: 200,
