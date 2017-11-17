@@ -57,6 +57,18 @@ system_clock::time_point Node::last_change() {
     return task_->get_last_change();
 }
 
+long Node::available() const {
+    return 1000;
+}
+
+long Node::used() const {
+    return 580;
+}
+
+bool Node::is_leader() const {
+    return false;
+}
+
 void Node::on_birth() {
     auto lp = listener_.lock();
     if (lp != nullptr)

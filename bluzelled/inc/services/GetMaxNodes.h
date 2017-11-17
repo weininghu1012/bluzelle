@@ -24,8 +24,8 @@ class GetMaxNodes : public Service {
 
     std::string tree_to_response(const pt::ptree& out_tree)
     {
-        auto r = boost::format("{\"getMaxNodes\": %d, \"seq\": %d}")
-                 % out_tree.get<long>("getMaxNodes") % out_tree.get<long>("seq");
+        auto r = boost::format("{\"cmd\":\"setMaxNodes\", \"data\": %d}")
+                 % out_tree.get<long>("getMaxNodes");
 
         return boost::str(r);
     }

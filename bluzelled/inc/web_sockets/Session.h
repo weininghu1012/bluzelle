@@ -10,6 +10,7 @@
 #include <boost/beast/websocket.hpp>
 #include <boost/asio/strand.hpp>
 #include <boost/asio/ip/tcp.hpp>
+#include <boost/thread.hpp>
 #include <algorithm>
 #include <cstdlib>
 #include <functional>
@@ -23,24 +24,16 @@ using tcp = boost::asio::ip::tcp;               // from <boost/asio/ip/tcp.hpp>
 namespace websocket = boost::beast::websocket;  // from <boost/beast/websocket.hpp>
 namespace pt = boost::property_tree;
 
-enum class SessionState {
-    Unknown,
-    Starting,
-    Started,
-    Finishing,
-    Finished,
-};
 
 void
 fail(boost::system::error_code ec, char const *what);
 
 class Session : public std::enable_shared_from_this<Session> {
     websocket::stream<tcp::socket> ws_;
+    boost::mutex ws_mutex_;
     boost::asio::io_service::strand strand_;
-    boost::beast::multi_buffer buffer_;
+    boost::beast::multi_buffer read_buffer_;
     Services services_;
-
-    SessionState state_ = SessionState::Unknown;
     size_t seq = 0;
 
     const unsigned int send_interval_millisecs_ = 2000;
@@ -76,10 +69,6 @@ public:
     on_write_async(
             boost::system::error_code ec,
             std::size_t bytes_transferred);
-
-    SessionState
-    set_state(
-            const pt::ptree &request);
 
     void
     send_remove_nodes(

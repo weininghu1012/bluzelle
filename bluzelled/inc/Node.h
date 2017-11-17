@@ -32,6 +32,9 @@ public:
     bool is_joinable();
     void ping(boost::thread::id other);
     system_clock::time_point last_change();
+    long available() const;
+    long used() const;
+    bool is_leader() const;
 
 private:
     void on_birth();

@@ -22,14 +22,12 @@ protected:
         pt::ptree array;
         for (auto node : *nodes_)
             {
-            //if (node->last_change() > last_update_)
-                {
-                pt::ptree child1;
-                child1.put("address", node->name());
-                child1.put("nodeState", node->state());
-                child1.put<long>("messages", node->state());
-                array.push_back(std::make_pair("", child1));
-                }
+            pt::ptree child1;
+            child1.put("address", node->name());
+            child1.put<long>("available", node->available());
+            child1.put<long>("used", node->used());
+            //child1.put<bool>("isLeader", node->is_leader());
+            array.push_back(std::make_pair("", child1));
             }
         out_tree.add_child("data", array);
         out_tree.put("seq", seq);

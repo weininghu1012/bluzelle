@@ -10,7 +10,7 @@
 
 namespace pt = boost::property_tree;
 
-void set_max_nodes(unsigned long max);
+unsigned long get_min_nodes();
 
 class GetMinNodes : public Service {
 
@@ -25,8 +25,8 @@ class GetMinNodes : public Service {
 
     std::string tree_to_response(const pt::ptree& out_tree)
     {
-        auto r = boost::format("{\"getMinNodes\": %d, \"seq\": %d}")
-                 % out_tree.get<long>("getMinNodes") % out_tree.get<long>("seq");
+        auto r = boost::format("{\"cmd\":\"setMinNodes\", \"data\": %d}")
+                 % out_tree.get<long>("getMinNodes");
 
         return boost::str(r);
     }
@@ -40,7 +40,7 @@ public:
         {
             pt::ptree in_tree;
             in_tree = parse_input(request);
-            out_tree = nodes_to_tree(in_tree.get<long>("seq"), 0);
+            out_tree = nodes_to_tree(in_tree.get<long>("seq"), get_min_nodes());
         }
         catch(std::exception& e)
         {

@@ -13,6 +13,10 @@
 
 Nodes *get_all_nodes();
 
+static std::string fix_json_numbers(const std::string &json_str) {
+    boost::regex re("\\\"([0-9]+\\.{0,1}[0-9]*)\\\"");
+    return  boost::regex_replace(json_str, re, "$1");
+}
 
 // Report a failure
 void
@@ -31,8 +35,6 @@ Session::Session(tcp::socket socket)
     services_.add_service("getMaxNodes", new GetMaxNodes());
     services_.add_service("getMinNodes", new GetMinNodes());
     services_.add_service("updateNodes", new GetAllNodes(nodes));
-    ///services_.add_service("removeNodes", new RemoveNodes());
-
 }
 
 // Start the asynchronous operation
@@ -59,7 +61,7 @@ void
 Session::do_read() {
     // Read a message into our buffer
     ws_.async_read(
-            buffer_,
+            read_buffer_,
             strand_.wrap(std::bind(
                     &Session::on_read,
                     shared_from_this(),
@@ -81,32 +83,36 @@ Session::on_read(
         fail(ec, "read");
 
     std::stringstream ss;
-    ss << boost::beast::buffers(buffer_.data());
-
     pt::ptree request;
-    pt::read_json(ss, request);
+
+    try
+        {
+        ss << boost::beast::buffers(read_buffer_.data());
+        pt::read_json(ss, request);
+        read_buffer_.consume(read_buffer_.size());
+        }
+    catch (pt::json_parser_error& e)
+        {
+        std::cout << e.what() << "Invalid JSON: [" << ss.str() << "]" << std::endl;
+        read_buffer_.consume(read_buffer_.size());
+        return;
+        }
 
     std::string command = request.get<std::string>("cmd");
-
-    std::cout << " **** command:" << command << "\n";
-
     std::string response = services_(command, ss.str());
 
-    std::cout
-            << " ******* response ["
-            << response
-            << "]\n";
+    std::cout << " **** command:" << command << "\n";
+    std::cout << " ******* response [" << response << "]\n";
 
     ws_.async_write(
             boost::asio::buffer(response),
-            std::bind(
+            strand_.wrap(std::bind(
                     &Session::on_write,
                     shared_from_this(),
                     std::placeholders::_1,
-                    std::placeholders::_2));
+                    std::placeholders::_2)));
 
 
-    state_ = set_state(request);
     seq = request.get<int>("seq");
 }
 
@@ -119,74 +125,33 @@ Session::on_write(
     if (ec)
         return fail(ec, "write");
 
-    // Clear the buffer
-    buffer_.consume(buffer_.size());
-
-    if (state_ == SessionState::Started)
-        {
-        auto request = boost::format("{\"seq\": %d}") % ++seq;
-        std::string response = services_("getAllNodes", boost::str(request));
-
-        if (response.length() > 0) // Send updated nodes status.
-            {
-            std::cout << " ******* " << std::endl << response << std::endl;
-            ws_.write(boost::asio::buffer(response));
-            state_ = SessionState::Started; // Send all nodes once.
-            }
-        }
-
-    buffer_.consume(buffer_.size());
-
     // Do another read
     do_read();
 }
 
-SessionState
-Session::set_state(
-        const pt::ptree &request) {
-    if (request.get<std::string>("cmd") == "getMaxNodes")
-        return SessionState::Starting;
-
-    if (request.get<std::string>("cmd") == "getMinNodes")
-        return SessionState::Started;
-
-    return state_;
-}
-
-void
-Session::write_async(boost::asio::const_buffers_1 b) {
-    ws_.async_write(
-            b,
-            std::bind(
-                    &Session::on_write_async,
-                    shared_from_this(),
-                    std::placeholders::_1,
-                    std::placeholders::_2));
-}
-
-void
-Session::on_write_async(
-        boost::system::error_code ec,
-        std::size_t bytes_transferred) {
-    boost::ignore_unused(bytes_transferred);
-
-    if (ec)
-        return fail(ec, "write");
-
-    buffer_.consume(buffer_.size());
-}
 
 void
 Session::send_remove_nodes(
         const std::string &name) {
 
-    // {"cmd":"removeNodes","data":["0x07"]}
-    auto f = boost::format("{\"cmd\":\"removeNodes\", \"data\":[\"%s\"]}") % name;
-    std::string response = boost::str(f);
+    pt::ptree out_tree, array, child1;
+    out_tree.put("cmd", "removeNodes");
+    child1.put("", name);
+    array.push_back(std::make_pair("", child1));
+    out_tree.add_child("data", array);
+    //out_tree.put("seq", seq);
 
+    std::stringstream ss;
+    ss.str("");
+    auto d = out_tree.get_child("data.");
+    pt::write_json(ss, out_tree);
+
+    auto response = fix_json_numbers(ss.str());
     if (response.length() > 0) // Send removed nodes.
         {
-        write_async(boost::asio::buffer(response));
+        std::cout << " ******* " << std::endl << response << std::endl;
+        boost::mutex::scoped_lock lock(ws_mutex_);
+        ws_.write(boost::asio::buffer(response));
         }
 }
 
@@ -194,18 +159,31 @@ void
 Session::send_update_nodes(
         const std::string &name) {
 
-    // {"cmd":"updateNodes","data":[{"address":"0x0e"}]}
-    auto f = boost::format("{\"cmd\":\"updateNodes\",\"data\":[{\"address\":\"%s\"}]}") % name;
-    std::string response = boost::str(f);
+    pt::ptree out_tree, array, child1;
+    out_tree.put("cmd", "updateNodes");
+    child1.put("address", name);
+    child1.put<long>("available", 1000);
+    child1.put<long>("used", 580);
+    //child1.put<bool>("isLeader", false);
+    array.push_back(std::make_pair("", child1));
+    out_tree.add_child("data", array);
+    //out_tree.put("seq", seq);
 
+    std::stringstream ss;
+    ss.str("");
+    auto d = out_tree.get_child("data.");
+    pt::write_json(ss, out_tree);
+
+    auto response = fix_json_numbers(ss.str());
     if (response.length() > 0)
         {
         std::cout << " ******* " << std::endl << response << std::endl;
-        write_async(boost::asio::buffer(response));
+        boost::mutex::scoped_lock lock(ws_mutex_);
+        ws_.write(boost::asio::buffer(response));
         }
 }
 
-void
+/*void
 Session::send_message(
         const std::string &from, const std::string &to, const std::string &message) {
 
@@ -243,4 +221,4 @@ Session::timestamp() {
     ss << boost::posix_time::microsec_clock::universal_time();
 
     return ss.str();
-}
+}*/
