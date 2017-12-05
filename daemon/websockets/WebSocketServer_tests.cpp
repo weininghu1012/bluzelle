@@ -104,5 +104,6 @@ connect_send_and_receive(
 
     boost::asio::streambuf sb;
     ws.read(sb);
+    ws.close(websocket::close_code::normal);
     return std::string((std::istreambuf_iterator<char>(&sb)), std::istreambuf_iterator<char>());
 }

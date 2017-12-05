@@ -48,7 +48,7 @@ endif()
 # Unit tests
 message(STATUS "*** CMakeLists for bluzelled_test")
 enable_testing()
-
+add_compile_options(-DRUNNING_UNDER_TEST)
 include_directories(
         websockets
         command_line_options

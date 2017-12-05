@@ -38,16 +38,19 @@ Session::on_accept(
     if (ec)
         return fail(ec, "accept");
 
-    auto b = boost::asio::buffer(update_nodes());
-    ws_.async_write(
-            b,
-            strand_.wrap(std::bind(
-                    &Session::on_write,
-                    shared_from_this(),
-                    std::placeholders::_1,
-                    std::placeholders::_2)));
-
-    // Read scheduled in on_write().
+#ifndef RUNNING_UNDER_TEST // When running from test framework don't send updateNodes on connect.
+        auto s = fix_json_numbers(update_nodes());
+        auto b = boost::asio::buffer(s);
+        ws_.async_write(
+               b,
+               strand_.wrap(std::bind(
+                       &Session::on_write,
+                       shared_from_this(),
+                       std::placeholders::_1,
+                       std::placeholders::_2)));
+#else
+        do_read();
+#endif
 }
 
 void
@@ -81,8 +84,10 @@ Session::on_read(
     if(buffer_.size() > 0)
         {
         response = process_json_string(buffer_);
+        buffer_.consume(buffer_.size()); // Clear the buffer
         }
-    auto b = boost::asio::buffer(fix_json_numbers(response));
+    auto s = fix_json_numbers(response);
+    auto b = boost::asio::buffer(s);
     ws_.async_write(
             b,
             std::bind(
@@ -101,24 +106,6 @@ Session::on_write(
 
     if (ec)
         return fail(ec, "write");
-
-    // Clear the buffer
-    buffer_.consume(buffer_.size());
-
-//    if (state_ == SessionState::Started)
-//        {
-//        auto request = boost::format("{\"seq\": %d}") % ++seq;
-//        std::string response = services_("getAllNodes", boost::str(request));
-//
-//        if (response.length() > 0) // Send updated nodes status.
-//            {
-//            std::cout << " ******* " << std::endl << response << std::endl;
-//            ws_.write(boost::asio::buffer(response));
-//            state_ = SessionState::Started; // Send all nodes once.
-//            }
-//        }
-
-    buffer_.consume(buffer_.size());
 
     // Do another read
     do_read();
@@ -196,5 +183,5 @@ Session::update_nodes() {
     auto d = out_tree.get_child("data.");
     pt::write_json(ss, out_tree);
 
-    return fix_json_numbers(ss.str());
+    return ss.str();
 }
