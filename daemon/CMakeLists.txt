@@ -15,6 +15,7 @@ elseif(APPLE)
 endif()
 
 # TODO can we move this to the root CMakeLists.txt?
+set(Boost_USE_STATIC_LIBS ON)
 find_package(Boost ${REQUIRED_BOOST} REQUIRED COMPONENTS unit_test_framework system coroutine thread regex chrono random program_options REQUIRED)
 if(Boost_FOUND)
     message(STATUS "Your boost is here: ${Boost_INCLUDE_DIRS}")
