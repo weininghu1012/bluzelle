@@ -37,7 +37,7 @@ BOOST_FIXTURE_TEST_SUITE(websockets, F)
             {
             namespace websocket = boost::beast::websocket;
             const char *host = "127.0.0.1";
-            const unsigned int port = 3000;
+            const unsigned int port = 54000;
 
             std::shared_ptr<Listener> listener;
             WebSocketServer sut(
@@ -49,14 +49,18 @@ BOOST_FIXTURE_TEST_SUITE(websockets, F)
 
             boost::asio::io_service ios;
             boost::asio::ip::tcp::socket sock(ios);
+
             std::string message = R"({"cmd":"ping","seq":1234})";
             std::string accepted_response = R"({"cmd":"pong","seq":1234})";
             std::string response = connect_send_and_receive(sock, host, port, message);
             remove_whitespace(response);
+
             BOOST_CHECK_EQUAL(accepted_response, response);
 
             using namespace std::chrono_literals;
             std::this_thread::sleep_for(2s);
+
+            sock.close();
             }
         catch (const std::exception &e)
             {
@@ -105,6 +109,10 @@ connect_send_and_receive(
 
     ws.write(boost::asio::buffer(message));
     boost::asio::streambuf sb;
+    ws.read(sb);
+
+    // Now we can send our ping request
+    ws.write(boost::asio::buffer(message));
     ws.read(sb);
 
     char close_reason[256] = {0};
