@@ -9,6 +9,7 @@ if(MSVC)
 elseif(UNIX AND NOT APPLE)
     message(STATUS "*** compiling for Unix")
     add_compile_options(-lrt)
+    add_compile_options(-lstdc++fs)
 elseif(APPLE)
     message(STATUS "*** compiling for MacOS")
     add_compile_options(-Wall -Wextra -Wpedantic)
@@ -26,13 +27,22 @@ endif()
 ###############################################################################
 # Primary project for the_db
 project(the_db)
-set(SOURCE_FILES main.cpp)
+set(SOURCE_FILES main.cpp ConfigParser.cpp ConfigParser.h)
 add_executable(the_db ${SOURCE_FILES})
-
+target_link_libraries(the_db ${Boost_LIBRARIES})
+if(UNIX AND NOT APPLE)
+    target_link_libraries(the_db ${Boost_LIBRARIES} -lrt)
+endif()
 ###############################################################################
 # Unit tests
 message(STATUS "*** CMakeLists for bluzelled_test")
 
-set(SOURCE_FILES test.cpp)
+set(SOURCE_FILES test.cpp ConfigParser.cpp ConfigParser.h)
 add_executable(the_db_test ${SOURCE_FILES})
 target_link_libraries(the_db_test ${Boost_LIBRARIES})
+
+if(UNIX AND NOT APPLE)
+   target_link_libraries(the_db_test pthread)
+   target_link_libraries(the_db_test stdc++fs)
+endif()
+

@@ -32,6 +32,8 @@ ARCHITECHTURE
 - node 
     - has ini file
     - client connects
+
+
     
 
 
