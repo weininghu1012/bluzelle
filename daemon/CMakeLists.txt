@@ -42,6 +42,7 @@ include_directories(
         websockets
         command_line_options
         ethereum
+        node
         peers
         storage
         raft
@@ -111,7 +112,8 @@ include_directories(
         storage
         websockets
         command_line_options
-        ethereum)
+        ethereum
+)
 set(SOURCE_FILES
         test.cpp
         websockets/Listener.h
@@ -134,9 +136,24 @@ set(SOURCE_FILES
         ethereum/EthereumToken.h
         ethereum/ethereum_test.cpp ethereum/TokenBalance.hpp
         websockets/WebSocketServer_tests.cpp
+        ethereum/EthereumApi.h
+        ethereum/EthereumApi.cpp
+        ethereum/EthereumToken.h
+        ethereum/ethereum_test.cpp ethereum/TokenBalance.hpp
+        websockets/WebSocketServer_tests.cpp
+        ethereum/EthereumApi.h
+        ethereum/EthereumApi.cpp
+        ethereum/EthereumToken.h
+        ethereum/ethereum_test.cpp ethereum/TokenBalance.hpp
+        websockets/WebSocketServer_tests.cpp
         storage/Storage.h
         storage/Storage.cpp
         storage/storage_test.cpp
+        command_line_options/CommandLineOptions.h
+        command_line_options/CommandLineOptions.cpp
+        command_line_options/command_line_options_test.cpp
+        node/NodeInfo.hpp
+        node/NodeInfo_tests.cpp
         command_line_options/CommandLineOptions.h
         command_line_options/CommandLineOptions.cpp
         command_line_options/command_line_options_test.cpp

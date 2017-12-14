@@ -1,16 +1,40 @@
 #include "CommandLineOptions.h"
 #include "Listener.h"
 #include "WebSocketServer.h"
-
 #include "TokenBalance.hpp"
+#include "NodeInfo.hpp"
 
 
- constexpr int s_uint_minimum_required_token_balance = 100;
- constexpr char s_etherscan_api_token_envar_name[] = "ETHERSCAN_IO_API_TOKEN";
+#include <boost/uuid/uuid.hpp>
+#include <boost/uuid/uuid_generators.hpp>
+#include <boost/uuid/uuid_io.hpp>
+#include <boost/lexical_cast.hpp>
+
+constexpr int s_uint_minimum_required_token_balance = 100;
+constexpr char s_etherscan_api_token_envar_name[] = "ETHERSCAN_IO_API_TOKEN";
 
 #include <iostream>
 #include <boost/thread.hpp>
 
+
+#include "CommandLineOptions.h"
+#include "Node.h"
+
+
+
+void initialize_node(NodeInfo& node_info)
+{
+    // TODO: Mehdi, put your config file work here.
+    // If we don't have a node id in the config file, then generate one here
+    // Mehdi, for now we just generate a new  node id everytime we restart the node,
+    // but we should really check the config file first.
+    boost::uuids::basic_random_generator<boost::mt19937> gen;
+    const boost::uuids::uuid node_id{gen()};
+    node_info.set_value("node_id", boost::lexical_cast<std::string>(node_id));
+}
+
+int parse_command_line(int argc, char *argv[], NodeInfo& node_info)
+{
 
 #include "CommandLineOptions.h"
 #include "Node.h"
@@ -31,6 +55,7 @@ int main(int argc, char *argv[]) {
         std::cout << address << " is not a valid Ethereum address." << std::endl;
         return 1;
         }
+    node_info.set_value( "ethereum_address", address);
 
     uint port = options.get_port();
     if (!CommandLineOptions::is_valid_port(port))
@@ -38,6 +63,14 @@ int main(int argc, char *argv[]) {
         std::cout << port << " is not a valid port. Please pick a port in 49152 - 65535 range" << std::endl;
         return 1;
         }
+    node_info.set_value("port",port);
+    return 0;
+}
+
+int main(int argc, char *argv[]) {
+    auto& node_info = NodeInfo::get_instance();
+    initialize_node(node_info);
+    parse_command_line(argc, argv,  node_info);
 
     auto token = getenv(s_etherscan_api_token_envar_name);
     if (token == nullptr)
@@ -47,7 +80,7 @@ int main(int argc, char *argv[]) {
         return 1;
         }
 
-    uint64_t balance = get_token_balance(address, token);
+    uint64_t balance = get_token_balance(node_info.get_value<std::string>("ethereum_address"), token);
     if (balance < s_uint_minimum_required_token_balance)
         {
         std::cout << "Insufficient BZN token balance. Te balance of "
@@ -56,9 +89,12 @@ int main(int argc, char *argv[]) {
         return 1;
         }
 
-    std::cout << "Running node: " << options.get_address() << std::endl
-              << "     on port: " << options.get_port() << std::endl
-              << " config path: " << options.get_config() << std::endl;
+    std::cout << "Running node with ID: " << node_info.get_value<std::string>("node_id") << "\n"
+              << " Ethereum Address ID: " << node_info.get_value<std::string>("ethereum_address") << "\n"
+              << "             on port: " << node_info.get_value<unsigned short>("port") << "\n"
+              << "       Token Balance: " << balance << " BLZ\n"
+              << std::endl;
+              //<< " config path: " << node_info.get_value("node_id") << std::endl;
 
     std::shared_ptr<Listener> listener;
     boost::thread websocket_thread(WebSocketServer("127.0.0.1", port + 1000, listener, 1));

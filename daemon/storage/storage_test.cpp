@@ -20,17 +20,17 @@ boost::mt19937 ran;
 boost::uuids::basic_random_generator<boost::mt19937> gen(&ran);
 boost::random::uniform_int_distribution<> random_unsigned_char(0,UCHAR_MAX);
 
-const UUID_t create_random_uuid();
-const VEC_BIN_t create_random_value(const size_t &sz = 1024);
+const UUID_t        create_random_uuid();
+const VEC_BIN_t     create_random_value(const size_t &sz = 1024);
 
 // --run_test=storage
 BOOST_FIXTURE_TEST_SUITE(storage, F)
 
     BOOST_AUTO_TEST_CASE( test_read_empty )
     {
-        Storage sut;
-        const UUID_t                key = create_random_uuid();
-        const VEC_BIN_t    accepted_value = create_random_value();
+        Storage         sut;
+        const UUID_t    key = create_random_uuid();
+        const VEC_BIN_t accepted_value = create_random_value();
 
         auto record = sut.read(key);
         BOOST_CHECK( 0 == record.timestamp_ );
@@ -40,12 +40,16 @@ BOOST_FIXTURE_TEST_SUITE(storage, F)
 
     BOOST_AUTO_TEST_CASE( test_create_read )
     {
-        Storage sut;
-        const UUID_t key = create_random_uuid();
+        Storage         sut;
+        const UUID_t    key = create_random_uuid();
         const VEC_BIN_t accepted_value = create_random_value(1024);
-        const UUID_t accepted_tx_id = create_random_uuid();
+        const UUID_t    accepted_tx_id = create_random_uuid();
 
-        sut.create(key, accepted_value, accepted_tx_id);
+        sut.create(
+                key,
+                accepted_value,
+                accepted_tx_id
+        );
 
         auto record = sut.read(key);
         BOOST_CHECK( accepted_value == record.value_ );
