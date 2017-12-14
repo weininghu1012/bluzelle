@@ -104,15 +104,14 @@ connect_send_and_receive(
 
     stream<boost::asio::ip::tcp::socket &> ws(sock);
     ws.handshake(host, "/");
-    boost::asio::streambuf sb0;
-    ws.read(sb0);
-
-    ws.write(boost::asio::buffer(message));
     boost::asio::streambuf sb;
     ws.read(sb);
+    sb.consume(sb.size());
 
     // Now we can send our ping request
     ws.write(boost::asio::buffer(message));
+
+    //boost::asio::streambuf sb;
     ws.read(sb);
 
     char close_reason[256] = {0};
