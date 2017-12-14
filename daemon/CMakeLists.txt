@@ -27,6 +27,7 @@ endif()
 # Primary project for the_db
 project(the_db)
 include_directories(
+        storage
         websockets
         command_line_options
 )
@@ -53,6 +54,7 @@ message(STATUS "*** CMakeLists for bluzelled_test")
 enable_testing()
 
 include_directories(
+        storage
         websockets
         command_line_options
 )
