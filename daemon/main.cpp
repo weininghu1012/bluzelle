@@ -2,6 +2,12 @@
 #include "Listener.h"
 #include "WebSocketServer.h"
 
+#include "TokenBalance.hpp"
+
+
+ constexpr int s_uint_minimum_required_token_balance = 100;
+ constexpr char s_etherscan_api_token_envar_name[] = "ETHERSCAN_IO_API_TOKEN";
+
 #include <iostream>
 #include <boost/thread.hpp>
 
@@ -25,6 +31,23 @@ int main(int argc, char *argv[]) {
     if (!CommandLineOptions::is_valid_port(port))
         {
         std::cout << port << " is not a valid port. Please pick a port in 49152 - 65535 range" << std::endl;
+        return 1;
+        }
+
+    auto token = getenv(s_etherscan_api_token_envar_name);
+    if (token == nullptr)
+        {
+        std::cout << "Environment variable " << s_etherscan_api_token_envar_name
+                  << " containing etherscan.io API token must be set" << std::endl;
+        return 1;
+        }
+
+    uint64_t balance = get_token_balance(address, token);
+    if (balance < s_uint_minimum_required_token_balance)
+        {
+        std::cout << "Insufficient BZN token balance. Te balance of "
+                  << s_uint_minimum_required_token_balance << "BZN required to run node. Your balance is "
+                  << balance << "BZN" << std::endl;
         return 1;
         }
 

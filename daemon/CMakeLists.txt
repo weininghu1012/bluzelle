@@ -30,7 +30,7 @@ include_directories(
         storage
         websockets
         command_line_options
-)
+        ethereum)
 set(SOURCE_FILES
         command_line_options/CommandLineOptions.h
         command_line_options/CommandLineOptions.cpp
@@ -39,6 +39,9 @@ set(SOURCE_FILES
         websockets/Session.cpp
         websockets/Session.h
         websockets/WebSocketServer.h
+        ethereum/EthereumApi.h
+        ethereum/EthereumApi.cpp
+        ethereum/EthereumToken.h
         storage/Storage.h
         storage/Storage.cpp
         )
@@ -57,7 +60,7 @@ include_directories(
         storage
         websockets
         command_line_options
-)
+        ethereum)
 set(SOURCE_FILES
         test.cpp
         command_line_options/CommandLineOptions.h
@@ -67,6 +70,11 @@ set(SOURCE_FILES
         websockets/Session.cpp
         websockets/Session.h
         websockets/WebSocketServer.h
+        websockets/WebSocketServer_tests.cpp
+        ethereum/EthereumApi.h
+        ethereum/EthereumApi.cpp
+        ethereum/EthereumToken.h
+        ethereum/ethereum_test.cpp ethereum/TokenBalance.hpp
         websockets/WebSocketServer_tests.cpp
         storage/Storage.h
         storage/Storage.cpp
