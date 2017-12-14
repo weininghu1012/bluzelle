@@ -15,7 +15,18 @@ elseif(APPLE)
 endif()
 
 # TODO can we move this to the root CMakeLists.txt?
-find_package(Boost ${REQUIRED_BOOST} REQUIRED COMPONENTS serialization filesystem unit_test_framework system coroutine thread regex chrono random program_options REQUIRED)
+find_package(
+        Boost ${REQUIRED_BOOST}
+        REQUIRED COMPONENTS
+        system
+        coroutine
+        thread
+        regex
+        chrono
+        random
+        program_options
+        unit_test_framework REQUIRED)
+
 if(Boost_FOUND)
     message(STATUS "Your boost is here: ${Boost_INCLUDE_DIRS}")
     check_asio_version()
@@ -27,13 +38,15 @@ endif()
 # Primary project for the_db
 project(the_db)
 include_directories(
-        storage
+        .
         websockets
         command_line_options
-        ethereum)
+        ethereum
+        peers
+        storage
+        raft
+)
 set(SOURCE_FILES
-        command_line_options/CommandLineOptions.h
-        command_line_options/CommandLineOptions.cpp
         main.cpp
         websockets/Listener.h
         websockets/Session.cpp
@@ -42,8 +55,46 @@ set(SOURCE_FILES
         ethereum/EthereumApi.h
         ethereum/EthereumApi.cpp
         ethereum/EthereumToken.h
+        command_line_options/CommandLineOptions.h
+        command_line_options/CommandLineOptions.cpp
+        peers/Peer.h
+        peers/Peer.cpp
+        peers/PeerList.h
+        peers/PeerList.cpp
+        peers/PeerListener.h
+        peers/PeerListener.cpp
+        peers/PeerSession.h
+        peers/PeerSession.cpp
+        peers/PeerServer.h
+        peers/PeerServer.cpp
         storage/Storage.h
         storage/Storage.cpp
+        raft/Raft.h
+        raft/Raft.cpp
+        NodeInfo.hpp
+        Singleton.hpp
+        Node.h
+        Node.cpp
+        main.cpp
+        MessageInfo.hpp
+        raft/ApiCommandQueue.h
+        raft/ApiCreateCommand.cpp
+        raft/ApiCreateCommand.h
+        raft/ApiCreateCommand.cpp
+        raft/ApiReadCommand.h
+        raft/ApiReadCommand.cpp
+        raft/CommandFactory.h
+        raft/Command.hpp
+        raft/CrudCreateCommand.h
+        raft/CrudCreateCommand.cpp
+        raft/RaftHeartbeatCommand.h
+        raft/RaftHeartbeatCommand.cpp
+        raft/CrudReadCommand.h
+        raft/CrudReadCommand.cpp
+        raft/CommandFactory.cpp
+        raft/JsonTools.cpp
+        raft/JsonTools.h
+        MessageInfo.hpp
         )
 add_executable(the_db ${SOURCE_FILES})
 target_link_libraries(the_db ${Boost_LIBRARIES})
@@ -63,9 +114,6 @@ include_directories(
         ethereum)
 set(SOURCE_FILES
         test.cpp
-        command_line_options/CommandLineOptions.h
-        command_line_options/CommandLineOptions.cpp
-        command_line_options/command_line_options_test.cpp
         websockets/Listener.h
         websockets/Session.cpp
         websockets/Session.h
@@ -76,9 +124,22 @@ set(SOURCE_FILES
         ethereum/EthereumToken.h
         ethereum/ethereum_test.cpp ethereum/TokenBalance.hpp
         websockets/WebSocketServer_tests.cpp
+        ethereum/EthereumApi.h
+        ethereum/EthereumApi.cpp
+        ethereum/EthereumToken.h
+        ethereum/ethereum_test.cpp ethereum/TokenBalance.hpp
+        websockets/WebSocketServer_tests.cpp
+        ethereum/EthereumApi.h
+        ethereum/EthereumApi.cpp
+        ethereum/EthereumToken.h
+        ethereum/ethereum_test.cpp ethereum/TokenBalance.hpp
+        websockets/WebSocketServer_tests.cpp
         storage/Storage.h
         storage/Storage.cpp
         storage/storage_test.cpp
+        command_line_options/CommandLineOptions.h
+        command_line_options/CommandLineOptions.cpp
+        command_line_options/command_line_options_test.cpp
         )
 add_executable(the_db_test ${SOURCE_FILES})
 target_link_libraries(the_db_test ${Boost_LIBRARIES})

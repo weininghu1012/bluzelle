@@ -9,20 +9,14 @@
 boost::uuids::nil_generator Storage::nil_uuid_gen;
 VEC_BIN_t Storage::nil_value{0};
 
-Storage::Storage() {
-}
-
-Storage::~Storage() {
-}
-
 void Storage::create(
-        const UUID_t& key,
+        const std::string& key,
         const VEC_BIN_t& value,
         const UUID_t& transaction_id
 )
 {
-    const std::string key_str = boost::uuids::to_string(key);
-    kv_store_[key_str] = {std::time(nullptr), value, transaction_id};
+    //const std::string key_str = boost::uuids::to_string(key);
+    kv_store_[key] = {std::time(nullptr), value, transaction_id};
 }
 
 void Storage::update(

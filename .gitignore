@@ -68,6 +68,7 @@ build
 .idea/**/uiDesigner.xml
 /bluzelle/bluzelle.cbp
 
+
 # Scott
 workspace.xml
 /client/web/dist/generated

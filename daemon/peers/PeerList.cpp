@@ -4,7 +4,7 @@
 
 PeerList::PeerList(boost::asio::io_service& ios) {
     // Hardcoded list of peers.
-    ushort leader_port =  58000; // One node starts on port 58000 and become leader.
+    //ushort leader_port =  58000; // One node starts on port 58000 and become leader.
     for (int i = 1; i <= 2; ++i) // Create 5 more followers.
         {
         NodeInfo n;

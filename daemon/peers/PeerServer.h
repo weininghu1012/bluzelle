@@ -14,7 +14,7 @@ private:
     boost::asio::io_service& ios_;
     boost::asio::ip::address ip_address_;
     unsigned short port_;
-    size_t threads_;
+    size_t thread_count_;
     std::function<string(const string&)> request_handler_;
 
     bool running_ = false;
@@ -23,7 +23,7 @@ public:
     PeerServer(boost::asio::io_service& ios,
                const string &ip_address,
                unsigned short port,
-               unsigned short threads,
+               unsigned short thread_count,
                std::function<string(const string&)> request_handler);
 
     void run();

@@ -11,6 +11,11 @@
 #include <iostream>
 #include <boost/thread.hpp>
 
+
+#include "CommandLineOptions.h"
+#include "Node.h"
+
+
 int main(int argc, char *argv[]) {
     CommandLineOptions options;
 
@@ -56,11 +61,33 @@ int main(int argc, char *argv[]) {
               << " config path: " << options.get_config() << std::endl;
 
     std::shared_ptr<Listener> listener;
-    boost::thread websocket_thread(WebSocketServer("127.0.0.1", port, listener, 1));
+    boost::thread websocket_thread(WebSocketServer("127.0.0.1", port + 1000, listener, 1));
 
-    std::cout << "Press any key to stop" << std::endl;
-    getchar();
-    std::cout << "Stopping..." << std::endl;
+    NodeInfo info = NodeInfo::this_node();
+    info.port_ = port;
+    info.address_ = address;
+    info.config_ = options.get_config();
+    info.name_ = "Node_running_on_port_" + boost::lexical_cast<string>(port);
+
+
+    boost::asio::io_service ios; // I/O service to use.
+    boost::thread_group tg;
+
+    Node this_node(ios, info);
+    try
+        {
+        this_node.run();
+
+        for (unsigned i = 0; i < boost::thread::hardware_concurrency(); ++i)
+            tg.create_thread(boost::bind(&boost::asio::io_service::run, &ios));
+
+        ios.run();
+        }
+    catch (std::exception& ex)
+        {
+        std::cout << ex.what() << std::endl;
+        return 1;
+        }
 
     return 0;
 }

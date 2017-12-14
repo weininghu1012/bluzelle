@@ -5,6 +5,7 @@
 #include <boost/uuid/random_generator.hpp>
 #include <boost/uuid/string_generator.hpp>
 #include <boost/test/unit_test.hpp>
+#include <string>
 #include <cstdlib>
 #include <climits>
 
@@ -127,6 +128,38 @@ BOOST_FIXTURE_TEST_SUITE(storage, F)
         BOOST_CHECK( 0 == x_record.value_.size() );
         BOOST_CHECK(x_record.transaction_id_.is_nil());
     }
+
+    BOOST_AUTO_TEST_CASE( test_create_with_strings )
+    {
+        Storage sut;
+        const UUID_t accepted_key = create_random_uuid();
+        std::string accepted_value = "this is a string that should come back to us.";
+        VEC_BIN_t accepted_blob_value{0};
+        accepted_blob_value.reserve(accepted_value.size());
+        for(auto c : accepted_value)
+            {
+            accepted_blob_value.emplace_back((unsigned char) c);
+            }
+
+        const UUID_t accepted_tx_id = create_random_uuid();
+        std::string key_string = boost::uuids::to_string(accepted_key);
+        std::string tx_id_string = boost::uuids::to_string(accepted_tx_id);
+        sut.create(key_string, accepted_value, tx_id_string);
+
+        auto record = sut.read(accepted_key);
+        BOOST_CHECK( accepted_blob_value == record.value_ );
+        BOOST_CHECK( accepted_tx_id == record.transaction_id_ );
+    }
+
+
+    // TODO: Mehdi
+    BOOST_AUTO_TEST_CASE( test_storage_persistence )
+    {
+        std::string filename{"/tmp/bluzelle/persistence.txt"};
+        Storage sut(filename);
+
+    }
+
 
 BOOST_AUTO_TEST_SUITE_END()
 
