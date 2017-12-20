@@ -65,7 +65,11 @@ int parse_command_line(
 
 int main(int argc, char *argv[]) {
     initialize_daemon();
-    parse_command_line(argc, argv);
+
+    if( 0 != parse_command_line(argc, argv) )
+        {
+        return -1;
+        }
 
     auto token = getenv(s_etherscan_api_token_envar_name);
     if (token == nullptr)
@@ -94,23 +98,12 @@ int main(int argc, char *argv[]) {
               << "             on port: " << port << "\n"
               << "       Token Balance: " << balance << " BLZ\n"
               << std::endl;
-              //<< " config path: " << node_info.get_value("node_id") << std::endl;
 
     std::shared_ptr<Listener> listener;
     boost::thread websocket_thread(WebSocketServer("127.0.0.1", port + 1000, listener, 1));
 
-
-
-//    NodeInfo info = NodeInfo::this_node();
-//    info.port_ = port;
-//    info.address_ = address;
-//    info.config_ = options.get_config();
-//    info.name_ = "Node_running_on_port_" + boost::lexical_cast<string>(port);
-
-
     boost::asio::io_service ios; // I/O service to use.
     boost::thread_group tg;
-
 
     Node this_node(ios);
     try
@@ -120,7 +113,7 @@ int main(int argc, char *argv[]) {
             {
             tg.create_thread(boost::bind(&boost::asio::io_service::run, &ios));
             }
-        this_node.run();
+        ios.run();
         }
     catch (std::exception& ex)
         {

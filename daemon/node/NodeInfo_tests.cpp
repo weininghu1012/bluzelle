@@ -1,6 +1,5 @@
 // See KEP-87
-#include "NodeInfo.hpp"
-#include "Singleton.h"
+#include "node/NodeInfo.hpp"
 
 #include <boost/filesystem.hpp>
 #include <boost/uuid/uuid.hpp>

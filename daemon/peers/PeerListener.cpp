@@ -3,10 +3,14 @@
 
 void fail(boost::system::error_code ec, char const *what); // In PeerSession.cpp
 
-PeerListener::PeerListener(boost::asio::io_service &ios,
-                           boost::asio::ip::tcp::endpoint endpoint,
-                           std::function<string(const string&)> handler)
-        : acceptor_(ios), socket_(ios), request_handler_(handler) {
+PeerListener::PeerListener
+        (
+        boost::asio::io_service &ios,
+        boost::asio::ip::tcp::endpoint endpoint,
+        std::function<string(const string&)> handler
+        )
+        : acceptor_(ios), socket_(ios), request_handler_(handler)
+{
     boost::system::error_code ec;
 
     // Open the acceptor

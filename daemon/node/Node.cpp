@@ -1,5 +1,5 @@
 #include "Node.h"
-#include "DaemonInfo.h"
+#include "node/DaemonInfo.h"
 
 #include <iostream>
 #include <boost/lexical_cast.hpp>
