@@ -20,12 +20,12 @@ void Storage::create(
 }
 
 void Storage::update(
-        const UUID_t& key,
+        const std::string& key,
         const VEC_BIN_t& value
 )
 {
     // TODO: what do we do with the transaction id?
-    const std::string key_str = boost::uuids::to_string(key);
+    const std::string key_str = key;
     auto record = kv_store_.find(key_str);
     if(record != kv_store_.end())
     {
@@ -34,7 +34,7 @@ void Storage::update(
     }
 }
 
-void Storage::remove(const UUID_t& key)
+void Storage::remove(const std::string& key)
 {
-    kv_store_.erase(boost::uuids::to_string(key));
+    kv_store_.erase(key);
 }

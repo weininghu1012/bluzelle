@@ -6,6 +6,7 @@
 #include <vector>
 #include <boost/lexical_cast.hpp>
 #include <iostream>
+#include <raft/CommandFactory.h>
 
 using std::string;
 using std::vector;
@@ -14,15 +15,9 @@ using boost::lexical_cast;
 
 class NodeInfo {
     map<string, string> values_;
+public:
     NodeInfo(NodeInfo const &) = default;
     NodeInfo() = default;
-
-public:
-    static NodeInfo &get_instance()
-    {
-        static NodeInfo instance_;
-        return instance_;
-    }
 
     template <typename T>
     const T

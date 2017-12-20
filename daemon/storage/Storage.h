@@ -29,12 +29,6 @@ private:
     static boost::uuids::nil_generator nil_uuid_gen;
     static VEC_BIN_t nil_value;
 
-    void create(
-            const std::string& key,
-            const VEC_BIN_t& value,
-            const UUID_t& transaction_id
-    );
-
 public:
     Storage() = default;
     Storage(std::string filename)
@@ -42,6 +36,12 @@ public:
         std::cerr << "Storage does not save to: [" << filename << "] yet." << std::endl;
     }
     ~Storage() = default;
+
+    void create(
+            const std::string& key,
+            const VEC_BIN_t& value,
+            const UUID_t& transaction_id
+    );
 
     void create(
             const std::string& key,
@@ -63,22 +63,22 @@ public:
     };
 
     Record read(
-            const UUID_t &key
+            const std::string &key
     )
     {
         Storage::nil_value.resize(0);
         Record nil_record{ 0, Storage::nil_value, Storage::nil_uuid_gen()};
-        auto rec = kv_store_.find(boost::uuids::to_string(key));
+        auto rec = kv_store_.find(key);
         return (rec != kv_store_.end()) ? rec->second : nil_record;
     }
 
     void update(
-            const UUID_t& key,
+            const std::string& key,
             const VEC_BIN_t& value
     );
 
     void remove(
-            const UUID_t& key
+            const std::string& key
     );
 };
 

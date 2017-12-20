@@ -1,5 +1,6 @@
 #include "Raft.h"
 #include "JsonTools.h"
+#include "DaemonInfo.h"
 
 #include <iostream>
 #include <utility>
@@ -13,42 +14,49 @@
 
 static boost::uuids::uuid s_transaction_id;
 
-Raft::Raft(boost::asio::io_service &ios, const NodeInfo &i)
+DaemonInfo& daemon_info = DaemonInfo::get_instance();
+State tmp_state = State::undetermined;
+
+Raft::Raft(boost::asio::io_service &ios)
         : ios_(ios),
           peers_(ios_),
-          info_(i),
-          storage_("./storage_" + info_.name_ + ".txt"), // TODO: using the wrong info..
-          command_factory_(info_.state_, storage_, peer_queue_),
+          storage_("./storage_" + daemon_info.get_value<std::string>("name") + ".txt"), // TODO: using the wrong info..
+          command_factory_(
+                  tmp_state, // TODO: couldn't use daemon_info here, so set state inside of the constructor.
+                  storage_,
+                  peer_queue_),
           heartbeat_timer_(ios_,
                            boost::posix_time::milliseconds(raft_default_heartbeat_interval_milliseconds))
 {
+    command_factory_.state() = (State)daemon_info.get_value<int>("state");
     static boost::uuids::nil_generator nil_uuid_gen;
     s_transaction_id = nil_uuid_gen();
-
 }
+
+
+void Raft::start_heartbeat()
+{
+    heartbeat_timer_.async_wait
+            (
+                    boost::bind
+                            (
+                                    &Raft::heartbeat,
+                                    this
+                            )
+            );
+}
+
+void Raft::announce_follower()
+{
+    std::cout << "\n\tI am follower" << std::endl;
+}
+
+
 
 void Raft::run() {
     // Leader is hardcoded: node with port ending with '0' is always a leader.
-    if (info_.port_ % 10 == 0) // This node is leader. [todo] replace with actual leader election.
-        {
-        info_.state_ = State::leader;
-        }
-    else
-        {
-        info_.state_ = State::follower;
-        }
-
-    if (info_.state_ == State::leader)
-        {
-        std::cout << "\n\tI am leader" << std::endl;
-        heartbeat_timer_.async_wait(
-                boost::bind(&Raft::heartbeat,
-                            this)); // start heartbeat.
-        }
-    else
-        {
-        std::cout << "\n\tI am follower" << std::endl;
-        }
+    daemon_info.set_value<int>("state", (daemon_info.get_value<int>("port") % 10 == 0 ? State::leader : State::follower));
+    (State)daemon_info.get_value<int>("state") == State::leader ? start_heartbeat() : announce_follower();
 
     // How CRUD works? Am I writing to any node and it sends it to leader or I can write to leader only.
     // All goes through leader. Leader receives log entry and writes it locally, its state is uncommited.

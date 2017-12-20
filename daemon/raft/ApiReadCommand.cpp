@@ -28,8 +28,7 @@ boost::property_tree::ptree ApiReadCommand::operator()()
 
     if (!key.empty())
         {
-        static boost::uuids::string_generator gen;
-        Record val = storage_.read(gen(key)); // Read from local storage, no need to send to followers.
+        Record val = storage_.read(key); // Read from local storage, no need to send to followers.
         // TODO: Dmitry, here is a place we need to do some refactoring. Record doesn't hold value as a string, it's a blob.
         // TODO: This is a bad thing to do:
         string val_str;

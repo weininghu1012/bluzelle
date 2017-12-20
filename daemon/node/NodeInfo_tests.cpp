@@ -1,5 +1,6 @@
 // See KEP-87
 #include "NodeInfo.hpp"
+#include "Singleton.h"
 
 #include <boost/filesystem.hpp>
 #include <boost/uuid/uuid.hpp>
@@ -22,7 +23,7 @@ BOOST_FIXTURE_TEST_SUITE(node_info, F)
 
     BOOST_AUTO_TEST_CASE( test_setter_and_getter )
     {
-        NodeInfo& sut = NodeInfo::get_instance();
+        NodeInfo sut;
         const string key = "key42";
         const int accepted_value = 42;
         sut.set_value( key, accepted_value);
@@ -32,7 +33,7 @@ BOOST_FIXTURE_TEST_SUITE(node_info, F)
 
     BOOST_AUTO_TEST_CASE(test_type_handling)
     {
-        NodeInfo& sut = NodeInfo::get_instance();
+        NodeInfo sut;
         boost::uuids::basic_random_generator<boost::mt19937> gen;
 
         const ushort actual_host = 127;
@@ -61,9 +62,11 @@ BOOST_FIXTURE_TEST_SUITE(node_info, F)
 
     BOOST_AUTO_TEST_CASE(test_missing_value)
     {
-        auto& sut = NodeInfo::get_instance();
+        NodeInfo sut;
         const string key = "MissingKey";
-        BOOST_CHECK_THROW(auto value = sut.get_value<__uint32_t>(key), std::exception);
+        unsigned long value = 22;
+        BOOST_CHECK_THROW(value = sut.get_value<unsigned long>(key), std::exception);
+        BOOST_CHECK( value == 0);
     }
 
 BOOST_AUTO_TEST_SUITE_END()

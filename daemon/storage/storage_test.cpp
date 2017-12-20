@@ -29,7 +29,7 @@ BOOST_FIXTURE_TEST_SUITE(storage, F)
     BOOST_AUTO_TEST_CASE( test_read_empty )
     {
         Storage         sut;
-        const UUID_t    key = create_random_uuid();
+        const std::string    key{"fluffy"};
         const VEC_BIN_t accepted_value = create_random_value();
 
         auto record = sut.read(key);
@@ -41,7 +41,7 @@ BOOST_FIXTURE_TEST_SUITE(storage, F)
     BOOST_AUTO_TEST_CASE( test_create_read )
     {
         Storage         sut;
-        const UUID_t    key = create_random_uuid();
+        std::string     key{"fluffy"};
         const VEC_BIN_t accepted_value = create_random_value(1024);
         const UUID_t    accepted_tx_id = create_random_uuid();
 
@@ -65,19 +65,19 @@ BOOST_FIXTURE_TEST_SUITE(storage, F)
         Storage sut;
         for(size_t i=0;i<10;++i)
         {
-            const UUID_t key = create_random_uuid();
+            const std::string key{"Fluffy"};
             const VEC_BIN_t value = create_random_value(rand() % 1024);
             const UUID_t tx_id = create_random_uuid();
             Record record{time(nullptr), value, tx_id};
-            records[boost::uuids::to_string(key)] = record;
+            records[key] = record;
 
             sut.create(key, value, tx_id);
         }
 
-        boost::uuids::string_generator gen;
-        std::for_each( records.begin(), records.end(), [&gen, &sut](const auto &p)
+
+        std::for_each( records.begin(), records.end(), [&sut](const auto &p)
         {
-            auto accepted_key = gen(p.first);
+            auto accepted_key = p.first;
             auto accepted_record = p.second;
             auto record = sut.read(accepted_key);
             double diff = std::fabs(std::difftime(accepted_record.timestamp_, record.timestamp_));
@@ -91,7 +91,7 @@ BOOST_FIXTURE_TEST_SUITE(storage, F)
     BOOST_AUTO_TEST_CASE( test_update )
     {
         Storage sut;
-        const UUID_t key = create_random_uuid();
+        const std::string key{"Mr. Kitty"};
         const VEC_BIN_t accepted_value = create_random_value(1024);
         const UUID_t accepted_tx_id = create_random_uuid();
         sut.create(key, accepted_value, accepted_tx_id);
@@ -112,15 +112,15 @@ BOOST_FIXTURE_TEST_SUITE(storage, F)
     BOOST_AUTO_TEST_CASE( test_remove )
     {
         Storage sut;
-        const UUID_t key = create_random_uuid();
+        const std::string key{"Mr. Kitty"};
         const VEC_BIN_t accepted_value = create_random_value(256);
         const UUID_t accepted_tx_id = create_random_uuid();
 
-        sut.create( create_random_uuid(),create_random_value(1024), create_random_uuid());
-        sut.create( create_random_uuid(),create_random_value(1024), create_random_uuid());
+        sut.create( "akey01",create_random_value(1024), create_random_uuid());
+        sut.create( "akey02",create_random_value(1024), create_random_uuid());
         sut.create( key, accepted_value, accepted_tx_id);
-        sut.create( create_random_uuid(),create_random_value(1024), create_random_uuid());
-        sut.create( create_random_uuid(),create_random_value(1024), create_random_uuid());
+        sut.create( "akey04",create_random_value(1024), create_random_uuid());
+        sut.create( "akey05",create_random_value(1024), create_random_uuid());
 
         const auto record = sut.read(key);
         BOOST_CHECK(record.value_ == accepted_value);
@@ -136,7 +136,7 @@ BOOST_FIXTURE_TEST_SUITE(storage, F)
     BOOST_AUTO_TEST_CASE( test_create_with_strings )
     {
         Storage sut;
-        const UUID_t accepted_key = create_random_uuid();
+        const std::string accepted_key{"Fluffy"};
         std::string accepted_value = "this is a string that should come back to us.";
         VEC_BIN_t accepted_blob_value{0};
         accepted_blob_value.reserve(accepted_value.size());
@@ -146,7 +146,7 @@ BOOST_FIXTURE_TEST_SUITE(storage, F)
             }
 
         const UUID_t accepted_tx_id = create_random_uuid();
-        std::string key_string = boost::uuids::to_string(accepted_key);
+        std::string key_string{accepted_key};
         std::string tx_id_string = boost::uuids::to_string(accepted_tx_id);
         sut.create(key_string, accepted_value, tx_id_string);
 

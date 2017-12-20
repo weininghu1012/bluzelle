@@ -1,12 +1,14 @@
 #ifndef BLUZELLE_PEERLIST_H
 #define BLUZELLE_PEERLIST_H
 
+#include "Peer.h"
+#include "NodeInfo.hpp"
+
 #include <vector>
 
 using std::vector;
 
-#include "Peer.h"
-#include "NodeInfo.hpp"
+
 
 class PeerList : public vector<Peer>{
 public:

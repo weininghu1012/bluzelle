@@ -47,6 +47,7 @@ include_directories(
         storage
         raft
 )
+
 set(SOURCE_FILES
         main.cpp
         websockets/Listener.h
@@ -72,10 +73,9 @@ set(SOURCE_FILES
         storage/Storage.cpp
         raft/Raft.h
         raft/Raft.cpp
-        NodeInfo.hpp
-        Singleton.hpp
-        Node.h
-        Node.cpp
+        node/NodeInfo.hpp
+        node/Node.h
+        node/Node.cpp
         main.cpp
         MessageInfo.hpp
         raft/ApiCommandQueue.h
@@ -96,7 +96,9 @@ set(SOURCE_FILES
         raft/JsonTools.cpp
         raft/JsonTools.h
         MessageInfo.hpp
-        )
+        node/Singleton.h
+        node/DaemonInfo.h)
+
 add_executable(the_db ${SOURCE_FILES})
 target_link_libraries(the_db ${Boost_LIBRARIES})
 if(UNIX AND NOT APPLE)
@@ -157,7 +159,7 @@ set(SOURCE_FILES
         command_line_options/CommandLineOptions.h
         command_line_options/CommandLineOptions.cpp
         command_line_options/command_line_options_test.cpp
-        )
+        node/Singleton.h)
 add_executable(the_db_test ${SOURCE_FILES})
 target_link_libraries(the_db_test ${Boost_LIBRARIES})
 if(UNIX AND NOT APPLE)
