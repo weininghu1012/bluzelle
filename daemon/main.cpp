@@ -63,14 +63,8 @@ int parse_command_line(
 }
 
 
-int main(int argc, char *argv[]) {
-    initialize_daemon();
-
-    if( 0 != parse_command_line(argc, argv) )
-        {
-        return -1;
-        }
-
+int check_token_balance()
+{
     auto token = getenv(s_etherscan_api_token_envar_name);
     if (token == nullptr)
         {
@@ -89,15 +83,35 @@ int main(int argc, char *argv[]) {
                   << balance << "BZN" << std::endl;
         return 1;
         }
+    daemon_info.set_value("ropsten_token_balance", balance);
+    return 0;
+}
 
 
-    unsigned short port = daemon_info.get_value<unsigned short>("port");
+int main(int argc, char *argv[]) {
+    initialize_daemon();
+
+    if( 0 != parse_command_line(argc, argv) )
+        {
+        return -1;
+        }
+
+    if( 0 != check_token_balance())
+        {
+        return -1;
+        }
+
+
+    DaemonInfo& daemon_info = DaemonInfo::get_instance();
+    auto port = daemon_info.get_value<unsigned short>("port");
 
     std::cout << "Running node with ID: " << daemon_info.get_value<std::string>("node_id") << "\n"
               << " Ethereum Address ID: " << daemon_info.get_value<std::string>("ethereum_address") << "\n"
               << "             on port: " << port << "\n"
-              << "       Token Balance: " << balance << " BLZ\n"
+              << "       Token Balance: " << daemon_info.get_value<unsigned short>("ropsten_token_balance") << " BLZ\n"
               << std::endl;
+
+
 
     std::shared_ptr<Listener> listener;
     boost::thread websocket_thread(WebSocketServer("127.0.0.1", port + 1000, listener, 1));
