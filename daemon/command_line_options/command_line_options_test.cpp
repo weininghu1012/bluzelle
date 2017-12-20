@@ -1,5 +1,3 @@
-#define BOOST_TEST_MODULE "BaseClassModule"
-
 #include <boost/range.hpp>
 #include <boost/test/unit_test.hpp>
 
