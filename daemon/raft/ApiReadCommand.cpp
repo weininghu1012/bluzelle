@@ -38,12 +38,14 @@ boost::property_tree::ptree ApiReadCommand::operator()()
         std::transform(
                 val.value_.begin(),
                 val.value_.end(),
-                val_str.begin(),
+                std::back_inserter(val_str),
                 [](auto c)
                     {
                     return (char)c;
                     }
         );
+
+        std::cout << "api-read" << std::endl;
 
         return result(val_str);
         }

@@ -31,13 +31,6 @@ boost::property_tree::ptree ApiCreateCommand::operator()() {
                 boost::uuids::to_string(transaction_id)
         );
 
-        // Translate BZN-API command to CRUD command.
-        /*auto c = pt_.get<string>("bzn-api");
-        pt_.erase("bzn-api");
-        pt_.put("crud", c); // Doesn't work!
-        */
-
-
         // {"bzn-api":"create", "transaction-id":"123", "data":{key":"key_one", "value":"value_one"}}
         // {"crud":"create", "transaction-id":"123", "data":{key":"key_one", "value":"value_one"}}
         string resp = pt_to_json_string(pt_);
@@ -47,7 +40,7 @@ boost::property_tree::ptree ApiCreateCommand::operator()() {
                 pt_.get<string>("transaction-id"),
                 std::move(resp)/*pt_to_json_string(pt_)*/));
 
-        std::cout << "Queue size: " << queue_.size() << std::endl;
+        std::cout << "api-create" << std::endl;
 
         return success();
         }

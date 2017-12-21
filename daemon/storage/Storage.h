@@ -50,7 +50,7 @@ public:
     )
     {
         //static boost::uuids::string_generator gen;
-        VEC_BIN_t blob{0};
+        VEC_BIN_t blob;
         blob.reserve(value.size());
         for(auto c : value)
             {

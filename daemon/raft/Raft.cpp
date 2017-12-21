@@ -15,20 +15,18 @@
 static boost::uuids::uuid s_transaction_id;
 
 DaemonInfo& daemon_info = DaemonInfo::get_instance();
-State tmp_state = State::undetermined;
 
 Raft::Raft(boost::asio::io_service &ios)
         : ios_(ios),
           peers_(ios_),
           storage_("./storage_" + daemon_info.get_value<std::string>("name") + ".txt"), // TODO: using the wrong info..
           command_factory_(
-                  tmp_state, // TODO: couldn't use daemon_info here, so set state inside of the constructor.
                   storage_,
                   peer_queue_),
           heartbeat_timer_(ios_,
                            boost::posix_time::milliseconds(raft_default_heartbeat_interval_milliseconds))
 {
-    command_factory_.state() = (State)daemon_info.get_value<int>("state");
+    daemon_info.set_value("state", State::undetermined);
     static boost::uuids::nil_generator nil_uuid_gen;
     s_transaction_id = nil_uuid_gen();
 }

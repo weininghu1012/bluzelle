@@ -6,9 +6,11 @@
 #include "ApiCreateCommand.h"
 #include "ApiReadCommand.h"
 #include "ErrorCommand.hpp"
+#include "DaemonInfo.h"
 
-CommandFactory::CommandFactory(State& s, Storage& st, ApiCommandQueue& q)
-    : state_(s), storage_(st), queue_(q) {
+
+CommandFactory::CommandFactory(Storage& st, ApiCommandQueue& q)
+    : storage_(st), queue_(q) {
 
 }
 
@@ -47,7 +49,7 @@ unique_ptr<Command> CommandFactory::make_raft_command(const boost::property_tree
     auto cmd = pt.get<string>("raft");
     if (cmd == "beep")
         {
-        if (state_ == State::follower)
+        if (state() == State::follower)
             return std::make_unique<RaftHeartbeatCommand>();
         }
 
@@ -55,7 +57,7 @@ unique_ptr<Command> CommandFactory::make_raft_command(const boost::property_tree
 }
 
 unique_ptr<Command> CommandFactory::make_crud_command(const boost::property_tree::ptree& pt) const {
-    if (state_ == State::leader)
+    if (state() == State::leader)
         return std::make_unique<ErrorCommand>("CRUD request cannot be sent to swarm leader");
 
     auto cmd = pt.get<string>("crud");
@@ -71,8 +73,8 @@ unique_ptr<Command> CommandFactory::make_crud_command(const boost::property_tree
 }
 
 unique_ptr<Command> CommandFactory::make_api_command(const boost::property_tree::ptree& pt) const {
-    if (state_ == State::follower)
-        return std::make_unique<ErrorCommand>("API request must be sent to swarm leader");
+    //if (state_ == State::follower)
+    //    return std::make_unique<ErrorCommand>("API request must be sent to swarm leader");
 
     auto cmd = pt.get<string>("bzn-api");
     auto dat = get_data(pt);
@@ -99,4 +101,9 @@ std::pair<string,string> CommandFactory::get_data(const boost::property_tree::pt
         val = data.get<string>("value");
 
     return std::make_pair<string,string>(std::move(key), std::move(val));
+}
+
+State CommandFactory::state() const {
+    DaemonInfo& daemon_info = DaemonInfo::get_instance();
+    return (State)daemon_info.get_value<int>("state");
 }

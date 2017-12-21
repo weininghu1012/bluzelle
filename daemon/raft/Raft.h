@@ -22,7 +22,7 @@ using std::pair;
 
 class Raft {
     const string s_heartbeat_message{R"({"raft":"beep"})"};
-    static const uint raft_default_heartbeat_interval_milliseconds = 50; // 50 millisec.
+    static const uint raft_default_heartbeat_interval_milliseconds = 1050; // 50 millisec in RAFT (we need a reasonable interval, cannot expect 50ms heartbeat delivered over WAN reliably)
 
     boost::asio::io_service& ios_;
 

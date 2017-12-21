@@ -18,7 +18,6 @@ enum State {
 
 class CommandFactory {
 private:
-    State& state_;
     Storage& storage_;
     ApiCommandQueue& queue_;
 
@@ -33,14 +32,10 @@ private:
     std::pair<string,string> get_data(const boost::property_tree::ptree& pt) const;
 
 public:
-    State&
-    state()
-    {
-        return state_;
-    }
+    State
+    state() const;
 
     CommandFactory(
-            State& s,
             Storage& st,
             ApiCommandQueue& queue
     );
