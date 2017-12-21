@@ -13,7 +13,6 @@ using std::shared_ptr;
 string Peer::send_request(const string& req) {
     if (session_ == nullptr) // Check if we don't have a session.
         {
-        DaemonInfo& daemon_info = DaemonInfo::get_instance();
         try
             {
             boost::asio::ip::tcp::resolver resolver(ios_);
@@ -23,12 +22,12 @@ string Peer::send_request(const string& req) {
 
             auto lookup = resolver.resolve(
                     {
-                            daemon_info.get_value<std::string>("host"),
-                            daemon_info.get_value<string>("port")
+                            info_.get_value<std::string>("host"),
+                            info_.get_value<string>("port")
                     }
             );
             boost::asio::connect(ws.next_layer(), lookup);
-            ws.handshake(daemon_info.get_value<string>("host"), "/");
+            ws.handshake(info_.get_value<string>("host"), "/");
 
 
             session_ = std::make_shared<PeerSession>(std::move(ws)); // Store it for future use.
@@ -36,8 +35,8 @@ string Peer::send_request(const string& req) {
         catch (std::exception& ex)
             {
             std::cout << "Cannot connect to "
-                      << daemon_info.get_value<string>("host") << ":"
-                      << daemon_info.get_value<string>("port") << " '"
+                      << info_.get_value<string>("host") << ":"
+                      << info_.get_value<string>("port") << " '"
                       << ex.what() << "'" << std::endl;
             }
         catch (...)
