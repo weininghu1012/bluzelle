@@ -7,11 +7,10 @@
 #include "CommandLineOptions.h"
 #include "Node.h"
 
-
 #include <boost/uuid/uuid.hpp>
 #include <boost/uuid/uuid_generators.hpp>
-#include <boost/uuid/uuid_io.hpp>
-#include <boost/lexical_cast.hpp>
+//#include <boost/uuid/uuid_io.hpp>
+//#include <boost/lexical_cast.hpp>
 
 #include <iostream>
 #include <boost/thread.hpp>
@@ -62,6 +61,17 @@ int parse_command_line(
     return 0;
 }
 
+void display_daemon_info()
+{
+    DaemonInfo& daemon_info = DaemonInfo::get_instance();
+    auto port = daemon_info.get_value<unsigned short>("port");
+
+    std::cout << "Running node with ID: " << daemon_info.get_value<std::string>("node_id") << "\n"
+              << " Ethereum Address ID: " << daemon_info.get_value<std::string>("ethereum_address") << "\n"
+              << "             on port: " << port << "\n"
+              << "       Token Balance: " << daemon_info.get_value<unsigned short>("ropsten_token_balance") << " BLZ\n"
+              << std::endl;
+}
 
 int check_token_balance()
 {
@@ -87,8 +97,8 @@ int check_token_balance()
     return 0;
 }
 
-
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
     initialize_daemon();
 
     if( 0 != parse_command_line(argc, argv) )
@@ -101,20 +111,21 @@ int main(int argc, char *argv[]) {
         return -1;
         }
 
+    display_daemon_info();
 
-    DaemonInfo& daemon_info = DaemonInfo::get_instance();
-    auto port = daemon_info.get_value<unsigned short>("port");
-
-    std::cout << "Running node with ID: " << daemon_info.get_value<std::string>("node_id") << "\n"
-              << " Ethereum Address ID: " << daemon_info.get_value<std::string>("ethereum_address") << "\n"
-              << "             on port: " << port << "\n"
-              << "       Token Balance: " << daemon_info.get_value<unsigned short>("ropsten_token_balance") << " BLZ\n"
-              << std::endl;
-
-
-
+    ///////////////////////////////////////////////////////////////////////////
+    // Start the daemon work.
     std::shared_ptr<Listener> listener;
-    boost::thread websocket_thread(WebSocketServer("127.0.0.1", port + 1000, listener, 1));
+    boost::thread websocket_thread
+            (
+            WebSocketServer
+                    (
+                            "127.0.0.1",
+                            DaemonInfo::get_instance().get_value<unsigned short>("port") + 1000,
+                            listener,
+                            1
+                    )
+            );
 
     boost::asio::io_service ios; // I/O service to use.
     boost::thread_group tg;
