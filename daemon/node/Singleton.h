@@ -6,7 +6,7 @@ class Singleton
 {
     Singleton(const Singleton&) = delete;
     Singleton& operator= (const Singleton&) = delete;
-    inline static T * m_instance = nullptr;
+    /*inline*/ static T * m_instance;
 
     class MemoryGuard
     {
@@ -33,5 +33,8 @@ public:
         return *m_instance;
     }
 };
+
+template<typename T>
+T* Singleton<T>::m_instance = nullptr;
 
 #endif //BLUZELLE_SINGLETON_H

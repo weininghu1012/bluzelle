@@ -17,7 +17,6 @@ Node::Node
                         ios,
                         "127.0.0.1",
                         DaemonInfo::get_instance().get_value<unsigned short>("port"),
-                        0, // what is thread count?
                         std::bind
                                 (
                                         &Raft::handle_request,
