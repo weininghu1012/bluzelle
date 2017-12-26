@@ -27,20 +27,17 @@ unique_ptr<Command> CommandFactory::get_command(const boost::property_tree::ptre
     return std::make_unique<ErrorCommand>("Unsupported command");
 }
 
-// {"raft":"beep"} // This is a heartbeat command.
+// This is a heartbeat command.
 bool CommandFactory::is_raft(const boost::property_tree::ptree& pt) const {
     return pt.find("raft") != pt.not_found();
 }
 
 // CRUD commands go from leader to followers. I.e they are log replication commands.
-// {"crud":"create", "transaction-id":"123", "data":{"key":"key_one", "value":"value_one"}}
 bool CommandFactory::is_crud(const boost::property_tree::ptree& pt) const {
     return pt.find("crud") != pt.not_found();
 }
 
 // API commands go from API to leader. Same format as CRUD.
-// In future we can change either API or CRUD command format so better keep them separate.
-// {"bzn-api":"create", "transaction-id":"123", "data":{"key":"key_one", "value":"value_one"}}
 bool CommandFactory::is_api(const boost::property_tree::ptree& pt) const {
     return pt.find("bzn-api") != pt.not_found();
 }
@@ -48,18 +45,12 @@ bool CommandFactory::is_api(const boost::property_tree::ptree& pt) const {
 unique_ptr<Command> CommandFactory::make_raft_command(const boost::property_tree::ptree& pt) const {
     auto cmd = pt.get<string>("raft");
     if (cmd == "beep")
-        {
-        if (state() == State::follower)
-            return std::make_unique<RaftHeartbeatCommand>();
-        }
+        return std::make_unique<RaftHeartbeatCommand>();
 
-    return std::make_unique<ErrorCommand>("Leader received heartbeat");
+    return nullptr;
 }
 
 unique_ptr<Command> CommandFactory::make_crud_command(const boost::property_tree::ptree& pt) const {
-    if (state() == State::leader)
-        return std::make_unique<ErrorCommand>("CRUD request cannot be sent to swarm leader");
-
     auto cmd = pt.get<string>("crud");
     auto dat = get_data(pt);
 
@@ -73,9 +64,6 @@ unique_ptr<Command> CommandFactory::make_crud_command(const boost::property_tree
 }
 
 unique_ptr<Command> CommandFactory::make_api_command(const boost::property_tree::ptree& pt) const {
-    //if (state_ == State::follower)
-    //    return std::make_unique<ErrorCommand>("API request must be sent to swarm leader");
-
     auto cmd = pt.get<string>("bzn-api");
     auto dat = get_data(pt);
 
@@ -87,7 +75,6 @@ unique_ptr<Command> CommandFactory::make_api_command(const boost::property_tree:
 
     return nullptr;
 }
-
 
 std::pair<string,string> CommandFactory::get_data(const boost::property_tree::ptree& pt) const {
     auto data  = pt.get_child("data.");
@@ -101,9 +88,4 @@ std::pair<string,string> CommandFactory::get_data(const boost::property_tree::pt
         val = data.get<string>("value");
 
     return std::make_pair<string,string>(std::move(key), std::move(val));
-}
-
-State CommandFactory::state() const {
-    DaemonInfo& daemon_info = DaemonInfo::get_instance();
-    return (State)daemon_info.get_value<int>("state");
 }

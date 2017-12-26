@@ -10,12 +10,6 @@
 
 using std::unique_ptr;
 
-enum State {
-    undetermined,
-    leader,
-    follower
-};
-
 class CommandFactory {
 private:
     Storage& storage_;
@@ -32,9 +26,6 @@ private:
     std::pair<string,string> get_data(const boost::property_tree::ptree& pt) const;
 
 public:
-    State
-    state() const;
-
     CommandFactory(
             Storage& st,
             ApiCommandQueue& queue

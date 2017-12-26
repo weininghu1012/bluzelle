@@ -97,7 +97,13 @@ set(SOURCE_FILES
         websockets/Session.cpp
         websockets/Session.h
         websockets/WebSocketServer.h
-        )
+        raft/RaftLeaderState.h
+        raft/RaftFollowerState.h
+        raft/RaftCandidateState.h
+        raft/RaftState.h
+        raft/RaftLeaderState.cpp
+        raft/RaftCandidateState.cpp
+        raft/RaftFollowerState.cpp)
 
 add_executable(the_db ${SOURCE_FILES})
 target_link_libraries(the_db ${Boost_LIBRARIES})
