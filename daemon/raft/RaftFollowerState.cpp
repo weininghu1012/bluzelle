@@ -1,5 +1,7 @@
 #include <iostream>
 
+#include "PeerList.h"
+#include "CommandFactory.h"
 #include "RaftFollowerState.h"
 #include "JsonTools.h"
 
@@ -17,21 +19,12 @@ RaftFollowerState::RaftFollowerState(boost::asio::io_service& ios,
     election_timeout_timer_.async_wait(boost::bind(&RaftFollowerState::start_election, this));
 }
 
-string RaftFollowerState::handle_request(const string& req)
-{
-    auto pt = pt_from_json_string(req);
-
-    unique_ptr<Command> command = command_factory_.get_command(pt);
-    // If heartbeat command received reset timer.
-    string response = pt_to_json_string(command->operator()());
-
-    return response;
-}
 
 void RaftFollowerState::start_election()
 {
+    std::cout << "Starting Leader election" << std::endl;
 
-    // Change state to Candidate.
+    // Change state to Candidate. [todo] HOW?
 /*
  * If node haven't heard from leader it can start election.
  * Change state to State::candidate and request votes
@@ -47,4 +40,18 @@ void RaftFollowerState::start_election()
 // The leader sends Append_Entry messages to followers in Heartbeat_Timeout intervals. Followers respond
 // If follower don't receive Append_Entry in time alotted new election term starts.
 // Handle Split_Vote
+}
+
+unique_ptr<RaftState> RaftFollowerState::handle_request(const string& request, string& response)
+{
+    auto pt = pt_from_json_string(request);
+
+    unique_ptr<Command> command = command_factory_.get_command(pt);
+    // If heartbeat command received reset timer.
+    /* Rearm timer.
+     * election_timeout_timer_.expires_from_now(boost::posix_time::milliseconds(raft_election_timeout_interval_min_milliseconds)
+     * */
+    response = pt_to_json_string(command->operator()());
+
+    return nullptr;
 }

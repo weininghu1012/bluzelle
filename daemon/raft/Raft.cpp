@@ -37,12 +37,18 @@ void Raft::run() {
                                                        storage_,
                                                        command_factory_,
                                                        peer_queue_,
-                                                       peers_); // Starting from candidate state.
+                                                       peers_);
 }
 
 string Raft::handle_request(const string &req) {
-    string response = raft_state_->handle_request(req); // request handled by current state.
-    return response;
+    string resp;
+
+    unique_ptr<RaftState> next_state = raft_state_->handle_request(req, resp); // request handled by current state.
+
+    if (next_state != nullptr) // transition to next state.
+        raft_state_.reset(next_state.get());
+
+    return resp;
 }
 
 

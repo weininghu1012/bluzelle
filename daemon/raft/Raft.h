@@ -1,6 +1,16 @@
 #ifndef BLUZELLE_RAFT_H
 #define BLUZELLE_RAFT_H
 
+#include <string>
+#include <thread>
+#include <queue>
+#include <utility>
+
+using std::queue;
+using std::pair;
+
+#include <boost/property_tree/ptree.hpp>
+
 #include "PeerList.h"
 #include "NodeInfo.hpp"
 #include "Storage.h"
@@ -8,15 +18,6 @@
 #include "ApiCommandQueue.h"
 #include "DaemonInfo.h"
 #include "RaftState.h"
-
-#include <string>
-#include <thread>
-#include <queue>
-#include <utility>
-#include <boost/property_tree/ptree.hpp>
-
-using std::queue;
-using std::pair;
 
 
 class Raft {
@@ -28,9 +29,6 @@ class Raft {
     CommandFactory command_factory_;
 
     unique_ptr<RaftState> raft_state_; // There are 3 RAFT states: Candidate, Follower and Leader.
-    // Leader shouldn't change state.
-    // Candidate can become Leader of Follower
-    // Follower can only become Candidate
 
 public:
     Raft(boost::asio::io_service& ios);

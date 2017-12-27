@@ -18,7 +18,7 @@ public:
 
     void start_election();
 
-    virtual string handle_request(const string& r);
+    virtual unique_ptr<RaftState> handle_request(const string& request, string& response);
 };
 
 #endif //BLUZELLE_RAFTFOLLOWERSTATE_H

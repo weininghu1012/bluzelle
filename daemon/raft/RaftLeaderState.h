@@ -5,10 +5,9 @@
 
 #include "RaftState.h"
 
-class RaftLeaderState : public RaftState {
+class RaftLeaderState : public RaftState
+{
 private:
-    static constexpr char s_heartbeat_message[] = "({\"raft\":\"beep\"})";
-
     boost::asio::deadline_timer heartbeat_timer_;
     void heartbeat();
 
@@ -19,7 +18,7 @@ public:
                     ApiCommandQueue& pq,
                     PeerList& ps);
 
-    virtual string handle_request(const string& r);
+    virtual unique_ptr<RaftState> handle_request(const string& request, string& response);
 };
 
 #endif //BLUZELLE_RAFTLEADERSTATE_H

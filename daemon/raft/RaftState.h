@@ -2,21 +2,26 @@
 #define BLUZELLE_RAFTSTATE_H
 
 #include <string>
+
 using std::string;
+using std::unique_ptr;
 
-#include "PeerList.h"
-#include "Storage.h"
-#include "CommandFactory.h"
-#include "ApiCommandQueue.h"
+#include <boost/asio/io_service.hpp>
+
+class PeerList;
+class ApiCommandQueue;
+class Storage;
+class CommandFactory;
 
 
-class RaftState {
+class RaftState
+{
 protected:
     static constexpr uint raft_default_heartbeat_interval_milliseconds = 1000;
     static constexpr uint raft_election_timeout_interval_min_milliseconds =
             raft_default_heartbeat_interval_milliseconds * 3;
     static constexpr uint raft_election_timeout_interval_max_milliseconds =
-            raft_default_heartbeat_interval_milliseconds * 6;
+           raft_default_heartbeat_interval_milliseconds * 6;
 
     boost::asio::io_service& ios_;
 
@@ -26,7 +31,7 @@ protected:
     CommandFactory& command_factory_;
 
 public:
-    virtual string handle_request(const string& r) = 0;
+    virtual unique_ptr<RaftState> handle_request(const string& request, string& response) = 0;
 
     RaftState(boost::asio::io_service& ios,
               Storage& s,

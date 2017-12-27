@@ -6,25 +6,13 @@
 #include "ApiCreateCommand.h"
 #include "ApiReadCommand.h"
 #include "ErrorCommand.hpp"
-#include "DaemonInfo.h"
+#include "RaftVoteCommand.h"
+#include "RaftCountVotesCommand.h"
 
 
 CommandFactory::CommandFactory(Storage& st, ApiCommandQueue& q)
     : storage_(st), queue_(q) {
 
-}
-
-unique_ptr<Command> CommandFactory::get_command(const boost::property_tree::ptree& pt) const {
-    if (is_raft(pt))
-        return make_raft_command(pt);
-
-    if (is_crud(pt))
-        return make_crud_command(pt);
-
-    if (is_api(pt))
-        return make_api_command(pt);
-
-    return std::make_unique<ErrorCommand>("Unsupported command");
 }
 
 // This is a heartbeat command.
@@ -50,7 +38,8 @@ unique_ptr<Command> CommandFactory::make_raft_command(const boost::property_tree
     return nullptr;
 }
 
-unique_ptr<Command> CommandFactory::make_crud_command(const boost::property_tree::ptree& pt) const {
+unique_ptr<Command>
+CommandFactory::make_crud_command(const boost::property_tree::ptree& pt) const {
     auto cmd = pt.get<string>("crud");
     auto dat = get_data(pt);
 
@@ -63,7 +52,8 @@ unique_ptr<Command> CommandFactory::make_crud_command(const boost::property_tree
     return nullptr;
 }
 
-unique_ptr<Command> CommandFactory::make_api_command(const boost::property_tree::ptree& pt) const {
+unique_ptr<Command>
+CommandFactory::make_api_command(const boost::property_tree::ptree& pt) const {
     auto cmd = pt.get<string>("bzn-api");
     auto dat = get_data(pt);
 
@@ -76,7 +66,8 @@ unique_ptr<Command> CommandFactory::make_api_command(const boost::property_tree:
     return nullptr;
 }
 
-std::pair<string,string> CommandFactory::get_data(const boost::property_tree::ptree& pt) const {
+std::pair<string,string>
+CommandFactory::get_data(const boost::property_tree::ptree& pt) const {
     auto data  = pt.get_child("data.");
 
     string key;
@@ -88,4 +79,39 @@ std::pair<string,string> CommandFactory::get_data(const boost::property_tree::pt
         val = data.get<string>("value");
 
     return std::make_pair<string,string>(std::move(key), std::move(val));
+}
+
+unique_ptr<Command>
+CommandFactory::get_command(const boost::property_tree::ptree& pt) const {
+    if (is_raft(pt))
+        return make_raft_command(pt);
+
+    if (is_crud(pt))
+        return make_crud_command(pt);
+
+    if (is_api(pt))
+        return make_api_command(pt);
+
+    return std::make_unique<ErrorCommand>("Unsupported command");
+}
+
+unique_ptr<Command>
+CommandFactory::get_candidate_command(const boost::property_tree::ptree& pt,
+                      RaftCandidateState& st) const
+{
+    if (!is_raft(pt))
+        return nullptr;
+
+    auto cmd = pt.get<string>("raft");
+    if (cmd == "request-vote")
+        return std::make_unique<RaftVoteCommand>(st);
+
+    if (cmd == "vote")
+        {
+        auto data  = pt.get_child("data.");
+        bool voted_yes = data.get<string>("voted") == "yes" ? true : false;
+        return std::make_unique<RaftCountVotesCommand>(st, voted_yes);
+        }
+
+    return std::make_unique<ErrorCommand>("Unsupported command");
 }

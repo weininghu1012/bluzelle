@@ -1,9 +1,12 @@
 #include <iostream>
 
+#include "ApiCommandQueue.h"
+#include "CommandFactory.h"
+#include "PeerList.h"
 #include "RaftLeaderState.h"
 #include "JsonTools.h"
 
-constexpr char RaftLeaderState::s_heartbeat_message[];
+static constexpr char s_heartbeat_message[] = "({\"raft\":\"beep\"})";
 
 RaftLeaderState::RaftLeaderState(boost::asio::io_service& ios,
                                  Storage& s,
@@ -51,12 +54,12 @@ void RaftLeaderState::heartbeat() {
 }
 
 
-string RaftLeaderState::handle_request(const string& req)
+unique_ptr<RaftState> RaftLeaderState::handle_request(const string& request, string& response)
 {
-    auto pt = pt_from_json_string(req);
+    auto pt = pt_from_json_string(request);
 
     unique_ptr<Command> command = command_factory_.get_command(pt);
-    string response = pt_to_json_string(command->operator()());
+    response = pt_to_json_string(command->operator()());
 
-    return response;
+    return nullptr;
 }

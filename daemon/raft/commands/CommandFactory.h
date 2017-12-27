@@ -5,6 +5,7 @@
 #include "Storage.h"
 #include "Command.hpp"
 #include "ApiCommandQueue.h"
+#include "RaftCandidateState.h"
 
 #include <memory>
 
@@ -26,15 +27,16 @@ private:
     std::pair<string,string> get_data(const boost::property_tree::ptree& pt) const;
 
 public:
-    CommandFactory(
-            Storage& st,
-            ApiCommandQueue& queue
-    );
+    CommandFactory(Storage& st,
+            ApiCommandQueue& queue);
+
+    // [todo] Instead of generic get_command have get_leader_command(), get_follower_command & get_candidate_command()
+    // So only command that can be executed in certain state is created.
+    unique_ptr<Command>
+    get_command(const boost::property_tree::ptree& pt) const;
 
     unique_ptr<Command>
-    get_command(
-            const boost::property_tree::ptree& pt
-    ) const;
+    get_candidate_command(const boost::property_tree::ptree& pt, RaftCandidateState& st) const;
 };
 
 #endif //BLUZELLE_COMMANDPROCESSOR_H
