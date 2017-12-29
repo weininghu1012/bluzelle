@@ -12,7 +12,7 @@ private:
     std::random_device rd_;
     boost::asio::deadline_timer election_timeout_timer_;
 
-    void schedule_reelection();
+    void schedule_election();
     void start_election();
     void finish_election();
 
@@ -26,7 +26,8 @@ public:
                        Storage& s,
                        CommandFactory& cf,
                        ApiCommandQueue& pq,
-                       PeerList& ps);
+                       PeerList& ps,
+                       function<string(const string&)> rh);
 
     bool nominated_self() {return nominated_for_leader_; }
     void count_vote(bool vote_yes);

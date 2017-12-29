@@ -5,44 +5,47 @@
 #include "RaftCandidateState.h"
 #include "JsonTools.h"
 
-static constexpr char s_request_for_vote_message[] = "({\"raft\":\"request-vote\"})";
+static constexpr char s_request_for_vote_message[] = "{\"raft\": \"request-vote\"}";
 
 
 RaftCandidateState::RaftCandidateState(boost::asio::io_service& ios,
                                        Storage& s,
                                        CommandFactory& cf,
                                        ApiCommandQueue& pq,
-                                       PeerList& ps)
-        : RaftState(ios, s, cf, pq, ps),
+                                       PeerList& ps,
+                                       function<string(const string&)> rh)
+        : RaftState(ios, s, cf, pq, ps, rh),
           nominated_for_leader_(false),
           voted_yes_(0),
           voted_no_(0),
           election_timeout_timer_(ios_, boost::posix_time::milliseconds(
                   raft_election_timeout_interval_min_milliseconds))
 {
-    std::cout << "I am Candidate" << std::endl;
+    std::cout << "          I am Candidate" << std::endl;
 
-    schedule_reelection();
+    schedule_election();
 }
 
-void RaftCandidateState::schedule_reelection()
+void RaftCandidateState::schedule_election()
 {
     std::mt19937 rng(rd_());
-    std::uniform_int_distribution<uint> uni(raft_election_timeout_interval_max_milliseconds,
-                                            raft_election_timeout_interval_min_milliseconds);
+    std::uniform_int_distribution<uint> uni(raft_election_timeout_interval_min_milliseconds,
+                                            raft_election_timeout_interval_max_milliseconds);
+
     election_timeout_timer_.expires_from_now(boost::posix_time::milliseconds(
             uni(rng)));
 
-    election_timeout_timer_.async_wait(boost::bind(&RaftCandidateState::start_election, this));
+    election_timeout_timer_.async_wait(boost::bind(&RaftCandidateState::start_election,
+                                                   this));
 }
 
 void RaftCandidateState::start_election()
 {
     nominated_for_leader_ = true;
-    std::cout << "v ";
+    std::cout << "vote requested " << std::endl;
     for (auto &p : peers_)
         {
-        p.send_request(s_request_for_vote_message);
+        p.send_request(s_request_for_vote_message, handler_);
         std::cout << ".";
         }
 }
@@ -57,9 +60,17 @@ void RaftCandidateState::finish_election()
 void RaftCandidateState::count_vote(bool vote_yes)
 {
     if (vote_yes)
+        {
+        std::cout << "vote 'yes' received" << std::endl;
         ++ voted_yes_;
+        }
+
     else
+        {
+        std::cout << "vote 'no' received" << std::endl;
         ++voted_no_;
+        }
+
 
     if (voted_yes_ >= peers_.size() * 2 / 3) // If 2/3rd voted yes this node is the new leader.
         {
@@ -68,7 +79,7 @@ void RaftCandidateState::count_vote(bool vote_yes)
         return;
         }
 
-    schedule_reelection(); // No consensus reached, re-schedule election.
+    //schedule_election(); // No consensus reached, re-schedule election.
 }
 
 // If heartbeat received transition to follower state.

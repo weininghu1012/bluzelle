@@ -16,7 +16,8 @@ public:
                     Storage& s,
                     CommandFactory& cf,
                     ApiCommandQueue& pq,
-                    PeerList& ps);
+                    PeerList& ps,
+                    function<string(const string&)> rh);
 
     virtual unique_ptr<RaftState> handle_request(const string& request, string& response);
 };

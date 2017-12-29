@@ -5,9 +5,11 @@
 #include <thread>
 #include <queue>
 #include <utility>
+#include <mutex>
 
 using std::queue;
 using std::pair;
+using std::mutex;
 
 #include <boost/property_tree/ptree.hpp>
 
@@ -28,6 +30,7 @@ class Raft {
     Storage storage_;                   // Where the RAFTs log is replicated.
     CommandFactory command_factory_;
 
+    mutex raft_state_mutex_;
     unique_ptr<RaftState> raft_state_; // There are 3 RAFT states: Candidate, Follower and Leader.
 
 public:

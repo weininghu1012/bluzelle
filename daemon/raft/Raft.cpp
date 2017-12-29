@@ -32,15 +32,22 @@ Raft::Raft(boost::asio::io_service &ios)
     s_transaction_id = nil_uuid_gen();
 }
 
-void Raft::run() {
+void Raft::run()
+{
     raft_state_ = std::make_unique<RaftCandidateState>(ios_,
                                                        storage_,
                                                        command_factory_,
                                                        peer_queue_,
-                                                       peers_);
+                                                       peers_,
+                                                    std::bind(&Raft::handle_request,
+                                                              this,
+                                                              std::placeholders::_1));
 }
 
-string Raft::handle_request(const string &req) {
+string Raft::handle_request(const string &req)
+{
+    std::lock_guard<mutex> lock(raft_state_mutex_); // Requests come from multiple peers. Handle one at a time. Potential bottleneck.
+
     string resp;
 
     unique_ptr<RaftState> next_state = raft_state_->handle_request(req, resp); // request handled by current state.

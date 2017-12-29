@@ -6,18 +6,19 @@
 #include "RaftLeaderState.h"
 #include "JsonTools.h"
 
-static constexpr char s_heartbeat_message[] = "({\"raft\":\"beep\"})";
+static constexpr char s_heartbeat_message[] = "{\"raft\": \"beep\"}";
 
 RaftLeaderState::RaftLeaderState(boost::asio::io_service& ios,
                                  Storage& s,
                                  CommandFactory& cf,
                                  ApiCommandQueue& pq,
-                                 PeerList& ps)
-        : RaftState(ios, s, cf, pq, ps),
+                                 PeerList& ps,
+                                 function<string(const string&)> rh)
+        : RaftState(ios, s, cf, pq, ps, rh),
           heartbeat_timer_(ios_,
                            boost::posix_time::milliseconds(raft_default_heartbeat_interval_milliseconds))
 {
-    std::cout << "I am Leader" << std::endl;
+    std::cout << "          I am Leader" << std::endl;
     heartbeat_timer_.async_wait(boost::bind(&RaftLeaderState::heartbeat, this));
 }
 

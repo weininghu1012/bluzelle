@@ -1,8 +1,8 @@
 #include "RaftVoteCommand.h"
 #include "JsonTools.h"
 
-static constexpr char s_vote_yes_message[] = "({\"raft\":\"vote\", \"data\":{\"voted\":\"yes\"}})";
-static constexpr char s_vote_no_message[] = "({\"raft\":\"vote\", \"data\":{\"voted\":\"no\"}})";
+static constexpr char s_vote_yes_message[] = "{\"raft\":\"vote\", \"data\":{\"voted\":\"yes\"}}";
+static constexpr char s_vote_no_message[] = "{\"raft\":\"vote\", \"data\":{\"voted\":\"no\"}}";
 
 RaftVoteCommand::RaftVoteCommand(RaftCandidateState& s) : state_(s)
 {

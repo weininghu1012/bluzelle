@@ -14,7 +14,8 @@ public:
                        Storage& s,
                        CommandFactory& cf,
                        ApiCommandQueue& pq,
-                       PeerList& ps);
+                       PeerList& ps,
+                      function<string(const string&)> rh);
 
     void start_election();
 

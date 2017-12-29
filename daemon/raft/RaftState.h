@@ -5,6 +5,7 @@
 
 using std::string;
 using std::unique_ptr;
+using std::function;
 
 #include <boost/asio/io_service.hpp>
 
@@ -17,7 +18,7 @@ class CommandFactory;
 class RaftState
 {
 protected:
-    static constexpr uint raft_default_heartbeat_interval_milliseconds = 1000;
+    static constexpr uint raft_default_heartbeat_interval_milliseconds = 3000;
     static constexpr uint raft_election_timeout_interval_min_milliseconds =
             raft_default_heartbeat_interval_milliseconds * 3;
     static constexpr uint raft_election_timeout_interval_max_milliseconds =
@@ -29,6 +30,7 @@ protected:
     ApiCommandQueue& peer_queue_;
     Storage& storage_;
     CommandFactory& command_factory_;
+    function<string(const string&)> handler_;
 
 public:
     virtual unique_ptr<RaftState> handle_request(const string& request, string& response) = 0;
@@ -37,12 +39,14 @@ public:
               Storage& s,
               CommandFactory& cf,
               ApiCommandQueue& pq,
-              PeerList& ps)
+              PeerList& ps,
+    function<string(const string&)> rh)
     : ios_(ios),
       storage_(s),
       command_factory_(cf),
       peer_queue_(pq),
-      peers_(ps)
+      peers_(ps),
+      handler_(rh)
     {
 
     }

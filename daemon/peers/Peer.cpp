@@ -10,7 +10,9 @@
 using std::shared_ptr;
 
 
-string Peer::send_request(const string& req) {
+void Peer::send_request(const string& req,
+                        std::function<string(const string&)> h)
+{
     if (session_ == nullptr) // Check if we don't have a session.
         {
         try
@@ -19,7 +21,6 @@ string Peer::send_request(const string& req) {
             boost::beast::websocket::stream<boost::asio::ip::tcp::socket> ws{ios_};
 
             // Resolve, connect, handshake.
-
             auto lookup = resolver.resolve(
                     {
                             info_.get_value<std::string>("host"),
@@ -31,6 +32,8 @@ string Peer::send_request(const string& req) {
 
 
             session_ = std::make_shared<PeerSession>(std::move(ws)); // Store it for future use.
+            if (h != nullptr)
+                session_->handler_ = h;
             }
         catch (std::exception& ex)
             {
@@ -47,12 +50,10 @@ string Peer::send_request(const string& req) {
 
     if (session_ != nullptr) // Check again in case we just created a session.
         {
-        session_->write_async(req);
+        session_->write_async(req, h != nullptr);
         }
     else
         {
         std::cout << "No session to send request to" << std::endl;
         }
-
-    return string();
 }

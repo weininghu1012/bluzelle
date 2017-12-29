@@ -38,7 +38,8 @@ public:
                   std::size_t bytes_transferred,
                   bool schedule_read = true);
 
-    void write_async(const string& message);
+    void write_async(const string& message,
+                     bool schedule_read);
 };
 
 #endif //BLUZELLE_PEERSESSION_H

@@ -9,12 +9,13 @@ RaftFollowerState::RaftFollowerState(boost::asio::io_service& ios,
                                        Storage& s,
                                        CommandFactory& cf,
                                        ApiCommandQueue& pq,
-                                       PeerList& ps)
-        : RaftState(ios, s, cf, pq, ps),
+                                       PeerList& ps,
+                                     function<string(const string&)> rh)
+        : RaftState(ios, s, cf, pq, ps, rh),
           election_timeout_timer_(ios_,
                            boost::posix_time::milliseconds(raft_election_timeout_interval_min_milliseconds))
 {
-    std::cout << "I am Follower" << std::endl;
+    std::cout << "          I am Follower" << std::endl;
 
     election_timeout_timer_.async_wait(boost::bind(&RaftFollowerState::start_election, this));
 }
