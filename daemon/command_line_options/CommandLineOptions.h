@@ -2,15 +2,13 @@
 #define BLUZELLE_COMMANDLINEOPTIONS_H
 
 #include <string>
+#include <boost/program_options.hpp>
 
 using std::string;
 
-#include <boost/program_options.hpp>
-
-
 class CommandLineOptions {
 private:
-    static const uint s_address_size;
+    static const uint16_t s_address_size;
 
     static const string s_help_option_name;
     static const string s_address_option_name;
@@ -20,7 +18,7 @@ private:
     boost::program_options::variables_map vm_;
     boost::program_options::options_description desc_;
 
-    ushort port_;
+    uint16_t port_;
     string address_;
     string config_;
     string error_;
@@ -41,7 +39,7 @@ public:
 
     boost::program_options::options_description get_description() const;
 
-    ushort get_port() const;
+    uint16_t get_port() const;
 
     string get_address() const;
 
@@ -49,7 +47,7 @@ public:
 
     static bool is_valid_ethereum_address(const string &addr);
 
-    static bool is_valid_port(ushort p);
+    static bool is_valid_port(uint16_t p);
 };
 
 #endif //BLUZELLE_COMMANDLINEOPTIONS_H

@@ -7,7 +7,7 @@
 
 using namespace boost::program_options;
 
-const uint CommandLineOptions::s_address_size = 42; // ("0x2ba35056580b505690c03dfb1df58bc6b6cd9f89").length().
+const uint16_t CommandLineOptions::s_address_size = 42; // ("0x2ba35056580b505690c03dfb1df58bc6b6cd9f89").length().
 
 const string CommandLineOptions::s_help_option_name = "help";
 const string CommandLineOptions::s_address_option_name = "address";
@@ -20,7 +20,7 @@ CommandLineOptions::CommandLineOptions()
     desc_.add_options()
             ((s_help_option_name + ",h").c_str(), "produce help message")
             ((s_address_option_name + ",a").c_str(), value<string>(&address_)->required(), "Ethererum account address")
-            ((s_port_option_name + ",p").c_str(), value<ushort>(&port_)->required(), "port to use")
+            ((s_port_option_name + ",p").c_str(), value<uint16_t>(&port_)->required(), "port to use")
             ((s_config_option_name + ",c").c_str(), value<string>(&config_), "path to configuration file");
 }
 
@@ -76,13 +76,13 @@ bool CommandLineOptions::is_valid_ethereum_address(const string &addr) {
     return false;
 }
 
-bool CommandLineOptions::is_valid_port(ushort p) {
+bool CommandLineOptions::is_valid_port(uint16_t p) {
     return (p >= 49152) &&
            (p <= 65535); // As per IANA https://www.iana.org/assignments/service-names-port-numbers/service-names-port-numbers.xhtml
 }
 
-ushort CommandLineOptions::get_port() const {
-    return get_option<ushort>(s_port_option_name);
+uint16_t CommandLineOptions::get_port() const {
+    return get_option<uint16_t>(s_port_option_name);
 }
 
 string CommandLineOptions::get_address() const {

@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.9)
 
 set(CMAKE_CXX_STANDARD 17)
 set(REQUIRED_BOOST "1.66.0")
@@ -17,8 +17,9 @@ endif()
 # TODO can we move this to the root CMakeLists.txt?
 
 set(Boost_USE_STATIC_LIBS on)
-find_package(
-        Boost ${REQUIRED_BOOST}
+find_package(Boost)
+
+        #[[ ${REQUIRED_BOOST}
         REQUIRED COMPONENTS
         chrono
         coroutine
@@ -29,7 +30,7 @@ find_package(
         thread
         unit_test_framework
 )
-
+]]
 if(Boost_FOUND)
     message(STATUS "Your boost is here: ${Boost_INCLUDE_DIRS}")
     include_directories(${Boost_INCLUDE_DIRS})
