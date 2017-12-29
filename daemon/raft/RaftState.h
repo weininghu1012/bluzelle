@@ -2,6 +2,7 @@
 #define BLUZELLE_RAFTSTATE_H
 
 #include <string>
+#include <memory>
 
 using std::string;
 using std::unique_ptr;
@@ -32,6 +33,8 @@ protected:
     CommandFactory& command_factory_;
     function<string(const string&)> handler_;
 
+    unique_ptr<RaftState> next_state_;
+
 public:
     virtual unique_ptr<RaftState> handle_request(const string& request, string& response) = 0;
 
@@ -50,6 +53,12 @@ public:
     {
 
     }
+
+    void set_next_state_follower();
+
+    void set_next_state_leader();
+
+    void set_next_state_candidate();
 };
 
 #endif //BLUZELLE_RAFTSTATE_H

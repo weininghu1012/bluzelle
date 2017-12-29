@@ -7,7 +7,9 @@
 
 class RaftFollowerState : public RaftState {
 private:
-    boost::asio::deadline_timer election_timeout_timer_; // When expired change state to Candidate.
+    boost::asio::deadline_timer heartbeat_timeout_timer_; // When expired change state to Candidate.
+
+    void start_election();
 
 public:
     RaftFollowerState(boost::asio::io_service& ios,
@@ -17,9 +19,9 @@ public:
                        PeerList& ps,
                       function<string(const string&)> rh);
 
-    void start_election();
-
     virtual unique_ptr<RaftState> handle_request(const string& request, string& response);
+
+    void rearm_heartbet_timeout_timer();
 };
 
 #endif //BLUZELLE_RAFTFOLLOWERSTATE_H

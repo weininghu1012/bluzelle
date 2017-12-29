@@ -1,6 +1,7 @@
 #include "RaftCountVotesCommand.h"
 
-RaftCountVotesCommand::RaftCountVotesCommand(RaftCandidateState& s, bool yes) : state_(s), voted_yes_(yes)
+RaftCountVotesCommand::RaftCountVotesCommand(RaftState& s, bool yes)
+        : state_(dynamic_cast<RaftCandidateState&>(s)), voted_yes_(yes)
 {
 
 }

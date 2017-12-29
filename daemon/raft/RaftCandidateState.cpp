@@ -3,6 +3,7 @@
 #include "PeerList.h"
 #include "CommandFactory.h"
 #include "RaftCandidateState.h"
+#include "RaftLeaderState.h"
 #include "JsonTools.h"
 
 static constexpr char s_request_for_vote_message[] = "{\"raft\": \"request-vote\"}";
@@ -42,12 +43,14 @@ void RaftCandidateState::schedule_election()
 void RaftCandidateState::start_election()
 {
     nominated_for_leader_ = true;
-    std::cout << "vote requested " << std::endl;
+    std::cout << "vote requested ";
     for (auto &p : peers_)
         {
         p.send_request(s_request_for_vote_message, handler_);
         std::cout << ".";
         }
+
+    std::cout << std::endl;
 }
 
 void RaftCandidateState::finish_election()
@@ -64,7 +67,6 @@ void RaftCandidateState::count_vote(bool vote_yes)
         std::cout << "vote 'yes' received" << std::endl;
         ++ voted_yes_;
         }
-
     else
         {
         std::cout << "vote 'no' received" << std::endl;
@@ -75,10 +77,16 @@ void RaftCandidateState::count_vote(bool vote_yes)
     if (voted_yes_ >= peers_.size() * 2 / 3) // If 2/3rd voted yes this node is the new leader.
         {
         std::cout << "Leader elected" << std::endl;
-        finish_election(); // [todo] Transition to RaftLeaderState.
-        return;
+        finish_election();
+        next_state_ = std::make_unique<RaftLeaderState>(ios_,
+                                                        storage_,
+                                                        command_factory_,
+                                                        peer_queue_,
+                                                        peers_,
+                                                        handler_); // Set next state.
         }
 
+    // [todo] Handle split vote.
     //schedule_election(); // No consensus reached, re-schedule election.
 }
 
@@ -91,6 +99,9 @@ unique_ptr<RaftState> RaftCandidateState::handle_request(const string& request, 
 
     unique_ptr<Command> command = command_factory_.get_candidate_command(pt, *this);
     response = pt_to_json_string(command->operator()());
+
+    if (next_state_ != nullptr) // If command execution caused state transition return new state.
+        return std::move(next_state_);
 
     return nullptr;
 }

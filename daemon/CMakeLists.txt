@@ -91,8 +91,6 @@ set(SOURCE_FILES
         raft/JsonTools.h
         raft/Raft.cpp
         raft/Raft.h
-        raft/RaftHeartbeatCommand.cpp
-        raft/RaftHeartbeatCommand.h
         storage/Storage.cpp
         storage/Storage.h
         websockets/Listener.h
@@ -109,7 +107,10 @@ set(SOURCE_FILES
         raft/commands/RaftVoteCommand.h
         raft/commands/RaftVoteCommand.cpp
         raft/commands/RaftCountVotesCommand.h
-        raft/commands/RaftCountVotesCommand.cpp)
+        raft/commands/RaftCountVotesCommand.cpp
+        raft/commands/RaftHeartbeatCommand.h
+        raft/commands/RaftHeartbeatCommand.cpp
+        raft/RaftState.cpp)
 
 add_executable(the_db ${SOURCE_FILES})
 target_link_libraries(the_db ${Boost_LIBRARIES})

@@ -10,7 +10,7 @@ private:
     RaftCandidateState& state_;
 
 public:
-    RaftVoteCommand(RaftCandidateState& s);
+    RaftVoteCommand(RaftState& s);
     virtual boost::property_tree::ptree operator()();
 };
 

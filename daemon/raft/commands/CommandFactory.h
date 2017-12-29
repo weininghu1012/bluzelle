@@ -17,26 +17,30 @@ private:
     ApiCommandQueue& queue_;
 
     bool is_raft(const boost::property_tree::ptree& s) const;
-    bool is_crud(const boost::property_tree::ptree& s) const;
+/*    bool is_crud(const boost::property_tree::ptree& s) const;
     bool is_api(const boost::property_tree::ptree& s) const;
 
     unique_ptr<Command> make_raft_command(const boost::property_tree::ptree& s) const;
     unique_ptr<Command> make_crud_command(const boost::property_tree::ptree& s) const;
     unique_ptr<Command> make_api_command(const boost::property_tree::ptree& s) const;
-
+*/
     std::pair<string,string> get_data(const boost::property_tree::ptree& pt) const;
 
 public:
     CommandFactory(Storage& st,
             ApiCommandQueue& queue);
 
-    // [todo] Instead of generic get_command have get_leader_command(), get_follower_command & get_candidate_command()
-    // So only command that can be executed in certain state is created.
     unique_ptr<Command>
-    get_command(const boost::property_tree::ptree& pt) const;
+    get_candidate_command(const boost::property_tree::ptree& pt,
+                          RaftState& st) const;
 
     unique_ptr<Command>
-    get_candidate_command(const boost::property_tree::ptree& pt, RaftCandidateState& st) const;
+    get_follower_command(const boost::property_tree::ptree& pt,
+                         RaftState& st) const;
+
+    unique_ptr<Command>
+    get_leader_command(const boost::property_tree::ptree& pt,
+                       RaftState& st) const;
 };
 
 #endif //BLUZELLE_COMMANDPROCESSOR_H

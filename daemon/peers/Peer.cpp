@@ -50,7 +50,7 @@ void Peer::send_request(const string& req,
 
     if (session_ != nullptr) // Check again in case we just created a session.
         {
-        session_->write_async(req, h != nullptr);
+        session_->write_async(req);
         }
     else
         {

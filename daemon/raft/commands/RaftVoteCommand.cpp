@@ -4,7 +4,7 @@
 static constexpr char s_vote_yes_message[] = "{\"raft\":\"vote\", \"data\":{\"voted\":\"yes\"}}";
 static constexpr char s_vote_no_message[] = "{\"raft\":\"vote\", \"data\":{\"voted\":\"no\"}}";
 
-RaftVoteCommand::RaftVoteCommand(RaftCandidateState& s) : state_(s)
+RaftVoteCommand::RaftVoteCommand(RaftState& s) : state_(dynamic_cast<RaftCandidateState&>(s))
 {
 
 }

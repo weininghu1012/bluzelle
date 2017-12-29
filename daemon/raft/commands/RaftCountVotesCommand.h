@@ -11,7 +11,7 @@ private:
     bool voted_yes_;
 
 public:
-    RaftCountVotesCommand(RaftCandidateState& s, bool yes);
+    RaftCountVotesCommand(RaftState& s, bool yes);
     virtual boost::property_tree::ptree operator()();
 };
 
