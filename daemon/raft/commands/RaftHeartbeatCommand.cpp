@@ -7,17 +7,20 @@ RaftHeartbeatCommand::RaftHeartbeatCommand(RaftState& s) : state_(s)
 
 }
 
+// Heartbets can be received in two states: Candidate and Follower
+// When in candidate state is noe recived heartbeat message it means that new leader was elected and it must
+// transition to Follower state.
+// If HB received in Follower state we need to re-arm heartbeat timer.
 boost::property_tree::ptree RaftHeartbeatCommand::operator()()
 {
     boost::property_tree::ptree result;
 
     std::cout << " ♥" << std::endl;
 
-    // if heartbeat received in candidate state transition to Follower.
-    //state_.set_next_state_follower();
+    if (state_.get_type() == RaftStateType::Candidate)
+        state_.set_next_state_follower();
 
-    // If heartbet received in Follower state -> re-arm timeout timer.
-    //state_.rearm_timer();
+    state_.rearm_timer();
 
     return result;
 }

@@ -27,12 +27,15 @@ public:
                        CommandFactory& cf,
                        ApiCommandQueue& pq,
                        PeerList& ps,
-                       function<string(const string&)> rh);
+                       function<string(const string&)> rh,
+                       function<void(void)> tr);
 
     bool nominated_self() {return nominated_for_leader_; }
     void count_vote(bool vote_yes);
 
-    virtual unique_ptr<RaftState> handle_request(const string& request, string& response);
+    virtual unique_ptr<RaftState> handle_request(const string& request, string& response) override;
+
+    virtual RaftStateType get_type() const override { return RaftStateType::Candidate; }
 };
 
 #endif //BLUZELLE_RAFTCANDIDATESTATE_H

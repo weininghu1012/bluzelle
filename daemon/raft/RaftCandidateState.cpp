@@ -14,8 +14,9 @@ RaftCandidateState::RaftCandidateState(boost::asio::io_service& ios,
                                        CommandFactory& cf,
                                        ApiCommandQueue& pq,
                                        PeerList& ps,
-                                       function<string(const string&)> rh)
-        : RaftState(ios, s, cf, pq, ps, rh),
+                                       function<string(const string&)> rh,
+                                       function<void(void)> tr)
+        : RaftState(ios, s, cf, pq, ps, rh, tr),
           nominated_for_leader_(false),
           voted_yes_(0),
           voted_no_(0),
@@ -83,7 +84,8 @@ void RaftCandidateState::count_vote(bool vote_yes)
                                                         command_factory_,
                                                         peer_queue_,
                                                         peers_,
-                                                        handler_); // Set next state.
+                                                        handler_,
+                                                        timer_rearmer_); // Set next state.
         }
 
     // [todo] Handle split vote.
@@ -97,7 +99,7 @@ unique_ptr<RaftState> RaftCandidateState::handle_request(const string& request, 
 {
     auto pt = pt_from_json_string(request);
 
-    unique_ptr<Command> command = command_factory_.get_candidate_command(pt, *this);
+    unique_ptr<Command> command = command_factory_.get_command(pt, *this);
     response = pt_to_json_string(command->operator()());
 
     if (next_state_ != nullptr) // If command execution caused state transition return new state.

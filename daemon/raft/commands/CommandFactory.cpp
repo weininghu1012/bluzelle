@@ -31,7 +31,7 @@ CommandFactory::get_data(const boost::property_tree::ptree& pt) const {
 }
 
 unique_ptr<Command>
-CommandFactory::get_candidate_command(const boost::property_tree::ptree& pt,
+CommandFactory::get_command(const boost::property_tree::ptree& pt,
                       RaftState& st) const
 {
     if (!is_raft(pt))
@@ -58,7 +58,7 @@ CommandFactory::get_candidate_command(const boost::property_tree::ptree& pt,
     return std::make_unique<ErrorCommand>("Unsupported command");
 }
 
-unique_ptr<Command>
+/*unique_ptr<Command>
 CommandFactory::get_follower_command(const boost::property_tree::ptree& pt, RaftState& st) const
 {
     return nullptr;
@@ -68,7 +68,7 @@ unique_ptr<Command>
 CommandFactory::get_leader_command(const boost::property_tree::ptree& pt, RaftState& st) const
 {
     return nullptr;
-}
+}*/
 
 /*unique_ptr<Command>
 CommandFactory::get_command(const boost::property_tree::ptree& pt) const {

@@ -17,9 +17,12 @@ public:
                     CommandFactory& cf,
                     ApiCommandQueue& pq,
                     PeerList& ps,
-                    function<string(const string&)> rh);
+                    function<string(const string&)> rh,
+                    function<void(void)> tr);
 
-    virtual unique_ptr<RaftState> handle_request(const string& request, string& response);
+    virtual unique_ptr<RaftState> handle_request(const string& request, string& response) override;
+
+    virtual RaftStateType get_type() const override { return RaftStateType::Leader; }
 };
 
 #endif //BLUZELLE_RAFTLEADERSTATE_H

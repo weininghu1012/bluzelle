@@ -23,6 +23,7 @@ using std::mutex;
 
 
 class Raft {
+private:
     boost::asio::io_service& ios_;
 
     PeerList peers_;                    // List of known peers.
@@ -33,12 +34,18 @@ class Raft {
     mutex raft_state_mutex_;
     unique_ptr<RaftState> raft_state_; // There are 3 RAFT states: Candidate, Follower and Leader.
 
+    boost::asio::deadline_timer heartbeat_timer_; // When expired change state to Candidate.
+
 public:
     Raft(boost::asio::io_service& ios);
 
     void run();
 
     string handle_request(const string& req);
+
+    void rearm_heartbeat_timer();
+
+    void heartbeat_timer_expired();
 };
 
 #endif //BLUZELLE_RAFT_H

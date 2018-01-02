@@ -31,16 +31,16 @@ public:
             ApiCommandQueue& queue);
 
     unique_ptr<Command>
-    get_candidate_command(const boost::property_tree::ptree& pt,
+    get_command(const boost::property_tree::ptree& pt,
                           RaftState& st) const;
 
-    unique_ptr<Command>
+    /*unique_ptr<Command>
     get_follower_command(const boost::property_tree::ptree& pt,
                          RaftState& st) const;
 
     unique_ptr<Command>
     get_leader_command(const boost::property_tree::ptree& pt,
-                       RaftState& st) const;
+                       RaftState& st) const;*/
 };
 
 #endif //BLUZELLE_COMMANDPROCESSOR_H
