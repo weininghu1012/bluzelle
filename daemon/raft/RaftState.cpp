@@ -13,7 +13,7 @@ void RaftState::set_next_state_follower()
                                                       peer_queue_,
                                                       peers_,
                                                       handler_,
-                                                      timer_rearmer_);
+                                                      set_next_state_);
 }
 
 void RaftState::set_next_state_leader()
@@ -24,7 +24,7 @@ void RaftState::set_next_state_leader()
                                                     peer_queue_,
                                                     peers_,
                                                     handler_,
-                                                    timer_rearmer_);
+                                                    set_next_state_);
 }
 
 void RaftState::set_next_state_candidate()
@@ -35,5 +35,5 @@ void RaftState::set_next_state_candidate()
                                                        peer_queue_,
                                                        peers_,
                                                        handler_,
-                                                       timer_rearmer_);
+                                                       set_next_state_);
 }

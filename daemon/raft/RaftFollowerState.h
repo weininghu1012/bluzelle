@@ -7,6 +7,9 @@
 
 class RaftFollowerState : public RaftState {
 private:
+    boost::asio::deadline_timer heartbeat_timer_; // When expired change state to Candidate.
+
+    void heartbeat_timer_expired();
 
 public:
     RaftFollowerState(boost::asio::io_service& ios,
@@ -15,11 +18,13 @@ public:
                        ApiCommandQueue& pq,
                        PeerList& ps,
                        function<string(const string&)> rh,
-                       function<void(void)> tr);
+                       function<void(unique_ptr<RaftState>)> set_next);
 
     virtual unique_ptr<RaftState> handle_request(const string& request, string& response) override;
 
     virtual RaftStateType get_type() const override { return RaftStateType::Follower; }
+
+    void rearm_heartbeat_timer();
 };
 
 #endif //BLUZELLE_RAFTFOLLOWERSTATE_H

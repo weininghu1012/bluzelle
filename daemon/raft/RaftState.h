@@ -42,16 +42,10 @@ protected:
     CommandFactory& command_factory_;
 
     function<string(const string&)> handler_;
-    function<void(void)> timer_rearmer_;
+    function<void(unique_ptr<RaftState>)> set_next_state_;
 
 public:
     virtual unique_ptr<RaftState> handle_request(const string& request, string& response) = 0;
-
-    virtual void rearm_timer()
-    {
-        if (timer_rearmer_ != nullptr)
-            timer_rearmer_();
-    }
 
     RaftState(boost::asio::io_service& ios,
               Storage& s,
@@ -59,14 +53,14 @@ public:
               ApiCommandQueue& pq,
               PeerList& ps,
               function<string(const string&)> rh,
-              function<void(void)> tr)
+              function<void(unique_ptr<RaftState>)> set_next)
     : ios_(ios),
       storage_(s),
       command_factory_(cf),
       peer_queue_(pq),
       peers_(ps),
       handler_(rh),
-      timer_rearmer_(tr)
+      set_next_state_(set_next)
     {
 
     }

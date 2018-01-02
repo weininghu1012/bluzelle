@@ -28,7 +28,7 @@ public:
                        ApiCommandQueue& pq,
                        PeerList& ps,
                        function<string(const string&)> rh,
-                       function<void(void)> tr);
+                       function<void(unique_ptr<RaftState>)> set_next);
 
     bool nominated_self() {return nominated_for_leader_; }
     void count_vote(bool vote_yes);

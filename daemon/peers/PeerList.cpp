@@ -26,6 +26,9 @@ PeerList::PeerList(boost::asio::io_service& ios)
     string peer_info; // name=Host:port [todo] Pick a format for node info storage.
     while (getline(file, peer_info))
         {
+        if (peer_info.front() == ';')
+            continue; // Skip commented lines.
+
         NodeInfo n;
         n.set_value("name", peer_info.substr(0, peer_info.find('=')));
         n.set_value("host", peer_info.substr(peer_info.find('=') + 1, peer_info.find(':') - peer_info.find('=') - 1));

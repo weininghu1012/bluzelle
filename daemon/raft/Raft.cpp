@@ -26,14 +26,10 @@ Raft::Raft(boost::asio::io_service &ios)
           storage_("./storage_" + daemon_info.get_value<std::string>("name") + ".txt"),
           command_factory_(
                   storage_,
-                  peer_queue_),
-          heartbeat_timer_(ios_,
-                           boost::posix_time::milliseconds(RaftState::raft_default_heartbeat_interval_milliseconds))
+                  peer_queue_)
 {
     static boost::uuids::nil_generator nil_uuid_gen;
     s_transaction_id = nil_uuid_gen();
-
-    heartbeat_timer_.async_wait(boost::bind(&Raft::heartbeat_timer_expired, this));
 }
 
 void Raft::run()
@@ -46,8 +42,9 @@ void Raft::run()
                                                        std::bind(&Raft::handle_request,
                                                               this,
                                                               std::placeholders::_1),
-                                                       std::bind(&Raft::heartbeat_timer_expired,
-                                                                this));
+                                                       std::bind(&Raft::set_next_state,
+                                                                this,
+                                                                 std::placeholders::_1));
 }
 
 string Raft::handle_request(const string &req)
@@ -64,23 +61,6 @@ string Raft::handle_request(const string &req)
     return resp;
 }
 
-void Raft::heartbeat_timer_expired()
-{
-    std::cout << "Starting Leader election" << std::endl;
-
-    raft_state_->set_next_state_candidate();
-
-    std::lock_guard<mutex> lock(raft_state_mutex_);
-    raft_state_ = std::move(raft_state_->next_state_);
-}
-
-void Raft::rearm_heartbeat_timer()
-{
-    heartbeat_timer_.expires_from_now(
-            boost::posix_time::milliseconds(RaftState::raft_default_heartbeat_interval_milliseconds));
-
-    heartbeat_timer_.async_wait(boost::bind(&Raft::heartbeat_timer_expired, this));
-}
 
 
 

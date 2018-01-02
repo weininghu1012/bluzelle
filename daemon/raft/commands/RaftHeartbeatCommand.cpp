@@ -1,3 +1,4 @@
+#include <raft/RaftFollowerState.h>
 #include "RaftHeartbeatCommand.h"
 #include "JsonTools.h"
 
@@ -20,7 +21,8 @@ boost::property_tree::ptree RaftHeartbeatCommand::operator()()
     if (state_.get_type() == RaftStateType::Candidate)
         state_.set_next_state_follower();
 
-    state_.rearm_timer();
+    if (state_.get_type() == RaftStateType::Follower)
+        dynamic_cast<RaftFollowerState*>(&state_)->rearm_heartbeat_timer();
 
     return result;
 }

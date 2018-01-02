@@ -15,8 +15,8 @@ RaftCandidateState::RaftCandidateState(boost::asio::io_service& ios,
                                        ApiCommandQueue& pq,
                                        PeerList& ps,
                                        function<string(const string&)> rh,
-                                       function<void(void)> tr)
-        : RaftState(ios, s, cf, pq, ps, rh, tr),
+                                       function<void(unique_ptr<RaftState>)> set_next)
+        : RaftState(ios, s, cf, pq, ps, rh, set_next),
           nominated_for_leader_(false),
           voted_yes_(0),
           voted_no_(0),
@@ -85,7 +85,7 @@ void RaftCandidateState::count_vote(bool vote_yes)
                                                         peer_queue_,
                                                         peers_,
                                                         handler_,
-                                                        timer_rearmer_); // Set next state.
+                                                        set_next_state_); // Set next state.
         }
 
     // [todo] Handle split vote.

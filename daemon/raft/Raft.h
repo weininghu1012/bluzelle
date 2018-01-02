@@ -34,8 +34,6 @@ private:
     mutex raft_state_mutex_;
     unique_ptr<RaftState> raft_state_; // There are 3 RAFT states: Candidate, Follower and Leader.
 
-    boost::asio::deadline_timer heartbeat_timer_; // When expired change state to Candidate.
-
 public:
     Raft(boost::asio::io_service& ios);
 
@@ -45,7 +43,11 @@ public:
 
     void rearm_heartbeat_timer();
 
-    void heartbeat_timer_expired();
+    void set_next_state(unique_ptr<RaftState> s)
+    {
+        std::lock_guard<mutex> lock(raft_state_mutex_);
+        raft_state_ = std::move(s);
+    }
 };
 
 #endif //BLUZELLE_RAFT_H
