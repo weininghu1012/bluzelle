@@ -27,7 +27,7 @@ enum class RaftStateType
 class RaftState
 {
 public:
-    static constexpr uint raft_default_heartbeat_interval_milliseconds = 3000;
+    static constexpr uint raft_default_heartbeat_interval_milliseconds = 5000;
     static constexpr uint raft_election_timeout_interval_min_milliseconds =
             raft_default_heartbeat_interval_milliseconds * 3;
     static constexpr uint raft_election_timeout_interval_max_milliseconds =

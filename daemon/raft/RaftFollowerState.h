@@ -9,7 +9,7 @@ class RaftFollowerState : public RaftState {
 private:
     boost::asio::deadline_timer heartbeat_timer_; // When expired change state to Candidate.
 
-    void heartbeat_timer_expired();
+    void heartbeat_timer_expired(const boost::system::error_code& e);
 
 public:
     RaftFollowerState(boost::asio::io_service& ios,

@@ -16,13 +16,17 @@ boost::property_tree::ptree RaftHeartbeatCommand::operator()()
 {
     boost::property_tree::ptree result;
 
-    std::cout << " ♥" << std::endl;
+    std::cout << "♥" << std::endl;
 
     if (state_.get_type() == RaftStateType::Candidate)
         state_.set_next_state_follower();
 
     if (state_.get_type() == RaftStateType::Follower)
-        dynamic_cast<RaftFollowerState*>(&state_)->rearm_heartbeat_timer();
+        {
+        auto fs = dynamic_cast<RaftFollowerState*>(&state_);
+        if (fs != nullptr)
+            fs->rearm_heartbeat_timer();
+        }
 
     return result;
 }

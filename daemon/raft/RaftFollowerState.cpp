@@ -1,5 +1,7 @@
 #include <iostream>
 
+#include <boost/asio/placeholders.hpp>
+
 #include "PeerList.h"
 #include "CommandFactory.h"
 #include "RaftFollowerState.h"
@@ -18,7 +20,8 @@ RaftFollowerState::RaftFollowerState(boost::asio::io_service& ios,
 {
     std::cout << "          I am Follower" << std::endl;
 
-    heartbeat_timer_.async_wait(boost::bind(&RaftFollowerState::heartbeat_timer_expired, this));
+    heartbeat_timer_.async_wait(boost::bind(&RaftFollowerState::heartbeat_timer_expired,
+                                            this, boost::asio::placeholders::error));
 }
 
 
@@ -36,20 +39,28 @@ unique_ptr<RaftState> RaftFollowerState::handle_request(const string& request, s
 }
 
 
-void RaftFollowerState::heartbeat_timer_expired()
+void RaftFollowerState::heartbeat_timer_expired(const boost::system::error_code& e)
 {
-    std::cout << "Starting Leader election" << std::endl;
+    if (e != boost::asio::error::operation_aborted)
+        {
+        std::cout << "Starting Leader election" << std::endl;
 
-    set_next_state_candidate();
+        set_next_state_candidate();
 
-    set_next_state_(std::move(next_state_));
-
-    //
-    //raft_state_ = std::move(raft_state_->next_state_);
+        set_next_state_(std::move(next_state_));
+        }
+    //else
+    //    std::cout << "aborted" << std::endl;
 }
 
 void RaftFollowerState::rearm_heartbeat_timer() // Use with flag to stop it when transitioned to another state
 {
+    std::cout << "#" << std::endl;
+
+    heartbeat_timer_.cancel();
     heartbeat_timer_.expires_from_now(
             boost::posix_time::milliseconds(RaftState::raft_election_timeout_interval_min_milliseconds));
+
+    heartbeat_timer_.async_wait(boost::bind(&RaftFollowerState::heartbeat_timer_expired,
+                                            this, boost::asio::placeholders::error));
 }
