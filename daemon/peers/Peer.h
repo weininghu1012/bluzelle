@@ -24,7 +24,7 @@ public:
     }
 
     void send_request(const string& req,
-                      std::function<string(const string&)> h = nullptr);
+                      std::function<string(const string&)> h, bool schedule_read);
 };
 
 #endif //BLUZELLE_PEER_H

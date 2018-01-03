@@ -7,7 +7,7 @@
 class RaftCountVotesCommand : public Command
 {
 private:
-    RaftCandidateState& state_;
+    RaftState& state_;
     bool voted_yes_;
 
 public:

@@ -8,10 +8,10 @@
 #include "JsonTools.h"
 
 RaftFollowerState::RaftFollowerState(boost::asio::io_service& ios,
-                                       Storage& s,
-                                       CommandFactory& cf,
-                                       ApiCommandQueue& pq,
-                                       PeerList& ps,
+                                     Storage& s,
+                                     CommandFactory& cf,
+                                     ApiCommandQueue& pq,
+                                     PeerList& ps,
                                      function<string(const string&)> rh,
                                      function<void(unique_ptr<RaftState>)> set_next)
         : RaftState(ios, s, cf, pq, ps, rh, set_next),
@@ -24,6 +24,10 @@ RaftFollowerState::RaftFollowerState(boost::asio::io_service& ios,
                                             this, boost::asio::placeholders::error));
 }
 
+RaftFollowerState::~RaftFollowerState()
+{
+    heartbeat_timer_.cancel();
+}
 
 unique_ptr<RaftState> RaftFollowerState::handle_request(const string& request, string& response)
 {
@@ -49,14 +53,10 @@ void RaftFollowerState::heartbeat_timer_expired(const boost::system::error_code&
 
         set_next_state_(std::move(next_state_));
         }
-    //else
-    //    std::cout << "aborted" << std::endl;
 }
 
 void RaftFollowerState::rearm_heartbeat_timer() // Use with flag to stop it when transitioned to another state
 {
-    std::cout << "#" << std::endl;
-
     heartbeat_timer_.cancel();
     heartbeat_timer_.expires_from_now(
             boost::posix_time::milliseconds(RaftState::raft_election_timeout_interval_min_milliseconds));

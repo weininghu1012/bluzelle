@@ -19,6 +19,7 @@ public:
     boost::asio::io_service::strand strand_;
     boost::beast::multi_buffer buffer_;
     std::function<string(const string&)> handler_ = nullptr;
+    bool schedule_read_; // Sometimes we don't expect response, so set this flag if no on_read() need to be called.
 
 public:
     explicit PeerSession(boost::beast::websocket::stream<boost::asio::ip::tcp::socket> ws);

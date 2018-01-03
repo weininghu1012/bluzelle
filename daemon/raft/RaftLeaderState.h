@@ -9,7 +9,7 @@ class RaftLeaderState : public RaftState
 {
 private:
     boost::asio::deadline_timer heartbeat_timer_;
-    void heartbeat();
+    void heartbeat(const boost::system::error_code& e);
 
 public:
     RaftLeaderState(boost::asio::io_service& ios,
@@ -19,6 +19,8 @@ public:
                     PeerList& ps,
                     function<string(const string&)> rh,
                     function<void(unique_ptr<RaftState>)> set_next);
+
+    ~RaftLeaderState();
 
     virtual unique_ptr<RaftState> handle_request(const string& request, string& response) override;
 

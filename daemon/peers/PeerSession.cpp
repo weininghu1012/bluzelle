@@ -71,12 +71,13 @@ void PeerSession::on_write(
     if (ec)
         return fail(ec, "PeerSession::on_write");
 
-    if (handler_ != nullptr)
+    if (schedule_read_)
         do_read();
 }
 
 void PeerSession::set_request_handler(std::function<string(const string&)> request_handler) {
-    handler_ = request_handler;
+    if (request_handler != nullptr)
+        handler_ = request_handler;
 }
 
 void PeerSession::write_async(const string& request) {

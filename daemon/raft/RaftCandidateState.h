@@ -30,6 +30,8 @@ public:
                        function<string(const string&)> rh,
                        function<void(unique_ptr<RaftState>)> set_next);
 
+    ~RaftCandidateState();
+
     bool nominated_self() {return nominated_for_leader_; }
     void count_vote(bool vote_yes);
 

@@ -11,7 +11,8 @@ using std::shared_ptr;
 
 
 void Peer::send_request(const string& req,
-                        std::function<string(const string&)> h)
+                        std::function<string(const string&)> h,
+                        bool schedule_read)
 {
     if (session_ == nullptr) // Check if we don't have a session.
         {
@@ -30,10 +31,10 @@ void Peer::send_request(const string& req,
             boost::asio::connect(ws.next_layer(), lookup);
             ws.handshake(info_.get_value<string>("host"), "/");
 
-
             session_ = std::make_shared<PeerSession>(std::move(ws)); // Store it for future use.
-            if (h != nullptr)
-                session_->handler_ = h;
+
+            session_->set_request_handler(h);
+            session_->schedule_read_ = schedule_read;
             }
         catch (std::exception& ex)
             {
@@ -50,6 +51,7 @@ void Peer::send_request(const string& req,
 
     if (session_ != nullptr) // Check again in case we just created a session.
         {
+        session_->schedule_read_ = schedule_read;
         session_->write_async(req);
         }
     else

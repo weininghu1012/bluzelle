@@ -28,14 +28,25 @@ RaftCandidateState::RaftCandidateState(boost::asio::io_service& ios,
     schedule_election();
 }
 
+RaftCandidateState::~RaftCandidateState()
+{
+    election_timeout_timer_.cancel();
+}
+
 void RaftCandidateState::schedule_election()
 {
     std::mt19937 rng(rd_());
-    std::uniform_int_distribution<uint> uni(raft_election_timeout_interval_min_milliseconds,
-                                            raft_election_timeout_interval_max_milliseconds);
+    std::uniform_int_distribution<uint> uni(1,
+                                            raft_election_timeout_interval_max_milliseconds -
+                                                    raft_election_timeout_interval_min_milliseconds);
 
+    uint election_in = uni(rng);
+
+    std::cout << "Scheduled vote in: " << boost::lexical_cast<string>(election_in) << " millisecs" << std::endl;
+
+    election_timeout_timer_.cancel();
     election_timeout_timer_.expires_from_now(boost::posix_time::milliseconds(
-            uni(rng)));
+            election_in));
 
     election_timeout_timer_.async_wait(boost::bind(&RaftCandidateState::start_election,
                                                    this));
@@ -47,7 +58,7 @@ void RaftCandidateState::start_election()
     std::cout << "vote requested ";
     for (auto &p : peers_)
         {
-        p.send_request(s_request_for_vote_message, handler_);
+        p.send_request(s_request_for_vote_message, handler_, true);
         std::cout << ".";
         }
 

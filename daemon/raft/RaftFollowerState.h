@@ -20,6 +20,8 @@ public:
                        function<string(const string&)> rh,
                        function<void(unique_ptr<RaftState>)> set_next);
 
+    ~RaftFollowerState();
+
     virtual unique_ptr<RaftState> handle_request(const string& request, string& response) override;
 
     virtual RaftStateType get_type() const override { return RaftStateType::Follower; }
