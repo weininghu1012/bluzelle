@@ -13,7 +13,7 @@ private:
     boost::asio::deadline_timer election_timeout_timer_;
 
     void schedule_election();
-    void start_election();
+    void start_election(const boost::system::error_code& e);
     void finish_election();
 
     bool nominated_for_leader_;
@@ -38,6 +38,8 @@ public:
     virtual unique_ptr<RaftState> handle_request(const string& request, string& response) override;
 
     virtual RaftStateType get_type() const override { return RaftStateType::Candidate; }
+
+    void cancel_election();
 };
 
 #endif //BLUZELLE_RAFTCANDIDATESTATE_H

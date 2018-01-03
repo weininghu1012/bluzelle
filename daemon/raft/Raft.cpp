@@ -34,7 +34,7 @@ Raft::Raft(boost::asio::io_service &ios)
 
 void Raft::run()
 {
-    raft_state_ = std::make_unique<RaftFollowerState>(ios_,
+    raft_state_ = std::make_unique<RaftCandidateState>(ios_,
                                                        storage_,
                                                        command_factory_,
                                                        peer_queue_,

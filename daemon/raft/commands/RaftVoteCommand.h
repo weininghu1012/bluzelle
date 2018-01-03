@@ -7,7 +7,7 @@
 class RaftVoteCommand : public Command
 {
 private:
-    RaftCandidateState& state_;
+    RaftState& state_;
 
 public:
     RaftVoteCommand(RaftState& s);

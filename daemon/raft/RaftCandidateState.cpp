@@ -1,5 +1,7 @@
 #include <iostream>
 
+#include <boost/asio/placeholders.hpp>
+
 #include "PeerList.h"
 #include "CommandFactory.h"
 #include "RaftCandidateState.h"
@@ -42,20 +44,28 @@ void RaftCandidateState::schedule_election()
 
     uint election_in = uni(rng);
 
-    std::cout << "Scheduled vote in: " << boost::lexical_cast<string>(election_in) << " millisecs" << std::endl;
+    std::cout << "Election in " << boost::lexical_cast<string>(election_in) << " millisecs" << std::endl;
 
     election_timeout_timer_.cancel();
     election_timeout_timer_.expires_from_now(boost::posix_time::milliseconds(
             election_in));
 
     election_timeout_timer_.async_wait(boost::bind(&RaftCandidateState::start_election,
-                                                   this));
+                                                   this, boost::asio::placeholders::error));
 }
 
-void RaftCandidateState::start_election()
+void RaftCandidateState::cancel_election()
 {
+    election_timeout_timer_.cancel();
+}
+
+void RaftCandidateState::start_election(const boost::system::error_code& e)
+{
+    if (e == boost::asio::error::operation_aborted)
+        return; // Timer was cancelled.
+
     nominated_for_leader_ = true;
-    std::cout << "vote requested ";
+    std::cout << "votes requested ";
     for (auto &p : peers_)
         {
         p.send_request(s_request_for_vote_message, handler_, true);
@@ -76,27 +86,29 @@ void RaftCandidateState::count_vote(bool vote_yes)
 {
     if (vote_yes)
         {
-        std::cout << "vote 'yes' received" << std::endl;
+        std::cout << "  'yes' received" << std::endl;
         ++ voted_yes_;
         }
     else
         {
-        std::cout << "vote 'no' received" << std::endl;
+        std::cout << "  'no' received" << std::endl;
         ++voted_no_;
         }
 
-
-    if (voted_yes_ >= peers_.size() * 2 / 3) // If 2/3rd voted yes this node is the new leader.
+    if (voted_yes_ + voted_no_ >= peers_.size()) // If all nodes voted.
         {
-        std::cout << "Leader elected" << std::endl;
-        finish_election();
-        next_state_ = std::make_unique<RaftLeaderState>(ios_,
-                                                        storage_,
-                                                        command_factory_,
-                                                        peer_queue_,
-                                                        peers_,
-                                                        handler_,
-                                                        set_next_state_); // Set next state.
+        if (voted_yes_ >= peers_.size() * 2 / 3) // If 2/3rd voted yes this node is the new leader.
+            {
+            std::cout << "Election finished" << std::endl;
+            finish_election();
+            next_state_ = std::make_unique<RaftLeaderState>(ios_,
+                                                            storage_,
+                                                            command_factory_,
+                                                            peer_queue_,
+                                                            peers_,
+                                                            handler_,
+                                                            set_next_state_);
+            }
         }
 
     // [todo] Handle split vote.

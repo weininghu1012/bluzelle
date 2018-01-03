@@ -3,7 +3,7 @@
 void fail(boost::system::error_code ec, char const *what);
 
 PeerSession::PeerSession(boost::beast::websocket::stream<boost::asio::ip::tcp::socket> ws)
-        : ws_(std::move(ws)), strand_(ws_.get_executor().context()) {
+        : ws_(std::move(ws)), strand_(ws_.get_executor().context())/*, schedule_read_(true)*/ {
 }
 
 void PeerSession::run() {
@@ -50,17 +50,21 @@ void PeerSession::on_read(
     buffer_.consume(buffer_.size());
 
     std::string response, request = ss.str();
-    if (handler_ != nullptr)
+
+    if (handler_ != nullptr && !request.empty())
         response = handler_(request);
 
-    ws_.async_write(
-            boost::asio::buffer(response),
-            strand_.wrap(
-                    std::bind(
-                            &PeerSession::on_write,
-                            shared_from_this(),
-                            std::placeholders::_1,
-                            std::placeholders::_2)));
+    if (!response.empty())
+        ws_.async_write(
+                boost::asio::buffer(response),
+                strand_.wrap(
+                        std::bind(
+                                &PeerSession::on_write,
+                                shared_from_this(),
+                                std::placeholders::_1,
+                                std::placeholders::_2)));
+    else if (schedule_read_)
+        do_read();
 }
 
 void PeerSession::on_write(
