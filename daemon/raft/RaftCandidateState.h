@@ -28,7 +28,7 @@ public:
                        ApiCommandQueue& pq,
                        PeerList& ps,
                        function<string(const string&)> rh,
-                       function<void(unique_ptr<RaftState>)> set_next);
+                       unique_ptr<RaftState>& ns);
 
     ~RaftCandidateState();
 

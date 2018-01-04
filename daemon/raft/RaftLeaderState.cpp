@@ -16,8 +16,8 @@ RaftLeaderState::RaftLeaderState(boost::asio::io_service& ios,
                                  ApiCommandQueue& pq,
                                  PeerList& ps,
                                  function<string(const string&)> rh,
-                                 function<void(unique_ptr<RaftState>)> set_next)
-        : RaftState(ios, s, cf, pq, ps, rh, set_next),
+                                 unique_ptr<RaftState>& ns)
+        : RaftState(ios, s, cf, pq, ps, rh, ns),
           heartbeat_timer_(ios_,
                            boost::posix_time::milliseconds(raft_default_heartbeat_interval_milliseconds))
 {

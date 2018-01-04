@@ -13,7 +13,7 @@ void RaftState::set_next_state_follower()
                                                       peer_queue_,
                                                       peers_,
                                                       handler_,
-                                                      set_next_state_);
+                                                      next_state_);
 }
 
 void RaftState::set_next_state_leader()
@@ -24,16 +24,17 @@ void RaftState::set_next_state_leader()
                                                     peer_queue_,
                                                     peers_,
                                                     handler_,
-                                                    set_next_state_);
+                                                    next_state_);
 }
 
 void RaftState::set_next_state_candidate()
 {
+    // todo: Lock next_state_
     next_state_ = std::make_unique<RaftCandidateState>(ios_,
                                                        storage_,
                                                        command_factory_,
                                                        peer_queue_,
                                                        peers_,
                                                        handler_,
-                                                       set_next_state_);
+                                                       next_state_);
 }

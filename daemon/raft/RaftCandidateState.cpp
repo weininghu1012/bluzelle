@@ -17,8 +17,8 @@ RaftCandidateState::RaftCandidateState(boost::asio::io_service& ios,
                                        ApiCommandQueue& pq,
                                        PeerList& ps,
                                        function<string(const string&)> rh,
-                                       function<void(unique_ptr<RaftState>)> set_next)
-        : RaftState(ios, s, cf, pq, ps, rh, set_next),
+                                       unique_ptr<RaftState>& ns)
+        : RaftState(ios, s, cf, pq, ps, rh, ns),
           nominated_for_leader_(false),
           voted_yes_(0),
           voted_no_(0),
@@ -107,7 +107,7 @@ void RaftCandidateState::count_vote(bool vote_yes)
                                                             peer_queue_,
                                                             peers_,
                                                             handler_,
-                                                            set_next_state_);
+                                                            next_state_);
             }
         }
 

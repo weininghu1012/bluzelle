@@ -42,7 +42,7 @@ protected:
     CommandFactory& command_factory_;
 
     function<string(const string&)> handler_;
-    function<void(unique_ptr<RaftState>)> set_next_state_;
+    unique_ptr<RaftState>& next_state_;
 
 public:
     virtual unique_ptr<RaftState> handle_request(const string& request, string& response) = 0;
@@ -53,14 +53,14 @@ public:
               ApiCommandQueue& pq,
               PeerList& ps,
               function<string(const string&)> rh,
-              function<void(unique_ptr<RaftState>)> set_next)
+              unique_ptr<RaftState>& ns)
     : ios_(ios),
       storage_(s),
       command_factory_(cf),
       peer_queue_(pq),
       peers_(ps),
       handler_(rh),
-      set_next_state_(set_next)
+      next_state_(ns)
     {
 
     }
@@ -72,8 +72,6 @@ public:
     void set_next_state_leader();
 
     void set_next_state_candidate();
-
-    unique_ptr<RaftState> next_state_;
 };
 
 #endif //BLUZELLE_RAFTSTATE_H

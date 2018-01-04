@@ -42,20 +42,30 @@ void Raft::run()
                                                        std::bind(&Raft::handle_request,
                                                               this,
                                                               std::placeholders::_1),
-                                                       std::bind(&Raft::set_next_state,
-                                                                this,
-                                                                 std::placeholders::_1));
+                                                       raft_next_state_);
 }
 
 string Raft::handle_request(const string &req)
 {
+    // State transition can be a result of timer (Follower->Candidate) or command execution.
+    // First check if there is a pending state transition caused by timer:
+    {
+        std::lock_guard<mutex> lock(raft_next_state_mutex_);
+        if (raft_next_state_ != nullptr)
+            {
+            std::lock_guard<mutex> lock(raft_state_mutex_);
+            raft_state_.reset(raft_next_state_.release()); // Current state becomes next state.
+            }
+    }
+
+
     std::lock_guard<mutex> lock(raft_state_mutex_); // Requests come from multiple peers. Handle one at a time. Potential bottleneck.
 
     string resp;
-
     unique_ptr<RaftState> next_state = raft_state_->handle_request(req, resp); // request handled by current state.
 
-    if (next_state != nullptr) // transition to next state.
+    // Check if there is state transtion followed by command execution.
+    if (next_state != nullptr)
         raft_state_.reset(next_state.get());
 
     return resp;

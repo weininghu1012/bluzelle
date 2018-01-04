@@ -34,6 +34,9 @@ private:
     mutex raft_state_mutex_;
     unique_ptr<RaftState> raft_state_; // There are 3 RAFT states: Candidate, Follower and Leader.
 
+    mutex raft_next_state_mutex_;
+    unique_ptr<RaftState> raft_next_state_; // State to transition to.
+
 public:
     Raft(boost::asio::io_service& ios);
 
@@ -42,12 +45,6 @@ public:
     string handle_request(const string& req);
 
     void rearm_heartbeat_timer();
-
-    void set_next_state(unique_ptr<RaftState> s)
-    {
-        std::lock_guard<mutex> lock(raft_state_mutex_);
-        raft_state_ = std::move(s);
-    }
 };
 
 #endif //BLUZELLE_RAFT_H

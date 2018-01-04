@@ -13,8 +13,8 @@ RaftFollowerState::RaftFollowerState(boost::asio::io_service& ios,
                                      ApiCommandQueue& pq,
                                      PeerList& ps,
                                      function<string(const string&)> rh,
-                                     function<void(unique_ptr<RaftState>)> set_next)
-        : RaftState(ios, s, cf, pq, ps, rh, set_next),
+                                     unique_ptr<RaftState>& ns)
+        : RaftState(ios, s, cf, pq, ps, rh, ns),
           heartbeat_timer_(ios_,
                            boost::posix_time::milliseconds(RaftState::raft_election_timeout_interval_min_milliseconds))
 {
@@ -50,8 +50,6 @@ void RaftFollowerState::heartbeat_timer_expired(const boost::system::error_code&
         std::cout << "Starting Leader election" << std::endl;
 
         set_next_state_candidate();
-
-        set_next_state_(std::move(next_state_));
         }
 }
 
