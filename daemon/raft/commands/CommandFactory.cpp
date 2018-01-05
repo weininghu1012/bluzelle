@@ -34,9 +34,25 @@ unique_ptr<Command>
 CommandFactory::get_command(const boost::property_tree::ptree& pt,
                       RaftState& st) const
 {
-    if (!is_raft(pt))
-        return nullptr;
+    if (has_key(pt, "bzn-api"))
+        return make_api_command(pt, st);
 
+    if (has_key(pt, "crud"))
+        return make_crud_command(pt, st);
+
+    if (has_key(pt, "raft"))
+        return make_raft_command(pt, st);
+}
+
+bool CommandFactory::has_key(const boost::property_tree::ptree& pt, const string& k) const
+{
+    return pt.find(k) != pt.not_found();
+}
+
+unique_ptr<Command>
+CommandFactory::make_raft_command(const boost::property_tree::ptree& pt,
+                                  RaftState& st) const
+{
     auto cmd = pt.get<string>("raft");
 
     // Candidate receive request for vote.
@@ -55,63 +71,12 @@ CommandFactory::get_command(const boost::property_tree::ptree& pt,
     if (cmd == "beep")
         return std::make_unique<RaftHeartbeatCommand>(st);
 
-    return std::make_unique<ErrorCommand>("Unsupported command");
-}
-
-/*unique_ptr<Command>
-CommandFactory::get_follower_command(const boost::property_tree::ptree& pt, RaftState& st) const
-{
     return nullptr;
 }
 
 unique_ptr<Command>
-CommandFactory::get_leader_command(const boost::property_tree::ptree& pt, RaftState& st) const
-{
-    return nullptr;
-}*/
-
-/*unique_ptr<Command>
-CommandFactory::get_command(const boost::property_tree::ptree& pt) const {
-    if (is_raft(pt))
-        return make_raft_command(pt);
-
-    if (is_crud(pt))
-        return make_crud_command(pt);
-
-    if (is_api(pt))
-        return make_api_command(pt);
-
-    return std::make_unique<ErrorCommand>("Unsupported command");
-}*/
-
-
-
-
-bool CommandFactory::is_raft(const boost::property_tree::ptree& pt) const {
-    return pt.find("raft") != pt.not_found();
-}
-
-/*
-// CRUD commands go from leader to followers. I.e they are log replication commands.
-bool CommandFactory::is_crud(const boost::property_tree::ptree& pt) const {
-    return pt.find("crud") != pt.not_found();
-}
-
-// API commands go from API to leader. Same format as CRUD.
-bool CommandFactory::is_api(const boost::property_tree::ptree& pt) const {
-    return pt.find("bzn-api") != pt.not_found();
-}
-
-unique_ptr<Command> CommandFactory::make_raft_command(const boost::property_tree::ptree& pt) const {
-    auto cmd = pt.get<string>("raft");
-    //if (cmd == "beep")
-     //   return std::make_unique<RaftHeartbeatCommand>();
-
-    return nullptr;
-}
-
-unique_ptr<Command>
-CommandFactory::make_crud_command(const boost::property_tree::ptree& pt) const {
+CommandFactory::make_crud_command(const boost::property_tree::ptree& pt,
+                                  RaftState& st) const {
     auto cmd = pt.get<string>("crud");
     auto dat = get_data(pt);
 
@@ -125,7 +90,8 @@ CommandFactory::make_crud_command(const boost::property_tree::ptree& pt) const {
 }
 
 unique_ptr<Command>
-CommandFactory::make_api_command(const boost::property_tree::ptree& pt) const {
+CommandFactory::make_api_command(const boost::property_tree::ptree& pt,
+                                 RaftState& st) const {
     auto cmd = pt.get<string>("bzn-api");
     auto dat = get_data(pt);
 
@@ -136,5 +102,5 @@ CommandFactory::make_api_command(const boost::property_tree::ptree& pt) const {
         return std::make_unique<ApiReadCommand>(queue_, storage_, pt);
 
     return nullptr;
-}*/
+}
 

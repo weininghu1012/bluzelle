@@ -75,7 +75,8 @@ unique_ptr<RaftState> RaftLeaderState::handle_request(const string& request, str
     auto pt = pt_from_json_string(request);
 
     unique_ptr<Command> command = command_factory_.get_command(pt, *this);
-    response = pt_to_json_string(command->operator()());
+    if (command != nullptr)
+        response = pt_to_json_string(command->operator()());
 
     return nullptr;
 }

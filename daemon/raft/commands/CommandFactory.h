@@ -13,18 +13,26 @@ using std::unique_ptr;
 
 class CommandFactory {
 private:
-    Storage& storage_;
+    Storage& storage_; // Also can be accessed from RaftState.
     ApiCommandQueue& queue_;
 
-    bool is_raft(const boost::property_tree::ptree& s) const;
-/*    bool is_crud(const boost::property_tree::ptree& s) const;
-    bool is_api(const boost::property_tree::ptree& s) const;
+    bool has_key(const boost::property_tree::ptree& s,
+                 const string& k) const;
 
-    unique_ptr<Command> make_raft_command(const boost::property_tree::ptree& s) const;
-    unique_ptr<Command> make_crud_command(const boost::property_tree::ptree& s) const;
-    unique_ptr<Command> make_api_command(const boost::property_tree::ptree& s) const;
-*/
-    std::pair<string,string> get_data(const boost::property_tree::ptree& pt) const;
+    unique_ptr<Command>
+    make_raft_command(const boost::property_tree::ptree& s,
+            RaftState& st) const;
+
+    unique_ptr<Command>
+    make_crud_command(const boost::property_tree::ptree& s,
+                      RaftState& st) const;
+
+    unique_ptr<Command>
+    make_api_command(const boost::property_tree::ptree& s,
+                     RaftState& st) const;
+
+    std::pair<string,string>
+    get_data(const boost::property_tree::ptree& pt) const;
 
 public:
     CommandFactory(Storage& st,
@@ -33,14 +41,6 @@ public:
     unique_ptr<Command>
     get_command(const boost::property_tree::ptree& pt,
                           RaftState& st) const;
-
-    /*unique_ptr<Command>
-    get_follower_command(const boost::property_tree::ptree& pt,
-                         RaftState& st) const;
-
-    unique_ptr<Command>
-    get_leader_command(const boost::property_tree::ptree& pt,
-                       RaftState& st) const;*/
 };
 
 #endif //BLUZELLE_COMMANDPROCESSOR_H
