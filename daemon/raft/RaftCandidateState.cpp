@@ -32,13 +32,13 @@ RaftCandidateState::RaftCandidateState(boost::asio::io_service& ios,
 
 RaftCandidateState::~RaftCandidateState()
 {
-    election_timeout_timer_.cancel();
+    cancel_election();
 }
 
 void RaftCandidateState::schedule_election()
 {
     std::mt19937 rng(rd_());
-    std::uniform_int_distribution<uint> uni(1,
+    std::uniform_int_distribution<uint> uni(1000,
                                             raft_election_timeout_interval_max_milliseconds -
                                                     raft_election_timeout_interval_min_milliseconds);
 
@@ -62,7 +62,11 @@ void RaftCandidateState::cancel_election()
 void RaftCandidateState::start_election(const boost::system::error_code& e)
 {
     if (e == boost::asio::error::operation_aborted)
+        {
+        std::cout << "election cancelled" << std::endl;
         return; // Timer was cancelled.
+        }
+
 
     nominated_for_leader_ = true;
     std::cout << "votes requested ";
@@ -95,24 +99,18 @@ void RaftCandidateState::count_vote(bool vote_yes)
         ++voted_no_;
         }
 
-    if (voted_yes_ + voted_no_ >= peers_.size()) // If all nodes voted.
+    if (voted_yes_ >= peers_.size() * 2 / 3) // If 2/3rd voted yes this node is the new leader.
         {
-        if (voted_yes_ >= peers_.size() * 2 / 3) // If 2/3rd voted yes this node is the new leader.
-            {
-            std::cout << "Election finished" << std::endl;
-            finish_election();
-            next_state_ = std::make_unique<RaftLeaderState>(ios_,
-                                                            storage_,
-                                                            command_factory_,
-                                                            peer_queue_,
-                                                            peers_,
-                                                            handler_,
-                                                            next_state_);
-            }
+        std::cout << "Election finished" << std::endl;
+        finish_election();
+        next_state_ = std::make_unique<RaftLeaderState>(ios_,
+                                                        storage_,
+                                                        command_factory_,
+                                                        peer_queue_,
+                                                        peers_,
+                                                        handler_,
+                                                        next_state_);
         }
-
-    // [todo] Handle split vote.
-    //schedule_election(); // No consensus reached, re-schedule election.
 }
 
 // If heartbeat received transition to follower state.

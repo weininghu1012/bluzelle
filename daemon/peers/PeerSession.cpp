@@ -45,7 +45,7 @@ void PeerSession::on_read(
     boost::ignore_unused(bytes_transferred);
 
     if (ec)
-        return fail(ec, "PeerSession::on_read");
+        return;// fail(ec, "PeerSession::on_read");
 
     std::stringstream ss;
     ss << boost::beast::buffers(buffer_.data());

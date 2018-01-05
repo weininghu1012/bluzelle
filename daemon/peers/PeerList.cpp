@@ -15,26 +15,19 @@ PeerList::PeerList(boost::asio::io_service& ios)
 
     // Read file and create a list of known peers.
     boost::filesystem::ifstream file("./peers");
-    /* Sample ./peers file
-        node_1=localhost:58000
-        node_2=localhost:58001
-        node_3=localhost:58002
-        node_4=localhost:58003
-        node_5=localhost:58004
-     */
 
     string peer_info; // name=Host:port [todo] Pick a format for node info storage.
     while (getline(file, peer_info))
         {
-        if (peer_info.front() == ';')
-            continue; // Skip commented lines.
-
-        NodeInfo n;
-        n.set_value("name", peer_info.substr(0, peer_info.find('=')));
-        n.set_value("host", peer_info.substr(peer_info.find('=') + 1, peer_info.find(':') - peer_info.find('=') - 1));
-        n.set_value("port", peer_info.substr(peer_info.find(':') + 1));
-        if (host != n.get_value<string>("host") // Exclude this node.
-            && port != n.get_value<ushort>("port"))
-            this->emplace_back(ios, n);
+        if (peer_info.front() != ';') // Skip commented lines.
+            {
+            NodeInfo n;
+            n.set_value("name", peer_info.substr(0, peer_info.find('=')));
+            n.set_value("host", peer_info.substr(peer_info.find('=') + 1, peer_info.find(':') - peer_info.find('=') - 1));
+            n.set_value("port", peer_info.substr(peer_info.find(':') + 1));
+            if (host != n.get_value<string>("host") // Exclude this node.
+                && port != n.get_value<ushort>("port"))
+                this->emplace_back(ios, n);
+            }
         }
 }

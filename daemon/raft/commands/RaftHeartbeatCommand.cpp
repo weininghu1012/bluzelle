@@ -1,5 +1,8 @@
-#include <raft/RaftFollowerState.h>
+#include "RaftFollowerState.h"
+#include "RaftCandidateState.h"
+
 #include "RaftHeartbeatCommand.h"
+
 #include "JsonTools.h"
 
 
@@ -19,7 +22,13 @@ boost::property_tree::ptree RaftHeartbeatCommand::operator()()
     std::cout << "♥" << std::endl;
 
     if (state_.get_type() == RaftStateType::Candidate)
+        {
         state_.set_next_state_follower();
+        auto cs = dynamic_cast<RaftCandidateState*>(&state_);
+        if (cs != nullptr)
+            cs->cancel_election(); // Election timer could be running, stop it before deleting state.
+        }
+
 
     if (state_.get_type() == RaftStateType::Follower)
         {
