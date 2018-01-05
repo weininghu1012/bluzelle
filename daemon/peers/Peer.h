@@ -10,9 +10,10 @@ using std::shared_ptr;
 
 class Peer
 {
+private:
     boost::asio::io_service& ios_;
     NodeInfo info_; // This node info.
-    shared_ptr<PeerSession> session_; // Corresponding session.
+
 public:
 
     Peer(

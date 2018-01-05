@@ -23,6 +23,7 @@ public:
 
 public:
     explicit PeerSession(boost::beast::websocket::stream<boost::asio::ip::tcp::socket> ws);
+    ~PeerSession();
 
     void run();
 

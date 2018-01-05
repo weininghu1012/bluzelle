@@ -36,9 +36,6 @@ unique_ptr<RaftState> RaftFollowerState::handle_request(const string& request, s
     unique_ptr<Command> command = command_factory_.get_command(pt, *this);
     response = pt_to_json_string(command->operator()());
 
-    if (next_state_ != nullptr)
-        return std::move(next_state_);
-
     return nullptr;
 }
 

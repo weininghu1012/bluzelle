@@ -77,8 +77,5 @@ unique_ptr<RaftState> RaftLeaderState::handle_request(const string& request, str
     unique_ptr<Command> command = command_factory_.get_command(pt, *this);
     response = pt_to_json_string(command->operator()());
 
-    if (next_state_ != nullptr) // If command execution caused state transition return new state.
-        return std::move(next_state_);
-
     return nullptr;
 }

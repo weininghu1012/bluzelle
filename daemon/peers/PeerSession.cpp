@@ -3,7 +3,14 @@
 void fail(boost::system::error_code ec, char const *what);
 
 PeerSession::PeerSession(boost::beast::websocket::stream<boost::asio::ip::tcp::socket> ws)
-        : ws_(std::move(ws)), strand_(ws_.get_executor().context())/*, schedule_read_(true)*/ {
+        : ws_(std::move(ws)), strand_(ws_.get_executor().context())
+{
+    //std::cout << "session [+]" << std::endl;
+}
+
+PeerSession::~PeerSession()
+{
+    //std::cout << "session [-]" << std::endl;
 }
 
 void PeerSession::run() {
@@ -37,12 +44,8 @@ void PeerSession::on_read(
         std::size_t bytes_transferred) {
     boost::ignore_unused(bytes_transferred);
 
-    // This indicates that the session was closed
-    if (ec == boost::beast::websocket::error::closed)
-        return;
-
     if (ec)
-        fail(ec, "PeerSession::on_read");
+        return fail(ec, "PeerSession::on_read");
 
     std::stringstream ss;
     ss << boost::beast::buffers(buffer_.data());
