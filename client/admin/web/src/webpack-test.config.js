@@ -1,6 +1,6 @@
 const webpack = require('webpack');
 
-const config = require('./webpack-base-config.js')();
+const config = require('../../../common/webpack-base-config.js')();
 const path = require('path');
 
 config.entry = {test: path.resolve('./test.js')};

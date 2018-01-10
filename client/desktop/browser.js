@@ -1,1 +1,1 @@
-../web/dist/generated/js/index.js
+../admin/web/dist/generated/js/index.js
