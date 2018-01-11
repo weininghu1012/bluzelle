@@ -18,21 +18,17 @@ module.exports = () => ({
     module: {
         rules: [
             {
+
                 test: /\.js$/,
                 include: (path) => {
 
                     if(/bluzelle-client-common/.test(path)) {
-
-                        console.log(path, true);
                         return true;
                     }
 
                     if(/node_modules/.test(path)) {
-                        console.log(path, false);
                         return false;
                     }
-
-                    console.log(path, true);
 
                     return true;
                 },

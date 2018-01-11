@@ -1,0 +1,1 @@
+../../../bluzelle-client-common/dist/runTests.js
