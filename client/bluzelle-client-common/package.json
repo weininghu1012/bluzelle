@@ -6,7 +6,5 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "webpack": "^3.10.0",
-    "webpack-beep-plugin": "^1.0.0"
   }
 }
