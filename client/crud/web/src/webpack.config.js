@@ -1,4 +1,4 @@
-const config = require('./webpack-base-config.js')();
+const config = require('bluzelle-client-common/webpack-base-config.js')();
 
 
 
