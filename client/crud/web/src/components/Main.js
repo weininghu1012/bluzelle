@@ -1,15 +1,23 @@
-import {ReflexContainer, ReflexElement} from 'react-reflex'
-
 export const Main = () => (
     <ReflexContainer
-        style={{height: '100%'}}
-        orientation='horizontal'>
+        style={{height: '100%'}}>
 
-        <ReflexElement>
-            Hello
-        </ReflexElement>
-        <ReflexElement>
-            World
+        <ReflexFixed>
+            <h1>Database</h1>
+        </ReflexFixed>
+
+        <ReflexElement flex={1}>
+            <ReflexContainer orientation='vertical'>
+                <ReflexElement>
+                    Keys
+                </ReflexElement>
+                <ReflexSplitter/>
+                <ReflexElement>
+                    Data
+                </ReflexElement>
+            </ReflexContainer>
         </ReflexElement>
     </ReflexContainer>
 );
+
+

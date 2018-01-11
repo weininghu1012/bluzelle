@@ -19,7 +19,24 @@ module.exports = () => ({
         rules: [
             {
                 test: /\.js$/,
-                exclude: /(node_modules)/,
+                include: (path) => {
+
+                    if(/bluzelle-client-common/.test(path)) {
+
+                        console.log(path, true);
+                        return true;
+                    }
+
+                    if(/node_modules/.test(path)) {
+                        console.log(path, false);
+                        return false;
+                    }
+
+                    console.log(path, true);
+
+                    return true;
+                },
+
                 use: {
                     loader: 'babel-loader',
                     options: {
@@ -70,7 +87,7 @@ module.exports = () => ({
             React: 'react',
             Fragment: ['react', 'Fragment'],
 
-            Component: 'components/Component',
+            Component: 'bluzelle-client-common/components/Component',
 
             LinkBtn: ['components/LinkBtn', 'default'],
             withParams: ['components/withParams', 'default'],
@@ -100,8 +117,12 @@ module.exports = () => ({
             '$j': 'jquery',
 
             Maybe: ['monet', 'Maybe'],
-            Either: ['monet', 'Either']
+            Either: ['monet', 'Either'],
 
+            ReflexContainer: ['react-reflex', 'ReflexContainer'],
+            ReflexSplitter: ['react-reflex', 'ReflexSplitter'],
+            ReflexElement: ['react-reflex', 'ReflexElement'],
+            ReflexFixed: ['bluzelle-client-common/components/ReflexFixed', 'ReflexFixed']
 
         }),
         new BeepPlugin(),
