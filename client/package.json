@@ -24,9 +24,9 @@
     "enzyme-adapter-react-16": "^1.1.1",
     "jsdom": "^11.5.1",
     "jsdom-global": "^3.0.2",
+    "mobx": "^3.4.1",
     "mocha": "^4.1.0",
-    "react": "^16.2.0",
-    "react-compat": "^0.0.1",
+    "react": "^16.0.0",
     "react-dom": "^16.2.0",
     "react-reflex": "^2.0.11",
     "react-router": "^4.2.0",
@@ -35,7 +35,8 @@
     "sinon-chai": "^2.14.0",
     "style-loader": "^0.19.1",
     "webpack": "^3.10.0",
-    "webpack-beep-plugin": "^1.0.0"
+    "webpack-beep-plugin": "^1.0.0",
+    "websocket": "^1.0.25"
   },
   "author": "",
   "license": "ISC"
