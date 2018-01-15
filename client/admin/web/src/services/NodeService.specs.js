@@ -8,7 +8,6 @@ describe('services/NodeService', () => {
         it('should get nodes', async () => {
             updateNode({address: 1});
             await waitFor(() => getNodes().length === 1);
-            expect(getNodes()[0]).to.deep.equal({address: 1, nodeState: 'new'});
         })
     });
 
@@ -20,43 +19,35 @@ describe('services/NodeService', () => {
             expect(spy).to.have.been.calledWith([]);
 
             spy.reset();
-            updateNode({address: 1});
+            updateNode({ ip: '1', port: 1  });
 
             await waitFor(() => getNodes().length === 1);
-            expect(spy).to.have.been.calledWith([{address: 1, nodeState: 'new'}]);
+            expect(spy).to.have.been.calledWith(sinon.match(v => v[0].port === 1));
 
             spy.reset();
-            updateNode({address: 2});
+            updateNode({ ip: '1', port: 2 });
             await waitFor(() => getNodes().length === 2);
-            expect(spy).to.have.been.calledWith([{address: 1, nodeState: 'new'}, {address: 2, nodeState: 'new'}]);
+            expect(spy).to.have.been.calledWith(sinon.match(v => v[1].port === 2));
         })
     });
 
     describe('removeNodeByAddress()', () => {
         it('should remove a node given the correct address', async () => {
-            updateNode({address:1});
-            updateNode({address:2});
-            updateNode({address:3});
-            updateNode({address:4});
+            updateNode({ip:'1.2.3', port:1});
+            updateNode({ip:'3.2.1', port:7});
+            updateNode({ip:'192.168.0.1', port:8080});
 
-            await waitFor(() => getNodes().length === 4);
-            expect(toJS(getNodes())).to.deep.equal([{address: 1, nodeState: 'new'}, {address:2, nodeState: 'new'}, {address:3, nodeState: 'new'}, {address: 4, nodeState: 'new'}]);
-            removeNodeByAddress(3);
-            expect(toJS(getNodes())).to.deep.equal([{address: 1, nodeState: 'new'}, {address:2, nodeState: 'new'}, {address: 3, nodeState: 'dead'}, {address: 4, nodeState: 'new'}]);
-            removeNodeByAddress(1);
-            expect(toJS(getNodes())).to.deep.equal([{address: 1, nodeState: 'dead'},{address:2, nodeState: 'new'}, {address: 3, nodeState: 'dead'}, {address: 4, nodeState: 'new'}]);
-            removeNodeByAddress(4);
-            expect(toJS(getNodes())).to.deep.equal([{address: 1, nodeState: 'dead'},{address:2, nodeState: 'new'}, {address: 3, nodeState: 'dead'}, {address: 4, nodeState: 'dead'}]);
-            removeNodeByAddress(2);
-            expect(toJS(getNodes())).to.deep.equal([{address: 1, nodeState: 'dead'},{address:2, nodeState: 'dead'}, {address: 3, nodeState: 'dead'}, {address: 4, nodeState: 'dead'}]);
-        });
+            await waitFor(() => getNodes().length === 3);
 
-        it('should not remove any nodes if given an address of a non-existent node', async () => {
-            updateNode({address: 1});
+            removeNodeByAddress('99.99.99:5');
 
-            await waitFor(() => getNodes().length === 1);
-            removeNodeByAddress(5);
-            expect(toJS(getNodes())).to.deep.equal([{address: 1, nodeState: 'new'}]);
+            await waitFor(() => getNodes().length === 3);
+
+            removeNodeByAddress('1.2.3:1');
+            removeNodeByAddress('3.2.1:7');
+            removeNodeByAddress('192.168.0.1:8080');
+
+            await waitFor(() => getNodes().length === 0);
         });
 
     })

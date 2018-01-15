@@ -5,12 +5,12 @@ import StorageDisplay from './StorageDisplay'
 import PercentageDisplay from "./PercentageDisplay";
 
 const NodeInfo = ({node: selectedNode}) => {
-    const node = getNodeByAddress(selectedNode.address);
+    const node = getNodeByAddress(`${selectedNode.ip}:${selectedNode.port}`);
     return node ? (
         <table style={styles.infoBox}>
             <tbody>
-            <InfoRow title="Address">{node.address}</InfoRow>
-            <InfoRow title="Messages"><NodeMessagesBtn address={node.address}/></InfoRow>
+            <InfoRow title="Address">{`${node.ip}:${node.port}`}</InfoRow>
+            <InfoRow title="Messages"><NodeMessagesBtn address={`${node.ip}:${node.port}`}/></InfoRow>
             <InfoRow title="Status"><StatusFormatter value={node.nodeState}/></InfoRow>
             <InfoRow title="Available Space"><StorageDisplay size={node.available} /></InfoRow>
             <InfoRow title="Used"><StorageDisplay size={node.used} /> (<PercentageDisplay total={node.available} part={node.used}/>)</InfoRow>
