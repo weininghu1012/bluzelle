@@ -1,3 +1,5 @@
+import {JSONEditor} from './JSONEditor'
+
 export const Main = () => (
     <ReflexContainer
         style={{height: '100%'}}>
@@ -13,7 +15,14 @@ export const Main = () => (
                 </ReflexElement>
                 <ReflexSplitter/>
                 <ReflexElement>
-                    Data
+                    <JSONEditor json={{
+                        title: 'my title',
+                        number: 123,
+                        isSwanky: true,
+                        moreStuff: {
+                            arr: [1, 2, 3]
+                        }
+                    }}/>
                 </ReflexElement>
             </ReflexContainer>
         </ReflexElement>
