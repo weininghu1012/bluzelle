@@ -1,4 +1,4 @@
-import {JSONEditor} from './JSONEditor'
+import {JSONEditor} from "./JSONEditor";
 
 export const Main = () => (
     <ReflexContainer
@@ -15,12 +15,16 @@ export const Main = () => (
                 </ReflexElement>
                 <ReflexSplitter/>
                 <ReflexElement>
-                    <JSONEditor json={{
-                        title: 'my title',
+                    <JSONEditor obj={{
                         number: 123,
-                        isSwanky: true,
-                        moreStuff: {
-                            arr: [1, 2, 3]
+                        hey: true,
+                        string: "hey world",
+                        nestedObj: {
+                            float: 123.321,
+                            anotherString: "woohoo",
+                            nested2: {
+                                a: 123
+                            }
                         }
                     }}/>
                 </ReflexElement>
@@ -28,5 +32,3 @@ export const Main = () => (
         </ReflexElement>
     </ReflexContainer>
 );
-
-
