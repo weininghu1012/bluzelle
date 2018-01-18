@@ -5,22 +5,22 @@ import {Deletable} from "./Deletable";
 
 export class RenderTree extends Component {
     render() {
-        const {json, update} = this.props;
+        const {obj, update} = this.props;
 
         // If object
-        if (typeof json === 'object' && !Array.isArray(json)) {
+        if (typeof obj === 'object' && !Array.isArray(obj)) {
             return (
                 <Deletable update={update}>
-                    <RenderObject update={update} json={json}/>
+                    <RenderObject update={update} obj={obj}/>
                 </Deletable>
             );
         }
 
         // If array
-        if (Array.isArray(json)) {
+        if (Array.isArray(obj)) {
             return (
                 <Deletable update={update}>
-                    <RenderArray update={update} json={json}/>
+                    <RenderArray update={update} obj={obj}/>
                 </Deletable>
             );
         }
@@ -28,7 +28,7 @@ export class RenderTree extends Component {
         // Standard datatypes
         return (
             <Deletable update={update}>
-                <RenderField update={update} json={json}/>
+                <RenderField update={update} obj={obj}/>
             </Deletable>
         );
     }

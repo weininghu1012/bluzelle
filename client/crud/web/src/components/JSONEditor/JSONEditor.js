@@ -1,5 +1,5 @@
-import {RenderTree} from "./RenderTree";
-import {merge} from'lodash';
+import {RenderObject} from "./RenderObject";
+
 
 export class JSONEditor extends Component {
     constructor(props) {
@@ -10,9 +10,37 @@ export class JSONEditor extends Component {
         };
     }
 
+    update(obj) {
+        merge(this.state.obj, obj);
+        this.setState({ obj: this.state.obj });
+    }
+
     render() {
-        return <RenderTree json={this.state.obj} update={obj => {
-            this.setState({ obj: merge(this.state.obj, obj) });
-        }}/>;
+        return <RenderObject obj={this.state.obj} update={this.update.bind(this)}/>;
     }
 }
+
+const merge = (obj1, obj2) => {
+
+    const key = Object.keys(obj2)[0];
+
+
+    if(typeof obj2[key] === 'object') {
+
+        merge(obj1[key], obj2[key]);
+
+    } else {
+
+        if(obj2[key] === undefined) {
+
+            if(Array.isArray(obj1)) {
+                obj1.splice(key, 1);
+            } else {
+                delete obj1[key];
+            }
+
+        } else {
+            obj1[key] = obj2[key];
+        }
+    }
+};

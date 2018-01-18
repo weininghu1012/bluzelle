@@ -1,21 +1,20 @@
 import {Collapsible} from "./Collapsible";
 import {RenderTree} from "./RenderTree";
 
-console.log(Collapsible);
-console.log(RenderTree);
-
-export const RenderObject = ({json, update}) => (
-    <Collapsible label={`{} (${Object.entries(json).length} entries)`}>
+export const RenderObject = ({obj, update}) => (
+    <Collapsible label={`{} (${Object.entries(obj).length} entries)`}>
         {
-            Object.entries(json).map(([key, value]) =>
+            Object.entries(obj).map(([key, value]) =>
                 <div key={key}>
                     <span>{key}</span>:
                     <RenderTree
                         update={
                             obj => update({ [key]: obj })
                         }
-                        json={value}/>
+                        obj={value}/>
                 </div>)
         }
+
+
     </Collapsible>
 );

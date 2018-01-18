@@ -16,15 +16,10 @@ export const Main = () => (
                 <ReflexSplitter/>
                 <ReflexElement>
                     <JSONEditor obj={{
-                        number: 123,
-                        hey: true,
-                        string: "hey world",
-                        nestedObj: {
-                            float: 123.321,
-                            anotherString: "woohoo",
-                            nested2: {
-                                a: 123
-                            }
+                        a: 5,
+                        bool: true,
+                        second: {
+                            arr: [1, 2, 3, 4]
                         }
                     }}/>
                 </ReflexElement>

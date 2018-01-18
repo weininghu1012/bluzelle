@@ -15,6 +15,7 @@
     "coverage-text": "nyc --instrument=false yarn test"
   },
   "dependencies": {
+    "istanbul-instrumenter-loader": "^3.0.0",
     "jsdom": "^11.5.1",
     "jsdom-global": "^3.0.2"
   },

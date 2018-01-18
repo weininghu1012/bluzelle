@@ -3,7 +3,7 @@ export class RenderField extends Component {
         super(props);
 
         this.state = {
-            formValue: JSON.stringify(props.json),
+            formValue: JSON.stringify(props.obj),
             formActive: false
         };
     }
@@ -36,9 +36,9 @@ export class RenderField extends Component {
     }
 
     render() {
-        const {json} = this.props;
+        const {obj} = this.props;
 
-        let color = colorFromType(json);
+        let color = colorFromType(obj);
 
         return (
             <span style={{color}} onClick={this.enableEditing.bind(this)}>
@@ -51,15 +51,15 @@ export class RenderField extends Component {
                           value={this.state.formValue}
                           onChange={this.handleChange.bind(this)}/>
                   </form>
-                  : JSON.stringify(json)}
+                  : JSON.stringify(obj)}
             </span>
         );
     }
 }
 
-const colorFromType = json => {
+const colorFromType = obj => {
     let color;
-    switch(typeof json) {
+    switch(typeof obj) {
         case 'string':
             color = 'blue';
             break;
