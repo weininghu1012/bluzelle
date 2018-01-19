@@ -1,6 +1,6 @@
 import {RenderArray} from "./RenderArray";
 import {RenderObject} from "./RenderObject";
-import {RenderField} from "./RenderField";
+import {EditableField} from './EditableField';
 import {Deletable} from "./Deletable";
 
 export class RenderTree extends Component {
@@ -28,8 +28,36 @@ export class RenderTree extends Component {
         // Standard datatypes
         return (
             <Deletable update={update}>
-                <RenderField update={update} obj={obj}/>
+                <EditableField
+                    onChange={v => update(JSON.parse(v))}
+                    val={JSON.stringify(obj)}
+                    renderVal={v =>
+                        <span style={{ color: colorFromType(v) }}>{v}</span>
+                        }/>
             </Deletable>
         );
     }
 }
+
+
+const colorFromType = obj => {
+    let color;
+    switch(typeof JSON.parse(obj)) {
+        case 'string':
+            color = 'blue';
+            break;
+
+        case 'number':
+            color = 'red';
+            break;
+
+        case 'boolean':
+            color = 'purple';
+            break;
+
+        default:
+            color = 'pink';
+    }
+
+    return color;
+};

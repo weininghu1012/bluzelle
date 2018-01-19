@@ -1,4 +1,5 @@
 import {RenderObject} from "./RenderObject";
+import {isEmpty} from 'lodash';
 
 
 export class JSONEditor extends Component {
@@ -20,12 +21,13 @@ export class JSONEditor extends Component {
     }
 }
 
-const merge = (obj1, obj2) => {
 
+// Behaves like lodash merge but also deletes undefined
+// values and
+const merge = (obj1, obj2) => {
     const key = Object.keys(obj2)[0];
 
-
-    if(typeof obj2[key] === 'object') {
+    if(typeof obj1[key] === 'object' && typeof obj2[key] === 'object') {
 
         merge(obj1[key], obj2[key]);
 

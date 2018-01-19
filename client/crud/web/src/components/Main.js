@@ -16,11 +16,7 @@ export const Main = () => (
                 <ReflexSplitter/>
                 <ReflexElement>
                     <JSONEditor obj={{
-                        a: 5,
-                        bool: true,
-                        second: {
-                            arr: [1, 2, 3, 4]
-                        }
+
                     }}/>
                 </ReflexElement>
             </ReflexContainer>

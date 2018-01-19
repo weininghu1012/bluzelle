@@ -1,9 +1,9 @@
-export class RenderField extends Component {
+export class EditableField extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            formValue: JSON.stringify(props.obj),
+            formValue: props.val,
             formActive: false
         };
     }
@@ -15,18 +15,16 @@ export class RenderField extends Component {
     }
 
     handleSubmit(event) {
+
+        const {onChange} = this.props;
+
         event.preventDefault();
 
         this.setState({
             formActive: false
         });
 
-
-        // Do error handling here
-        let val = JSON.parse(this.state.formValue);
-
-        // Propagate change to root
-        this.props.update(val);
+        onChange(this.state.formValue);
     }
 
     enableEditing() {
@@ -36,12 +34,11 @@ export class RenderField extends Component {
     }
 
     render() {
-        const {obj} = this.props;
-
-        let color = colorFromType(obj);
+        const {val, renderVal} = this.props;
+        const renderValWithDefault = renderVal || (i => i);
 
         return (
-            <span style={{color}} onClick={this.enableEditing.bind(this)}>
+            <span onClick={this.enableEditing.bind(this)}>
               {this.state.formActive ?
                   <form
                       style={{ display: 'inline' }}
@@ -51,30 +48,8 @@ export class RenderField extends Component {
                           value={this.state.formValue}
                           onChange={this.handleChange.bind(this)}/>
                   </form>
-                  : JSON.stringify(obj)}
+                  : renderValWithDefault(val)}
             </span>
         );
     }
 }
-
-const colorFromType = obj => {
-    let color;
-    switch(typeof obj) {
-        case 'string':
-            color = 'blue';
-            break;
-
-        case 'number':
-            color = 'red';
-            break;
-
-        case 'boolean':
-            color = 'purple';
-            break;
-
-        default:
-            color = 'pink';
-    }
-
-    return color;
-};

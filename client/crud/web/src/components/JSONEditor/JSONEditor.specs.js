@@ -1,5 +1,4 @@
 import {JSONEditor} from "./JSONEditor";
-import {RenderField} from "./RenderField";
 import {RenderObject} from "./RenderObject";
 import {RenderTree} from "./RenderTree";
 import {each} from 'lodash';
@@ -10,15 +9,16 @@ describe('JSONEditor', () => {
 
         it('should render an object', () => {
             const mWrapper = mount(<JSONEditor obj={{ a: 5 }}/>);
+
             expect(mWrapper).to.containMatchingElement(<RenderObject obj={{ a: 5}}/>);
-            expect(mWrapper).to.containMatchingElement(<RenderField obj={5}/>);
+            // expect(mWrapper).to.containMatchingElement(<RenderField obj={5}/>);
         });
 
         it('should render recursively', () => {
             const mWrapper = mount(<JSONEditor obj={{ a: { b: 5 }}}/>);
             expect(mWrapper).to.containMatchingElement(<RenderObject obj={{ a: { b: 5 }}}/>);
             expect(mWrapper).to.containMatchingElement(<RenderObject obj={{ b: 5 }}/>);
-            expect(mWrapper).to.containMatchingElement(<RenderField obj={5}/>);
+            // expect(mWrapper).to.containMatchingElement(<RenderField obj={5}/>);
         });
 
     });
@@ -29,7 +29,7 @@ describe('JSONEditor', () => {
         const types = {
             number: [123, 31.32],
             boolean: [true, false],
-            string: ["hello", '"true"']
+            string: ["hello", '"goodbye"']
         };
 
         each(types, ([val1, val2], type) => {
@@ -38,7 +38,7 @@ describe('JSONEditor', () => {
                 const obj = { a: val1 };
                 const mWrapper = mount(<JSONEditor obj={obj}/>);
                 expect(mWrapper).to.containMatchingElement(<RenderObject obj={{ a: val1}}/>);
-                expect(mWrapper).to.containMatchingElement(<RenderField obj={val1}/>);
+                // expect(mWrapper).to.containMatchingElement(<RenderField obj={val1}/>);
 
                 mWrapper.find('span').filterWhere(el => el.text() === JSON.stringify(val1)).simulate('click');
                 mWrapper.find('input').simulate('change', { target: { value: JSON.stringify(val2) }});
@@ -55,7 +55,9 @@ describe('JSONEditor', () => {
 
             // global.mWrapper = mWrapper;
 
-            mWrapper.find('button').simulate('click');
+            mWrapper.find('button')
+                .filterWhere(el => el.text() === 'X')
+                .simulate('click');
 
             expect(obj.a).to.be.undefined;
 
@@ -98,6 +100,7 @@ describe('JSONEditor', () => {
                 .find(RenderTree)
                 .filter({ obj: obj.otherObject })
                 .find('button')
+                .filterWhere(el => el.text() === 'X')
                 .first()
                 .simulate('click');
 
@@ -110,16 +113,53 @@ describe('JSONEditor', () => {
 
     describe('add new field', () => {
 
+        it('should be able to rename the key of a field', () => {
+
+            const obj = {
+                somekey: 123
+            };
+
+            const wrapper = mount(<JSONEditor obj={obj}/>);
+
+            wrapper.find('span')
+                .filterWhere(el => el.text() === 'somekey')
+                .simulate('click');
+
+            wrapper.find('input')
+                .simulate('change', { target: { value: 'newkey' } });
+
+            wrapper.find('form')
+                .simulate('submit');
+
+            expect(obj.newkey).to.equal(123);
+            expect(obj.somekey).to.be.undefined;
+
+        });
+
+
         it('should have a button', () => {
 
             const obj = {};
 
-            mount(<JSONEditor obj={obj}/>)
-                .find('button')
+            const wrapper = mount(<JSONEditor obj={obj}/>);
+
+            wrapper.find('button')
                 .filterWhere(el => el.text() === '+')
                 .simulate('click');
 
+            wrapper.find('input')
+                .simulate('change', { target: { value: 'keyname' } });
 
+            wrapper.find('form')
+                .simulate('submit');
+
+            wrapper.find('input')
+                .simulate('change', { target: { value: '51' } });
+
+            wrapper.find('form')
+                .simulate('submit');
+
+            expect(obj.keyname).to.equal(51);
 
         });
 

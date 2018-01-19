@@ -17,13 +17,14 @@ export class Collapsible extends Component {
 
     render() {
 
-        const {children, label} = this.props;
+        const {children, label, button} = this.props;
 
         return (
             <React.Fragment>
                 <span onClick={() => this.toggleCollapse()}>
                     {this.collapseTriangle()} {label}
                 </span>
+                {button}
                 <div style={{ paddingLeft: 20 }}>
                     {this.state.collapsed || children}
                 </div>

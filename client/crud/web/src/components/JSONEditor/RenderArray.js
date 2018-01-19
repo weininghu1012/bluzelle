@@ -2,7 +2,9 @@ import {RenderTree} from "./RenderTree";
 import {Collapsible} from "./Collapsible";
 
 export const RenderArray = ({obj, update}) => (
-    <Collapsible label={`[] (${obj.length} entries)`}>
+    <Collapsible
+        label={`[] (${obj.length} entries)`}
+        button={<NewField update={update}/>}>
         {
             obj.map((value, index) =>
                 <div key={index}>
@@ -16,3 +18,7 @@ export const RenderArray = ({obj, update}) => (
         }
     </Collapsible>
 );
+
+const NewField = ({ update }) => {
+
+};
