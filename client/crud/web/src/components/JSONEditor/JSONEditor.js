@@ -5,29 +5,25 @@ import {isEmpty} from 'lodash';
 export class JSONEditor extends Component {
     constructor(props) {
         super(props);
-
-        this.state = {
-            obj: props.obj
-        };
+        this.state = props.obj;
     }
 
     update(obj) {
-        merge(this.state.obj, obj);
-        this.setState({ obj: this.state.obj });
+        this.setState(merge(this.state, obj));
     }
 
     render() {
-        return <RenderObject obj={this.state.obj} update={this.update.bind(this)}/>;
+        return <RenderObject obj={this.state} update={this.update.bind(this)}/>;
     }
 }
 
 
-// Behaves like lodash merge but also deletes undefined
-// values and
+// Behaves like lodash merge but also deletes undefined values from
+// objects and splices undefined values out of arrays.
 const merge = (obj1, obj2) => {
     const key = Object.keys(obj2)[0];
 
-    if(typeof obj1[key] === 'object' && typeof obj2[key] === 'object') {
+    if(!isMinimal(obj1[key], obj2[key])) {
 
         merge(obj1[key], obj2[key]);
 
@@ -45,4 +41,8 @@ const merge = (obj1, obj2) => {
             obj1[key] = obj2[key];
         }
     }
+
+    return obj1;
 };
+
+

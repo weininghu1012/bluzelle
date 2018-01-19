@@ -4,7 +4,7 @@ import {Collapsible} from "./Collapsible";
 export const RenderArray = ({obj, update}) => (
     <Collapsible
         label={`[] (${obj.length} entries)`}
-        button={<NewField update={update}/>}>
+        button={<NewField update={update} obj={obj}/>}>
         {
             obj.map((value, index) =>
                 <div key={index}>
@@ -19,6 +19,6 @@ export const RenderArray = ({obj, update}) => (
     </Collapsible>
 );
 
-const NewField = ({ update }) => {
-
-};
+const NewField = ({ obj, update }) => (
+    <button onClick={ () => update({ [obj.length]: "default" }) }>+</button>
+);

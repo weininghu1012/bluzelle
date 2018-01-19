@@ -16,7 +16,6 @@ export class Collapsible extends Component {
     }
 
     render() {
-
         const {children, label, button} = this.props;
 
         return (
