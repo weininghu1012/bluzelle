@@ -20,10 +20,16 @@ export class Collapsible extends Component {
 
         return (
             <React.Fragment>
-                <span onClick={() => this.toggleCollapse()}>
-                    {this.collapseTriangle()} {label}
-                </span>
-                {button}
+                <div style={{
+                    display: 'inline-block'
+
+                }}>
+
+                    <span onClick={() => this.toggleCollapse()}>
+                        {this.collapseTriangle()} {label}
+                    </span>
+                    {button}
+                </div>
                 <div style={{ paddingLeft: 20 }}>
                     {this.state.collapsed || children}
                 </div>

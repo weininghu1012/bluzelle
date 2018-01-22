@@ -1,4 +1,4 @@
-import 'babel-polyfill'
+global._babelPolyfill || require('babel-polyfill');
 import chai, { expect } from 'chai';
 import Enzyme, { mount, shallow, render } from 'enzyme';
 import sinon from 'sinon';

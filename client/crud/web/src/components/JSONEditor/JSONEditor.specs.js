@@ -1,6 +1,7 @@
 import {JSONEditor} from "./JSONEditor";
 import {RenderObject} from "./RenderObject";
 import {RenderTree} from "./RenderTree";
+import {EditableField} from "./EditableField";
 import {each} from 'lodash';
 
 describe('JSONEditor', () => {
@@ -11,14 +12,14 @@ describe('JSONEditor', () => {
             const mWrapper = mount(<JSONEditor obj={{ a: 5 }}/>);
 
             expect(mWrapper).to.containMatchingElement(<RenderObject obj={{ a: 5}}/>);
-            // expect(mWrapper).to.containMatchingElement(<RenderField obj={5}/>);
+            expect(mWrapper).to.containMatchingElement(<RenderTree obj={5}/>);
         });
 
         it('should render recursively', () => {
             const mWrapper = mount(<JSONEditor obj={{ a: { b: 5 }}}/>);
             expect(mWrapper).to.containMatchingElement(<RenderObject obj={{ a: { b: 5 }}}/>);
             expect(mWrapper).to.containMatchingElement(<RenderObject obj={{ b: 5 }}/>);
-            // expect(mWrapper).to.containMatchingElement(<RenderField obj={5}/>);
+            expect(mWrapper).to.containMatchingElement(<RenderTree obj={5}/>);
         });
 
     });
@@ -38,9 +39,9 @@ describe('JSONEditor', () => {
                 const obj = { a: val1 };
                 const mWrapper = mount(<JSONEditor obj={obj}/>);
                 expect(mWrapper).to.containMatchingElement(<RenderObject obj={{ a: val1}}/>);
-                // expect(mWrapper).to.containMatchingElement(<RenderField obj={val1}/>);
+                expect(mWrapper).to.containMatchingElement(<RenderTree obj={val1}/>);
 
-                mWrapper.find('span').filterWhere(el => el.text() === JSON.stringify(val1)).simulate('click');
+                mWrapper.find(EditableField).filterWhere(el => el.text() === JSON.stringify(val1)).simulate('click');
                 mWrapper.find('input').simulate('change', { target: { value: JSON.stringify(val2) }});
                 mWrapper.find('form').simulate('submit');
 
@@ -137,7 +138,18 @@ describe('JSONEditor', () => {
         });
 
 
-        it('should have a button', () => {
+        it('should have a (+) button', () => {
+
+            const wrapper = mount(<JSONEditor obj={{ a: 5 }}/>);
+
+            wrapper.find('button')
+                .filterWhere(el => el.text() === '+')
+                .simulate('click');
+
+        });
+
+
+        it('should have two consecutive inputs to create a new field', () => {
 
             const obj = {};
 

@@ -11,7 +11,12 @@ export const RenderObject = ({obj, update}) => (
 
         {
             Object.entries(obj).map(([key, value]) =>
-                <div key={key}>
+                <div
+                    style={{
+                        paddingTop: 5,
+                        paddingLeft: 5
+                    }}
+                    key={key}>
 
                     <EditableField
                         val={key}
@@ -27,15 +32,22 @@ export const RenderObject = ({obj, update}) => (
                         obj={value}/>
                 </div>)
         }
-
-
     </Collapsible>
 );
 
 
-const NewField = ({ update, keyname }) => {
-    return <button onClick={ () => update({ [keyname]: "default" }) }>+</button>
-};
+const NewField = ({ update, keyname }) => (
+    <button
+        onClick={ () => update({ [keyname]: "default" }) }
+        style={{
+            borderRadius: '50%',
+            marginLeft: 5,
+            borderWidth: 2,
+            backgroundColor: '#7effa0'
+        }}>
+        +
+    </button>
+);
 
 const keynameNotInObject = (keyname, object, appendage) =>
     object[keyname] === undefined

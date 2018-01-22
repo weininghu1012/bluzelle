@@ -30,6 +30,8 @@ export class EditableField extends Component {
     enableEditing() {
         this.setState({
             formActive: true
+        }, () => {
+            this.input && this.input.select();
         });
     }
 
@@ -46,7 +48,9 @@ export class EditableField extends Component {
                       <input
                           type='text'
                           value={this.state.formValue}
-                          onChange={this.handleChange.bind(this)}/>
+                          ref={c => this.input = c}
+                          onChange={this.handleChange.bind(this)}
+                          onBlur={this.handleSubmit.bind(this)}/>
                   </form>
                   : renderValWithDefault(val)}
             </span>

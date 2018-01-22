@@ -7,7 +7,12 @@ export const RenderArray = ({obj, update}) => (
         button={<NewField update={update} obj={obj}/>}>
         {
             obj.map((value, index) =>
-                <div key={index}>
+                <div
+                    style={{
+                        paddingTop: 5,
+                        paddingLeft: 5
+                    }}
+                    key={index}>
                     <span>{index}</span>:
                     <RenderTree
                         update={
