@@ -1,36 +1,36 @@
 import {Collapsible} from "./Collapsible";
 import {RenderTree} from "./RenderTree";
 import {EditableField} from "./EditableField";
+import {Delete} from "./Delete";
+import {Nested} from "./Nested";
 
-export const RenderObject = ({obj, update}) => (
+export const RenderObject = ({obj, update, preamble, noDelete}) => (
     <Collapsible
         label={`{} (${Object.entries(obj).length} entries)`}
-        button={<NewField
-            update={update}
-            keyname={keynameNotInObject('key', obj, '+')}/>}>
-
+        buttons={
+            <React.Fragment>
+                <NewField
+                    update={update}
+                    keyname={keynameNotInObject('key', obj, '+')}/>
+                { noDelete || <Delete update={update}/> }
+            </React.Fragment>
+        }
+        preamble={preamble}>
         {
             Object.entries(obj).map(([key, value]) =>
-                <div
-                    style={{
-                        paddingTop: 5,
-                        paddingLeft: 5
-                    }}
-                    key={key}>
-
-                    <EditableField
-                        val={key}
-                        onChange={(newkey) => {
-                            update({ [key]: undefined });
-                            update({ [newkey]: value });
-                        }}/>:
-
+                <Nested key={key}>
                     <RenderTree
-                        update={
-                            obj => update({ [key]: obj })
-                        }
-                        obj={value}/>
-                </div>)
+                        update={obj => update({ [key]: obj })}
+                        obj={value}
+                        preamble={
+                            <EditableField
+                                val={key}
+                                onChange={newkey => {
+                                    update({ [key]: undefined });
+                                    update({ [newkey]: value });
+                                }}/>
+                        }/>
+                </Nested>)
         }
     </Collapsible>
 );
@@ -40,10 +40,9 @@ const NewField = ({ update, keyname }) => (
     <button
         onClick={ () => update({ [keyname]: "default" }) }
         style={{
-            borderRadius: '50%',
-            marginLeft: 5,
-            borderWidth: 2,
-            backgroundColor: '#7effa0'
+            border: 0,
+            background: 'none',
+            color: 'green'
         }}>
         +
     </button>

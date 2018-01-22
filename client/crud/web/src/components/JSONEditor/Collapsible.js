@@ -16,21 +16,22 @@ export class Collapsible extends Component {
     }
 
     render() {
-        const {children, label, button} = this.props;
+        const {children, label, buttons, preamble} = this.props;
 
         return (
             <React.Fragment>
-                <div style={{
-                    display: 'inline-block'
-
-                }}>
-
+                <div>
+                    {preamble && <span style={{ marginRight: 5 }}>{preamble}:</span>}
                     <span onClick={() => this.toggleCollapse()}>
                         {this.collapseTriangle()} {label}
                     </span>
-                    {button}
+                    {buttons}
                 </div>
-                <div style={{ paddingLeft: 20 }}>
+                <div style={{
+                    paddingLeft: 20,
+                    background: 'white',
+                    borderLeft: '1px solid #CCCCCC'
+                }}>
                     {this.state.collapsed || children}
                 </div>
             </React.Fragment>

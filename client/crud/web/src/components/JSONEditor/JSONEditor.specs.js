@@ -175,6 +175,38 @@ describe('JSONEditor', () => {
 
         });
 
+        it('should not create a new field if the user enters invalid key/json', () => {
+
+            const obj = {};
+
+            const wrapper = mount(<JSONEditor obj={obj}/>);
+
+            wrapper.find('button')
+                .filterWhere(el => el.text() === '+')
+                .simulate('click');
+
+            wrapper.find('input')
+                .simulate('blur');
+
+            expect(obj).to.be.empty;
+
+            wrapper.find('button')
+                .filterWhere(el => el.text() === '+')
+                .simulate('click');
+
+            wrapper.find('input')
+                .simulate('change', { target: { value: 'keyname' } });
+
+            wrapper.find('form')
+                .simulate('submit');
+
+            wrapper.find('input')
+                .simulate('blur');
+
+            expect(obj).to.be.empty;
+
+        })
+
     });
 
 });

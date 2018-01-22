@@ -1,25 +1,25 @@
 import {RenderTree} from "./RenderTree";
 import {Collapsible} from "./Collapsible";
+import {Delete} from "./Delete";
+import {Nested} from "./Nested";
 
-export const RenderArray = ({obj, update}) => (
+export const RenderArray = ({obj, update, noDelete}) => (
     <Collapsible
         label={`[] (${obj.length} entries)`}
-        button={<NewField update={update} obj={obj}/>}>
+        buttons={
+            <React.Fragment>
+                <NewField update={update} obj={obj}/>
+                { noDelete || <Delete update={update}/> }
+            </React.Fragment>
+        }>
         {
             obj.map((value, index) =>
-                <div
-                    style={{
-                        paddingTop: 5,
-                        paddingLeft: 5
-                    }}
-                    key={index}>
-                    <span>{index}</span>:
+                <Nested key={index}>
                     <RenderTree
-                        update={
-                            obj => update({ [index]: obj })
-                        }
-                        obj={value}/>
-                </div>)
+                        update={obj => update({ [index]: obj })}
+                        obj={value}
+                        preamble={<span>{index}</span>}/>
+                </Nested>)
         }
     </Collapsible>
 );
@@ -28,10 +28,9 @@ const NewField = ({ obj, update }) => (
     <button
         onClick={ () => update({ [obj.length]: "default" }) }
         style={{
-            borderRadius: '50%',
-            marginLeft: 5,
-            borderWidth: 2,
-            backgroundColor: '#7effa0'
+            border: 0,
+            background: 'none',
+            color: 'green'
         }}>
         +
     </button>

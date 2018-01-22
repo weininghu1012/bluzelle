@@ -1,40 +1,38 @@
 import {RenderArray} from "./RenderArray";
 import {RenderObject} from "./RenderObject";
 import {EditableField} from './EditableField';
-import {Deletable} from "./Deletable";
+import {Delete} from "./Delete";
 
 export class RenderTree extends Component {
     render() {
-        const {obj, update} = this.props;
+        const {obj, update, preamble, noDelete} = this.props;
 
         // If object
         if (typeof obj === 'object' && !Array.isArray(obj)) {
             return (
-                <Deletable update={update}>
-                    <RenderObject update={update} obj={obj}/>
-                </Deletable>
+                <RenderObject {...this.props}/>
             );
         }
 
         // If array
         if (Array.isArray(obj)) {
             return (
-                <Deletable update={update}>
-                    <RenderArray update={update} obj={obj}/>
-                </Deletable>
+                <RenderArray {...this.props}/>
             );
         }
 
         // Standard datatypes
         return (
-            <Deletable update={update}>
+            <div>
+                {preamble && <span style={{ marginRight: 5 }}>{preamble}:</span>}
                 <EditableField
                     onChange={v => update(JSON.parse(v))}
                     val={JSON.stringify(obj)}
                     renderVal={v =>
                         <span style={{ color: colorFromType(v) }}>{v}</span>
                         }/>
-            </Deletable>
+                { noDelete || <Delete update={update}/> }
+            </div>
         );
     }
 }
