@@ -25,5 +25,14 @@ export const RenderArray = ({obj, update}) => (
 );
 
 const NewField = ({ obj, update }) => (
-    <button onClick={ () => update({ [obj.length]: "default" }) }>+</button>
+    <button
+        onClick={ () => update({ [obj.length]: "default" }) }
+        style={{
+            borderRadius: '50%',
+            marginLeft: 5,
+            borderWidth: 2,
+            backgroundColor: '#7effa0'
+        }}>
+        +
+    </button>
 );
