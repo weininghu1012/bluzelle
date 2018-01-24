@@ -1,6 +1,6 @@
 export class Delete extends Component {
     render() {
-        const {update} = this.props;
+        const {onClick} = this.props;
 
         return (
             <button style={{
@@ -9,7 +9,7 @@ export class Delete extends Component {
                     background: 'none',
                     color: 'red'
                 }}
-                onClick={ () => update(undefined) }>
+                onClick={ onClick }>
                 X
             </button>
         );

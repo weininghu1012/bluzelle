@@ -1,6 +1,7 @@
 import {JSONEditor} from "./JSONEditor";
+import {getSwarmData} from '../services/DataService';
 
-export const Main = () => (
+const MainComponent = () => (
     <ReflexContainer
         style={{height: '100%'}}>
 
@@ -15,19 +16,11 @@ export const Main = () => (
                 </ReflexElement>
                 <ReflexSplitter/>
                 <ReflexElement>
-                    <JSONEditor obj={{
-                        a: 5,
-                        b: 10,
-                        c: true,
-                        d: {
-                            key1: "hello",
-                            key2: "goodbye",
-                            array: [1, 2, 3, 4, 5]
-                        },
-                        e: false
-                    }}/>
+                    <JSONEditor obj={getSwarmData()}/>
                 </ReflexElement>
             </ReflexContainer>
         </ReflexElement>
     </ReflexContainer>
 );
+
+export const Main = observer(MainComponent);

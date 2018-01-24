@@ -2,31 +2,37 @@ import {RenderTree} from "./RenderTree";
 import {Collapsible} from "./Collapsible";
 import {Delete} from "./Delete";
 import {Nested} from "./Nested";
+import {get, del} from '../../mobXUtils';
 
-export const RenderArray = ({obj, update, noDelete}) => (
-    <Collapsible
-        label={`[] (${obj.length} entries)`}
-        buttons={
-            <React.Fragment>
-                <NewField update={update} obj={obj}/>
-                { noDelete || <Delete update={update}/> }
-            </React.Fragment>
-        }>
-        {
-            obj.map((value, index) =>
-                <Nested key={index}>
-                    <RenderTree
-                        update={obj => update({ [index]: obj })}
-                        obj={value}
-                        preamble={<span>{index}</span>}/>
-                </Nested>)
-        }
-    </Collapsible>
-);
+@observer
+export class RenderArray extends Component {
+    render() {
+        const {obj, propName, preamble, noDelete} = this.props;
 
-const NewField = ({ obj, update }) => (
+        return <Collapsible
+            label={`[] (${get(obj, propName).length} entries)`}
+            buttons={
+                <React.Fragment>
+                    <NewField arr={get(obj, propName)}/>
+                    {noDelete || <Delete onClick={() => del(obj, propName)}/>}
+                </React.Fragment>}
+            preamble={preamble}>
+            {
+                get(obj, propName).map((value, index) =>
+                    <Nested key={index}>
+                        <RenderTree
+                            obj={get(obj, propName)}
+                            propName={index}
+                            preamble={<span>{index}</span>}/>
+                    </Nested>)
+            }
+        </Collapsible>;
+    }
+}
+
+const NewField = ({arr}) => (
     <button
-        onClick={ () => update({ [obj.length]: "default" }) }
+        onClick={() => arr.push('newfield')}
         style={{
             border: 0,
             background: 'none',

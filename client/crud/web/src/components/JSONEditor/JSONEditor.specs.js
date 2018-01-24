@@ -2,24 +2,37 @@ import {JSONEditor} from "./JSONEditor";
 import {RenderObject} from "./RenderObject";
 import {RenderTree} from "./RenderTree";
 import {EditableField} from "./EditableField";
+import {Nested} from "./Nested";
 import {each} from 'lodash';
+import {observableMapRecursive as omr} from "../../mobXUtils";
 
 describe('JSONEditor', () => {
 
     describe('renders', () => {
 
         it('should render an object', () => {
-            const mWrapper = mount(<JSONEditor obj={{ a: 5 }}/>);
 
-            expect(mWrapper).to.containMatchingElement(<RenderObject obj={{ a: 5}}/>);
-            expect(mWrapper).to.containMatchingElement(<RenderTree obj={5}/>);
+            const obj = omr({ a: 5 });
+            const mWrapper = mount(<JSONEditor obj={obj}/>);
+
+            expect(mWrapper
+                .find(RenderTree)
+                .filterWhere(el => el.props().propName === 'a'))
+                .to.have.length(1);
         });
 
         it('should render recursively', () => {
-            const mWrapper = mount(<JSONEditor obj={{ a: { b: 5 }}}/>);
-            expect(mWrapper).to.containMatchingElement(<RenderObject obj={{ a: { b: 5 }}}/>);
-            expect(mWrapper).to.containMatchingElement(<RenderObject obj={{ b: 5 }}/>);
-            expect(mWrapper).to.containMatchingElement(<RenderTree obj={5}/>);
+            const mWrapper = mount(<JSONEditor obj={omr({ a: { b: 5 }})}/>);
+
+            expect(mWrapper
+                .find(RenderTree)
+                .filterWhere(el => el.props().propName === 'a'))
+                .to.have.length(1);
+
+            expect(mWrapper
+                .find(RenderTree)
+                .filterWhere(el => el.props().propName === 'b'))
+                .to.have.length(1);
         });
 
     });
@@ -36,76 +49,71 @@ describe('JSONEditor', () => {
         each(types, ([val1, val2], type) => {
             it(`should update a ${type} field`, () => {
 
-                const obj = { a: val1 };
+                const obj = omr({ a: val1 });
                 const mWrapper = mount(<JSONEditor obj={obj}/>);
-                expect(mWrapper).to.containMatchingElement(<RenderObject obj={{ a: val1}}/>);
-                expect(mWrapper).to.containMatchingElement(<RenderTree obj={val1}/>);
 
                 mWrapper.find(EditableField).filterWhere(el => el.text() === JSON.stringify(val1)).simulate('click');
                 mWrapper.find('input').simulate('change', { target: { value: JSON.stringify(val2) }});
                 mWrapper.find('form').simulate('submit');
 
-                expect(obj.a).to.equal(val2);
+                expect(obj.get('a')).to.equal(val2);
             });
         });
 
         it('should delete a boolean field', () => {
 
-            const obj = { a: true };
+            const obj = omr({ a: true });
             const mWrapper = mount(<JSONEditor obj={obj}/>);
 
-            // global.mWrapper = mWrapper;
+            mWrapper.find(Nested).simulate('mouseOver');
 
             mWrapper.find('button')
                 .filterWhere(el => el.text() === 'X')
                 .simulate('click');
 
-            expect(obj.a).to.be.undefined;
+            expect(obj.get('a')).to.be.undefined;
 
         });
 
         it('should delete a deep field', () => {
 
-            const obj = {
+            const obj = omr({
                 field: 123,
                 otherObject: {
                     a: true,
                     b: false,
                     c: [1, 2, 3, "delete this"]
                 }
-            };
+            });
 
-            mount(<JSONEditor obj={obj}/>)
+            const mWrapper = mount(<JSONEditor obj={obj}/>);
+
+            mWrapper
                 .find(RenderTree)
-                .filter({ obj: "delete this" })
-                .find('button')
-                .filterWhere(el => el.text() === 'X')
-                .simulate('click');
+                .filter({ propName: 3 })
+                .simulate('mouseOver');
 
-            expect(obj.otherObject.c[3]).to.be.undefined;
-
-        });
-
-        it('should delete an object', () => {
-
-            const obj = {
-                field: 123,
-                otherObject: {
-                    a: true,
-                    b: false,
-                    c: [1, 2, 3, "delete this"]
-                }
-            };
-
-            mount(<JSONEditor obj={obj}/>)
+            mWrapper
                 .find(RenderTree)
-                .filter({ obj: obj.otherObject })
+                .filter({ propName: 3 })
                 .find('button')
                 .filterWhere(el => el.text() === 'X')
                 .first()
                 .simulate('click');
 
-            expect(obj.otherObject).to.be.undefined;
+            expect(obj.get('otherObject').get('c').length).to.equal(3);
+
+
+            mWrapper
+                .find(RenderTree)
+                .filter({ propName: 'otherObject' })
+                .simulate('mouseOver')
+                .find('button')
+                .filterWhere(el => el.text() === 'X')
+                .first()
+                .simulate('click');
+
+            expect(obj.get('otherObject')).to.be.undefined;
 
         });
 
@@ -116,9 +124,9 @@ describe('JSONEditor', () => {
 
         it('should be able to rename the key of a field', () => {
 
-            const obj = {
+            const obj = omr({
                 somekey: 123
-            };
+            });
 
             const wrapper = mount(<JSONEditor obj={obj}/>);
 
@@ -132,15 +140,15 @@ describe('JSONEditor', () => {
             wrapper.find('form')
                 .simulate('submit');
 
-            expect(obj.newkey).to.equal(123);
-            expect(obj.somekey).to.be.undefined;
+            expect(obj.get('newkey')).to.equal(123);
+            expect(obj.get('somekey')).to.be.undefined;
 
         });
 
 
         it('should have a (+) button', () => {
 
-            const wrapper = mount(<JSONEditor obj={{ a: 5 }}/>);
+            const wrapper = mount(<JSONEditor obj={omr({ a: 5 })}/>);
 
             wrapper.find('button')
                 .filterWhere(el => el.text() === '+')
@@ -151,7 +159,7 @@ describe('JSONEditor', () => {
 
         it('should have two consecutive inputs to create a new field', () => {
 
-            const obj = {};
+            const obj = omr({});
 
             const wrapper = mount(<JSONEditor obj={obj}/>);
 
@@ -171,13 +179,13 @@ describe('JSONEditor', () => {
             wrapper.find('form')
                 .simulate('submit');
 
-            expect(obj.keyname).to.equal(51);
+            expect(obj.get('keyname')).to.equal(51);
 
         });
 
         it('should not create a new field if the user enters invalid key/json', () => {
 
-            const obj = {};
+            const obj = omr({});
 
             const wrapper = mount(<JSONEditor obj={obj}/>);
 
@@ -188,7 +196,7 @@ describe('JSONEditor', () => {
             wrapper.find('input')
                 .simulate('blur');
 
-            expect(obj).to.be.empty;
+            expect(obj.toJS()).to.be.empty;
 
             wrapper.find('button')
                 .filterWhere(el => el.text() === '+')
@@ -203,7 +211,7 @@ describe('JSONEditor', () => {
             wrapper.find('input')
                 .simulate('blur');
 
-            expect(obj).to.be.empty;
+            expect(obj.toJS()).to.be.empty;
 
         })
 
