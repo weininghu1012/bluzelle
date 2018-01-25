@@ -1,5 +1,6 @@
 import {JSONEditor} from "./JSONEditor";
 import {RenderObject} from "./RenderObject";
+import {RenderArray} from "./RenderArray";
 import {RenderTree} from "./RenderTree";
 import {EditableField} from "./EditableField";
 import {Nested} from "./Nested";
@@ -65,9 +66,13 @@ describe('JSONEditor', () => {
             const obj = omr({ a: true });
             const mWrapper = mount(<JSONEditor obj={obj}/>);
 
-            mWrapper.find(Nested).simulate('mouseOver');
+            mWrapper
+                .find(RenderObject)
+                .find(Nested)
+                .simulate('mouseOver');
 
-            mWrapper.find('button')
+            mWrapper
+                .find('button')
                 .filterWhere(el => el.text() === 'X')
                 .simulate('click');
 
@@ -130,7 +135,7 @@ describe('JSONEditor', () => {
 
             const wrapper = mount(<JSONEditor obj={obj}/>);
 
-            wrapper.find('span')
+            wrapper.find(EditableField)
                 .filterWhere(el => el.text() === 'somekey')
                 .simulate('click');
 
@@ -150,6 +155,8 @@ describe('JSONEditor', () => {
 
             const wrapper = mount(<JSONEditor obj={omr({ a: 5 })}/>);
 
+            wrapper.find(RenderObject).simulate('mouseOver');
+
             wrapper.find('button')
                 .filterWhere(el => el.text() === '+')
                 .simulate('click');
@@ -162,6 +169,10 @@ describe('JSONEditor', () => {
             const obj = omr({});
 
             const wrapper = mount(<JSONEditor obj={obj}/>);
+
+            wrapper
+                .find(Nested)
+                .simulate('mouseOver');
 
             wrapper.find('button')
                 .filterWhere(el => el.text() === '+')
@@ -189,31 +200,49 @@ describe('JSONEditor', () => {
 
             const wrapper = mount(<JSONEditor obj={obj}/>);
 
-            wrapper.find('button')
-                .filterWhere(el => el.text() === '+')
-                .simulate('click');
-
-            wrapper.find('input')
-                .simulate('blur');
-
-            expect(obj.toJS()).to.be.empty;
+            wrapper
+                .find(Nested)
+                .simulate('mouseOver');
 
             wrapper.find('button')
                 .filterWhere(el => el.text() === '+')
                 .simulate('click');
 
             wrapper.find('input')
-                .simulate('change', { target: { value: 'keyname' } });
+                .simulate('submit');
+
+            wrapper.find('input')
+                .simulate('change', { target: { value: 'invalid' } });
 
             wrapper.find('form')
                 .simulate('submit');
 
-            wrapper.find('input')
-                .simulate('blur');
-
             expect(obj.toJS()).to.be.empty;
 
-        })
+        });
+
+
+        it('should have a single input for new array values', () => {
+            const obj = omr({ arr: [] });
+            const wrapper = mount(<JSONEditor obj={obj}/>);
+
+            wrapper.find(RenderArray)
+                .simulate('mouseOver');
+
+            wrapper.find(RenderArray)
+                .find('button')
+                .filterWhere(el => el.text() === '+')
+                .simulate('click');
+
+            wrapper.find('input')
+                .simulate('change', { target: { value: '"hello world"' }});
+
+            wrapper.find('form')
+                .simulate('submit');
+
+            expect(obj.get('arr').toJS()).to.deep.equal(["hello world"]);
+
+        });
 
     });
 

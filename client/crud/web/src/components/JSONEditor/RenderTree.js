@@ -7,20 +7,32 @@ import {isObservableArray} from 'mobx';
 
 @observer
 export class RenderTree extends Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            editing: false
+        };
+    }
+
     render() {
-        const {obj, propName, preamble, noDelete} = this.props;
+        const {obj, propName, preamble, noButtons} = this.props;
 
         // If array
-        if (isObservableArray(get(obj, propName))) {
+        if (!this.state.editing && isObservableArray(get(obj, propName))) {
             return (
-                <RenderArray {...this.props}/>
+                <RenderArray
+                    {...this.props}
+                    onEdit={() => this.setState({ editing: true })}/>
             );
         }
 
         // If object
-        if (typeof get(obj, propName) === 'object') {
+        if (!this.state.editing && typeof get(obj, propName) === 'object') {
             return (
-                <RenderObject {...this.props}/>
+                <RenderObject
+                    {...this.props}
+                    onEdit={() => this.setState({ editing: true })}/>
             );
         }
 
@@ -29,12 +41,15 @@ export class RenderTree extends Component {
             <div>
                 {preamble && <span style={{ marginRight: 5 }}>{preamble}:</span>}
                 <EditableField
-                    onChange={v =>
-                        obj.set(propName, observableMapRecursive(JSON.parse(v)))}
+                    active={this.state.editing}
+                    onChange={v => {
+                        this.setState({ editing: false });
+                        obj.set(propName, observableMapRecursive(JSON.parse(v)));
+                    }}
                     val={JSON.stringify(get(obj, propName))}
                     renderVal={v =>
                         <span style={{ color: colorFromType(v) }}>{v}</span> }/>
-                { noDelete || <Delete onClick={ () => del(obj, propName) }/> }
+                { noButtons || <Delete onClick={ () => del(obj, propName) }/> }
             </div>
         );
     }

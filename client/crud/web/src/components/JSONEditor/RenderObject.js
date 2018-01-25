@@ -1,29 +1,56 @@
 import {Collapsible} from "./Collapsible";
 import {RenderTree} from "./RenderTree";
 import {EditableField} from "./EditableField";
-import {Delete} from "./Delete";
+import {Plus, Edit, Delete} from "./Buttons";
+import {NewObjectField} from "./NewObjectField";
 import {Nested} from "./Nested";
 import {get, del} from '../../mobXUtils';
 
 
 @observer
 export class RenderObject extends Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            showNewField: false
+        };
+    }
+
     render() {
-        const {obj, propName, preamble, noDelete} = this.props;
+        const {obj, propName, preamble, noButtons, onEdit, isRoot} = this.props;
+
+        const buttons = noButtons ||
+            <React.Fragment>
+                <Plus onClick={() => this.setState({ showNewField: true })}/>
+                { isRoot ||
+                    <React.Fragment>
+                        <Delete onClick={() => del(obj, propName)}/>
+                        <Edit onClick={onEdit}/>
+                    </React.Fragment>
+                }
+            </React.Fragment>;
 
         return (<Collapsible
             label={`{} (${get(obj, propName).keys().length} entries)`}
-            buttons={
-                <React.Fragment>
-                    <NewField
-                        obj={get(obj, propName)}
-                        propName={keynameNotInObject('key', propName, '+')}/>
-                    {noDelete || <Delete onClick={() => del(obj, propName)}/>}
-                </React.Fragment>
-            }
+            buttons={buttons}
             preamble={preamble}>
+
             {
-                get(obj, propName).keys().map(subkey =>
+                this.state.showNewField &&
+                <Nested>
+                    <NewObjectField
+                        obj={get(obj, propName)}
+                        onChange={(key, val) => {
+                            this.setState({ showNewField: false });
+                            get(obj, propName).set(key, val);
+                        }}
+                        onError={() => this.setState({ showNewField: false })}/>
+                </Nested>
+            }
+
+            {
+                get(obj, propName).keys().sort().map(subkey =>
                     <Nested key={subkey}>
                         <RenderTree
                             obj={get(obj, propName)}
@@ -31,6 +58,7 @@ export class RenderObject extends Component {
                             preamble={
                                 <EditableField
                                     val={subkey}
+                                    renderVal={val => <span style={{ color: 'navy' }}>{val}</span>}
                                     onChange={newkey => {
                                         const subobj = get(obj, propName),
                                               oldval = subobj.get(subkey);
@@ -44,20 +72,3 @@ export class RenderObject extends Component {
         </Collapsible>);
     }
 }
-
-const NewField = ({ obj, propName }) => (
-    <button
-        onClick={() => obj.set(propName, 'default')}
-        style={{
-            border: 0,
-            background: 'none',
-            color: 'green'
-        }}>
-        +
-    </button>
-);
-
-const keynameNotInObject = (keyname, object, appendage) =>
-    object[keyname] === undefined
-        ? keyname
-        : keynameNotInObject(keyname + appendage, object, appendage);

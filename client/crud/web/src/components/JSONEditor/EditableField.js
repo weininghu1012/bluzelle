@@ -4,8 +4,17 @@ export class EditableField extends Component {
 
         this.state = {
             formValue: props.val,
-            formActive: false
+            formActive: false,
+            hovering: false
         };
+    }
+
+    componentWillMount() {
+        this.props.active && this.enableEditing();
+    }
+
+    componentWillReceiveProps(nextProps) {
+        nextProps.active && this.enableEditing();
     }
 
     handleChange(event) {
@@ -29,7 +38,8 @@ export class EditableField extends Component {
 
     enableEditing() {
         this.setState({
-            formActive: true
+            formActive: true,
+            hovering: false
         }, () => {
             this.input && this.input.select();
         });
@@ -52,8 +62,14 @@ export class EditableField extends Component {
                           onChange={this.handleChange.bind(this)}
                           onBlur={this.handleSubmit.bind(this)}/>
                   </form>
-                  : renderValWithDefault(val)}
-            </span>
+                  : <span style={{
+                      textDecoration: this.state.hovering
+                          ? 'underline' : 'none' }}
+                      onMouseOver={() => this.setState({ hovering: true })}
+                      onMouseLeave={() => this.setState({ hovering: false })}>
+                      {renderValWithDefault(val)}
+                  </span> }
+              </span>
         );
     }
 }

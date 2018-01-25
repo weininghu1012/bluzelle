@@ -20,7 +20,7 @@ export class Nested extends Component {
                 onMouseOver={() => this.setState({ hover: true })}
                 onMouseLeave={() => this.setState({ hover: false })}>
 
-                {React.cloneElement(children, { noDelete: !this.state.hover })}
+                {React.cloneElement(children, { noButtons: !this.state.hover })}
             </div>
         );
     }
