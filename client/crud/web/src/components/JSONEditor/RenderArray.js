@@ -42,30 +42,30 @@ export class RenderArray extends Component {
             }
             {
                 this.state.showNewField &&
-                    <NewField
-                        arr={get(obj, propName)}
-                        onEnd={() => this.setState({ showNewField: false })}/>
+                    <Nested>
+                        <NewField
+                            arr={get(obj, propName)}
+                            onEnd={() => this.setState({ showNewField: false })}/>
+                    </Nested>
             }
         </Collapsible>;
     }
 }
 
 const NewField = ({ arr, onEnd }) => (
-    <Nested>
-        <div>
-            {arr.length}:
+    <div>
+        {arr.length}:
 
-            <EditableField
-                active={true}
-                val={''}
-                onChange={val => {
-                    try {
-                        const obj = observableMapRecursive(JSON.parse(val));
-                        arr.push(obj);
-                    } catch(e) {}
+        <EditableField
+            active={true}
+            val={''}
+            onChange={val => {
+                try {
+                    const obj = observableMapRecursive(JSON.parse(val));
+                    arr.push(obj);
+                } catch(e) {}
 
-                    onEnd();
-                }}/>
-        </div>
-    </Nested>
+                onEnd();
+            }}/>
+    </div>
 );

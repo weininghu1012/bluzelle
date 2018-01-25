@@ -1,8 +1,8 @@
 import {Collapsible} from "./Collapsible";
 import {RenderTree} from "./RenderTree";
 import {EditableField} from "./EditableField";
+import {observableMapRecursive} from "../../mobXUtils";
 import {Plus, Edit, Delete} from "./Buttons";
-import {NewObjectField} from "./NewObjectField";
 import {Nested} from "./Nested";
 import {get, del} from '../../mobXUtils';
 
@@ -22,8 +22,8 @@ export class RenderObject extends Component {
 
         const buttons = noButtons ||
             <React.Fragment>
-                <Plus onClick={() => this.setState({ showNewField: true })}/>
-                { isRoot ||
+                <Plus onClick={() => this.setState({showNewField: true})}/>
+                {isRoot ||
                     <React.Fragment>
                         <Delete onClick={() => del(obj, propName)}/>
                         <Edit onClick={onEdit}/>
@@ -39,13 +39,12 @@ export class RenderObject extends Component {
             {
                 this.state.showNewField &&
                 <Nested>
-                    <NewObjectField
-                        obj={get(obj, propName)}
+                    <NewField
                         onChange={(key, val) => {
-                            this.setState({ showNewField: false });
+                            this.setState({showNewField: false});
                             get(obj, propName).set(key, val);
                         }}
-                        onError={() => this.setState({ showNewField: false })}/>
+                        onError={() => this.setState({showNewField: false})}/>
                 </Nested>
             }
 
@@ -58,10 +57,10 @@ export class RenderObject extends Component {
                             preamble={
                                 <EditableField
                                     val={subkey}
-                                    renderVal={val => <span style={{ color: 'navy' }}>{val}</span>}
+                                    renderVal={val => <span style={{color: 'navy'}}>{val}</span>}
                                     onChange={newkey => {
                                         const subobj = get(obj, propName),
-                                              oldval = subobj.get(subkey);
+                                            oldval = subobj.get(subkey);
 
                                         subobj.delete(subkey);
                                         subobj.set(newkey, oldval);
@@ -69,6 +68,46 @@ export class RenderObject extends Component {
                             }/>
                     </Nested>)
             }
-        </Collapsible>);
+        </Collapsible>)
+    }
+}
+
+
+class NewField extends Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            currentInput: 'key',
+            key: 'key'
+        };
+    }
+
+    render() {
+        const {onChange, onError} = this.props;
+
+        return (
+            <div>
+                <EditableField
+                    active={this.state.currentInput === 'key'}
+                    val={this.state.key}
+                    onChange={key => {
+                        this.setState({ currentInput: 'val', key })
+                    }}/>:
+
+                <EditableField
+                    active={this.state.currentInput === 'val'}
+                    val={''}
+                    onChange={val => {
+                        try {
+                            const obj = observableMapRecursive(JSON.parse(val));
+                            onChange(this.state.key, obj);
+                        } catch(e) {
+                            onError();
+                            return;
+                        }
+                    }}/>
+            </div>
+        );
     }
 }
