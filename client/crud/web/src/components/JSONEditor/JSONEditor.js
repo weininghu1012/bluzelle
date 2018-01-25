@@ -1,16 +1,16 @@
 import {RenderObject} from "./RenderObject";
-import {Nested} from "./Nested";
+import {Hoverable} from "./Hoverable";
 
 export class JSONEditor extends Component {
     render() {
         return (
             <div style={{ fontFamily: 'monospace '}}>
-                <Nested>
+                <Hoverable>
                     <RenderObject
                         obj={{ get: () => this.props.obj }}
                         propName=''
                         isRoot={true}/>
-                </Nested>
+                </Hoverable>
             </div>);
     }
 }

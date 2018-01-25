@@ -1,10 +1,10 @@
-export class Nested extends Component {
+export class Hoverable extends Component {
 
     constructor(props) {
         super(props);
 
         this.state = {
-            hover: false
+            hovering: false
         };
     }
 
@@ -17,10 +17,10 @@ export class Nested extends Component {
                     paddingRight: 0,
                     background: this.state.hover ? '#F9F9F9' : '#FFFFFF'
                 }}
-                onMouseOver={() => this.setState({ hover: true })}
-                onMouseLeave={() => this.setState({ hover: false })}>
+                onMouseOver={() => this.setState({ hovering: true })}
+                onMouseLeave={() => this.setState({ hovering: false })}>
 
-                {React.cloneElement(children, { noButtons: !this.state.hover })}
+                {React.cloneElement(children, { hovering: this.state.hovering })}
             </div>
         );
     }

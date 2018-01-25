@@ -3,7 +3,7 @@ import {RenderObject} from "./RenderObject";
 import {RenderArray} from "./RenderArray";
 import {RenderTree} from "./RenderTree";
 import {EditableField} from "./EditableField";
-import {Nested} from "./Nested";
+import {Hoverable} from "./Hoverable";
 import {each} from 'lodash';
 import {observableMapRecursive as omr} from "../../mobXUtils";
 
@@ -68,7 +68,7 @@ describe('JSONEditor', () => {
 
             mWrapper
                 .find(RenderObject)
-                .find(Nested)
+                .find(Hoverable)
                 .simulate('mouseOver');
 
             mWrapper
@@ -171,7 +171,7 @@ describe('JSONEditor', () => {
             const wrapper = mount(<JSONEditor obj={obj}/>);
 
             wrapper
-                .find(Nested)
+                .find(Hoverable)
                 .simulate('mouseOver');
 
             wrapper.find('button')
@@ -201,7 +201,7 @@ describe('JSONEditor', () => {
             const wrapper = mount(<JSONEditor obj={obj}/>);
 
             wrapper
-                .find(Nested)
+                .find(Hoverable)
                 .simulate('mouseOver');
 
             wrapper.find('button')

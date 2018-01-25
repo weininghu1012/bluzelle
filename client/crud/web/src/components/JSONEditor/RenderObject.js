@@ -3,7 +3,7 @@ import {RenderTree} from "./RenderTree";
 import {EditableField} from "./EditableField";
 import {observableMapRecursive} from "../../mobXUtils";
 import {Plus, Edit, Delete} from "./Buttons";
-import {Nested} from "./Nested";
+import {Hoverable} from "./Hoverable";
 import {get, del} from '../../mobXUtils';
 
 
@@ -18,9 +18,9 @@ export class RenderObject extends Component {
     }
 
     render() {
-        const {obj, propName, preamble, noButtons, onEdit, isRoot} = this.props;
+        const {obj, propName, preamble, hovering, onEdit, isRoot} = this.props;
 
-        const buttons = noButtons ||
+        const buttons = hovering &&
             <React.Fragment>
                 <Plus onClick={() => this.setState({showNewField: true})}/>
                 {isRoot ||
@@ -38,19 +38,19 @@ export class RenderObject extends Component {
 
             {
                 this.state.showNewField &&
-                <Nested>
+                <Hoverable>
                     <NewField
                         onChange={(key, val) => {
                             this.setState({showNewField: false});
                             get(obj, propName).set(key, val);
                         }}
                         onError={() => this.setState({showNewField: false})}/>
-                </Nested>
+                </Hoverable>
             }
 
             {
                 get(obj, propName).keys().sort().map(subkey =>
-                    <Nested key={subkey}>
+                    <Hoverable key={subkey}>
                         <RenderTree
                             obj={get(obj, propName)}
                             propName={subkey}
@@ -66,7 +66,7 @@ export class RenderObject extends Component {
                                         subobj.set(newkey, oldval);
                                     }}/>
                             }/>
-                    </Nested>)
+                    </Hoverable>)
             }
         </Collapsible>)
     }

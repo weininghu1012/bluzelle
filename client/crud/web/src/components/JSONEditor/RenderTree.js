@@ -16,7 +16,7 @@ export class RenderTree extends Component {
     }
 
     render() {
-        const {obj, propName, preamble, noButtons} = this.props;
+        const {obj, propName, preamble, hovering} = this.props;
 
         // If array
         if (!this.state.editing && isObservableArray(get(obj, propName))) {
@@ -49,7 +49,7 @@ export class RenderTree extends Component {
                     val={JSON.stringify(get(obj, propName))}
                     renderVal={v =>
                         <span style={{ color: colorFromType(v) }}>{v}</span> }/>
-                { noButtons || <Delete onClick={ () => del(obj, propName) }/> }
+                { hovering && <Delete onClick={ () => del(obj, propName) }/> }
             </div>
         );
     }

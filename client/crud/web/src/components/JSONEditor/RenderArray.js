@@ -3,7 +3,7 @@ import {Collapsible} from "./Collapsible";
 import {Plus, Edit, Delete} from "./Buttons";
 import {EditableField} from "./EditableField";
 import {observableMapRecursive} from "../../mobXUtils";
-import {Nested} from "./Nested";
+import {Hoverable} from "./Hoverable";
 import {get, del} from '../../mobXUtils';
 
 @observer
@@ -17,9 +17,9 @@ export class RenderArray extends Component {
     }
 
     render() {
-        const {obj, propName, preamble, noButtons, onEdit} = this.props;
+        const {obj, propName, preamble, hovering, onEdit} = this.props;
 
-        const buttons = noButtons ||
+        const buttons = hovering &&
             <React.Fragment>
                 <Plus onClick={() => this.setState({ showNewField: true })}/>
                 <Delete onClick={() => del(obj, propName)}/>
@@ -33,20 +33,20 @@ export class RenderArray extends Component {
 
             {
                 get(obj, propName).map((value, index) =>
-                    <Nested key={index}>
+                    <Hoverable key={index}>
                         <RenderTree
                             obj={get(obj, propName)}
                             propName={index}
                             preamble={<span>{index}</span>}/>
-                    </Nested>)
+                    </Hoverable>)
             }
             {
                 this.state.showNewField &&
-                    <Nested>
+                    <Hoverable>
                         <NewField
                             arr={get(obj, propName)}
                             onEnd={() => this.setState({ showNewField: false })}/>
-                    </Nested>
+                    </Hoverable>
             }
         </Collapsible>;
     }
