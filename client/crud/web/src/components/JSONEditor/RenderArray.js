@@ -26,6 +26,7 @@ export class RenderArray extends Component {
                 <Edit onClick={onEdit}/>
             </React.Fragment>;
 
+
         return <Collapsible
             label={`[] (${get(obj, propName).length} entries)`}
             buttons={buttons}

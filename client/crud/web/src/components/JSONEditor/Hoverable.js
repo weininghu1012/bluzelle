@@ -15,12 +15,15 @@ export class Hoverable extends Component {
             <div style={{
                     padding: 5,
                     paddingRight: 0,
-                    background: this.state.hover ? '#F9F9F9' : '#FFFFFF'
+                    background: this.state.hovering ? '#F9F9F9' : '#FFFFFF'
                 }}
                 onMouseOver={() => this.setState({ hovering: true })}
                 onMouseLeave={() => this.setState({ hovering: false })}>
 
-                {React.cloneElement(children, { hovering: this.state.hovering })}
+                {
+                    // Only works on single children
+                    React.cloneElement(children, { hovering: this.state.hovering })
+                }
             </div>
         );
     }

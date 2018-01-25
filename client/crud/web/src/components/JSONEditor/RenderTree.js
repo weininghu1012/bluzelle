@@ -18,6 +18,10 @@ export class RenderTree extends Component {
     render() {
         const {obj, propName, preamble, hovering} = this.props;
 
+        if(hovering === undefined) {
+            debugger;
+        }
+
         // If array
         if (!this.state.editing && isObservableArray(get(obj, propName))) {
             return (
