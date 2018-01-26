@@ -27,28 +27,30 @@ export class RenderArray extends Component {
             </React.Fragment>;
 
 
+        const newField = this.state.showNewField &&
+            <Hoverable>
+                <NewField
+                    arr={get(obj, propName)}
+                    onEnd={() => this.setState({ showNewField: false })}/>
+            </Hoverable>;
+
+
+        const fieldList = get(obj, propName).map((value, index) =>
+            <Hoverable key={index}>
+                <RenderTree
+                    obj={get(obj, propName)}
+                    propName={index}
+                    preamble={<span>{index}</span>}/>
+            </Hoverable>);
+
+
         return <Collapsible
             label={`[] (${get(obj, propName).length} entries)`}
             buttons={buttons}
             preamble={preamble}>
 
-            {
-                get(obj, propName).map((value, index) =>
-                    <Hoverable key={index}>
-                        <RenderTree
-                            obj={get(obj, propName)}
-                            propName={index}
-                            preamble={<span>{index}</span>}/>
-                    </Hoverable>)
-            }
-            {
-                this.state.showNewField &&
-                    <Hoverable>
-                        <NewField
-                            arr={get(obj, propName)}
-                            onEnd={() => this.setState({ showNewField: false })}/>
-                    </Hoverable>
-            }
+            {fieldList}
+            {newField}
         </Collapsible>;
     }
 }
