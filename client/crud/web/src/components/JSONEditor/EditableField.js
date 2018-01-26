@@ -13,11 +13,11 @@ export class EditableField extends Component {
     }
 
     componentWillMount() {
-        this.props.active && this.enableEditing();
+        this.props.active && this.setState({ formActive: true });
     }
 
     componentWillReceiveProps(nextProps) {
-        nextProps.active && this.enableEditing();
+        nextProps.active && this.setState({ formActive: true });
     }
 
     handleChange(event) {
@@ -27,9 +27,7 @@ export class EditableField extends Component {
     }
 
     handleSubmit(event) {
-
         const {onChange} = this.props;
-
         event.preventDefault();
 
         this.setState({
@@ -39,27 +37,28 @@ export class EditableField extends Component {
         onChange(this.state.formValue);
     }
 
-    enableEditing() {
-        this.setState({
-            formActive: true,
-            hovering: false
-        });
+    validationState() {
+        try {
+            JSON.parse(this.state.formValue);
+            return 'success';
+        } catch(e) {
+            return 'error';
+        }
     }
-
 
     render() {
         const {val, renderVal} = this.props;
         const renderValWithDefault = renderVal || (i => i);
 
         return (
-            <span onClick={this.enableEditing.bind(this)}>
+            <span onClick={() => this.setState({ formActive: true })}>
               {this.state.formActive ?
                   <Form inline
                         style={{display: 'inline'}}
                         onSubmit={this.handleSubmit.bind(this)}>
                       <FormGroup
                           controlId='JSONForm'
-                          validationState='success'>
+                          validationState={this.validationState()}>
                           <SelectedInput
                               type='text'
                               value={this.state.formValue}
@@ -78,30 +77,3 @@ export class EditableField extends Component {
         );
     }
 }
-
-
-//
-//         return (
-//             <span onClick={this.enableEditing.bind(this)}>
-//               {this.state.formActive ?
-//                   <form
-//                       style={{ display: 'inline' }}
-//                       onSubmit={this.handleSubmit.bind(this)}>
-//                       <input
-//                           type='text'
-//                           value={this.state.formValue}
-//                           ref={c => this.input = c}
-//                           onChange={this.handleChange.bind(this)}
-//                           onBlur={this.handleSubmit.bind(this)}/>
-//                   </form>
-//                   : <span style={{
-//                       textDecoration: this.state.hovering
-//                           ? 'underline' : 'none' }}
-//                       onMouseOver={() => this.setState({ hovering: true })}
-//                       onMouseLeave={() => this.setState({ hovering: false })}>
-//                       {renderValWithDefault(val)}
-//                   </span> }
-//               </span>
-//         );
-//     }
-// }
