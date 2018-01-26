@@ -1,3 +1,5 @@
+import {Button} from 'react-bootstrap';
+
 const common = {
     border: 0,
     background: 'none',
@@ -5,34 +7,34 @@ const common = {
 };
 
 export const Delete = ({ onClick }) => (
-    <button
+    <Button
         style={{
             ...common,
             float: 'right',
             color: 'red'
         }} onClick={ onClick }>
         X
-    </button>
+    </Button>
 );
 
 
 const PENCIL = '\u270E';
 
 export const Edit = ({ onClick }) => (
-    <button style={{
+    <Button style={{
         ...common,
         float: 'right',
         color: 'orange'
     }} onClick={ onClick }>
         {PENCIL}
-    </button>
+    </Button>
 );
 
 export const Plus = ({ onClick }) => (
-    <button style={{
+    <Button style={{
         ...common,
         color: 'green'
     }} onClick={ onClick }>
         +
-    </button>
+    </Button>
 );
