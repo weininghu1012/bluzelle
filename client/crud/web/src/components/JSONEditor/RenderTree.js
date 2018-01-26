@@ -1,7 +1,7 @@
 import {RenderArray} from "./RenderArray";
 import {RenderObject} from "./RenderObject";
 import {EditableField} from './EditableField';
-import {Delete} from "./Delete";
+import {Delete} from "./Buttons";
 import {observableMapRecursive, get, del} from '../../mobXUtils';
 import {isObservableArray} from 'mobx';
 
