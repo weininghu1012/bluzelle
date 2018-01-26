@@ -9,7 +9,7 @@ export class JSONEditor extends Component {
                     <RenderObject
                         obj={{ get: () => this.props.obj }}
                         propName=''
-                        isRoot={true}/>
+                        noDelete={true}/>
                 </Hoverable>
             </div>);
     }

@@ -18,17 +18,13 @@ export class RenderObject extends Component {
     }
 
     render() {
-        const {obj, propName, preamble, hovering, onEdit, isRoot} = this.props;
+        const {obj, propName, preamble, hovering, onEdit, noDelete} = this.props;
 
         const buttons = hovering &&
             <React.Fragment>
                 <Plus onClick={() => this.setState({showNewField: true})}/>
-                {isRoot ||
-                    <React.Fragment>
-                        <Delete onClick={() => del(obj, propName)}/>
-                        <Edit onClick={onEdit}/>
-                    </React.Fragment>
-                }
+                <Edit onClick={onEdit}/>
+                {noDelete || <Delete onClick={() => del(obj, propName)}/>}
             </React.Fragment>;
 
 
