@@ -2,8 +2,7 @@ import {Button} from 'react-bootstrap';
 
 const common = {
     border: 0,
-    background: 'none',
-    height: 10
+    background: 'none'
 };
 
 export const Delete = ({ onClick }) => (

@@ -1,3 +1,6 @@
+import {Form, FormGroup} from 'react-bootstrap';
+import {SelectedInput} from "./SelectedInput";
+
 export class EditableField extends Component {
     constructor(props) {
         super(props);
@@ -40,10 +43,9 @@ export class EditableField extends Component {
         this.setState({
             formActive: true,
             hovering: false
-        }, () => {
-            this.input && this.input.select();
         });
     }
+
 
     render() {
         const {val, renderVal} = this.props;
@@ -52,24 +54,54 @@ export class EditableField extends Component {
         return (
             <span onClick={this.enableEditing.bind(this)}>
               {this.state.formActive ?
-                  <form
-                      style={{ display: 'inline' }}
-                      onSubmit={this.handleSubmit.bind(this)}>
-                      <input
-                          type='text'
-                          value={this.state.formValue}
-                          ref={c => this.input = c}
-                          onChange={this.handleChange.bind(this)}
-                          onBlur={this.handleSubmit.bind(this)}/>
-                  </form>
+                  <Form inline
+                        style={{display: 'inline'}}
+                        onSubmit={this.handleSubmit.bind(this)}>
+                      <FormGroup
+                          controlId='JSONForm'
+                          validationState='success'>
+                          <SelectedInput
+                              type='text'
+                              value={this.state.formValue}
+                              onChange={this.handleChange.bind(this)}
+                              onBlur={this.handleSubmit.bind(this)}/>
+                      </FormGroup>
+                  </Form>
                   : <span style={{
-                      textDecoration: this.state.hovering
-                          ? 'underline' : 'none' }}
-                      onMouseOver={() => this.setState({ hovering: true })}
-                      onMouseLeave={() => this.setState({ hovering: false })}>
+                      textDecoration: this.state.hovering ? 'underline' : 'none'
+                  }}
+                          onMouseOver={() => this.setState({hovering: true})}
+                          onMouseLeave={() => this.setState({hovering: false})}>
                       {renderValWithDefault(val)}
-                  </span> }
+                  </span>}
               </span>
         );
     }
 }
+
+
+//
+//         return (
+//             <span onClick={this.enableEditing.bind(this)}>
+//               {this.state.formActive ?
+//                   <form
+//                       style={{ display: 'inline' }}
+//                       onSubmit={this.handleSubmit.bind(this)}>
+//                       <input
+//                           type='text'
+//                           value={this.state.formValue}
+//                           ref={c => this.input = c}
+//                           onChange={this.handleChange.bind(this)}
+//                           onBlur={this.handleSubmit.bind(this)}/>
+//                   </form>
+//                   : <span style={{
+//                       textDecoration: this.state.hovering
+//                           ? 'underline' : 'none' }}
+//                       onMouseOver={() => this.setState({ hovering: true })}
+//                       onMouseLeave={() => this.setState({ hovering: false })}>
+//                       {renderValWithDefault(val)}
+//                   </span> }
+//               </span>
+//         );
+//     }
+// }

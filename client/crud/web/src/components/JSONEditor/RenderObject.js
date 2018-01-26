@@ -23,8 +23,8 @@ export class RenderObject extends Component {
         const buttons = hovering &&
             <React.Fragment>
                 <Plus onClick={() => this.setState({showNewField: true})}/>
-                {isRoot || <Edit onClick={onEdit}/>}
                 {isRoot || <Delete onClick={() => del(obj, propName)}/>}
+                {isRoot || <Edit onClick={onEdit}/>}
             </React.Fragment>;
 
 

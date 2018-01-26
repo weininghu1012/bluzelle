@@ -122,6 +122,35 @@ describe('JSONEditor', () => {
 
         });
 
+
+        it('should update color based on validity-state of JSON', () => {
+
+            const obj = omr({ a: 5 });
+
+            const mWrapper = mount(<JSONEditor obj={obj}/>);
+
+            const ef = mWrapper
+                .find(EditableField)
+                .filterWhere(el => el.text() === '5');
+
+            ef.simulate('click');
+
+            const input = mWrapper.find('input');
+            input.simulate('change', { target: { value: '[1, 2, 3]' }});
+
+
+            expect(input.props()).to.have.property('type', 'text');
+
+            // These classes are part of react-bootstrap.
+            expect(input.props()).to.have.property('class', 'has-success');
+
+
+            input.simulate('change', { target: { value: 'invalid' }});
+
+            expect(input.props()).to.have.property('class', 'has-error');
+
+        });
+
     });
 
 
