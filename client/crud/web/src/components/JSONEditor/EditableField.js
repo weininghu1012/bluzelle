@@ -47,7 +47,7 @@ export class EditableField extends Component {
     }
 
     render() {
-        const {val, renderVal} = this.props;
+        const {val, renderVal, validateJSON} = this.props;
         const renderValWithDefault = renderVal || (i => i);
 
         return (
@@ -58,7 +58,7 @@ export class EditableField extends Component {
                         onSubmit={this.handleSubmit.bind(this)}>
                       <FormGroup
                           controlId='JSONForm'
-                          validationState={this.validationState()}>
+                          validationState={validateJSON ? this.validationState() : null}>
                           <SelectedInput
                               type='text'
                               value={this.state.formValue}

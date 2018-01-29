@@ -13,6 +13,7 @@ export const RenderField = ({ obj, propName, preamble, editing, onChange, hoveri
                 obj.set(propName, observableMapRecursive(JSON.parse(v)));
             }}
             val={JSON.stringify(get(obj, propName))}
+            validateJSON={true}
             renderVal={v =>
                 <span style={{ color: colorFromType(v) }}>{v}</span> }/>
 
