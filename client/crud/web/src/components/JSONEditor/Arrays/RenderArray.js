@@ -1,4 +1,4 @@
-import {RenderTree} from "../RenderTree";
+import {RenderTree} from "../Trees/RenderTree";
 import {Collapsible} from "../Collapsible";
 import {Plus, Edit, Delete} from "../Buttons";
 import {Hoverable} from "../Hoverable";

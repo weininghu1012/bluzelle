@@ -1,4 +1,4 @@
-import {RenderTree} from "./RenderTree";
+import {RenderTree} from "./Trees/RenderTree";
 import {Hoverable} from "./Hoverable";
 import 'bootstrap/dist/css/bootstrap.css';
 
