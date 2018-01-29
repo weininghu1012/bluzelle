@@ -3,6 +3,7 @@ import {RenderObject} from "../Objects/RenderObject";
 import {RenderField} from "./RenderField";
 import {get} from '../../../mobXUtils';
 import {isObservableArray} from 'mobx';
+import {Hoverable} from "../Hoverable";
 
 @observer
 export class RenderTree extends Component {
@@ -15,32 +16,39 @@ export class RenderTree extends Component {
     }
 
     render() {
-        const {obj, propName, preamble, hovering} = this.props;
+        const {obj, propName} = this.props;
+        let r;
 
         // If array
         if (!this.state.editing && isObservableArray(get(obj, propName))) {
-            return (
+            r = (
                 <RenderArray
                     {...this.props}
                     onEdit={() => this.setState({ editing: true })}/>
             );
-        }
 
         // If object
-        if (!this.state.editing && typeof get(obj, propName) === 'object') {
-            return (
+        } else if (!this.state.editing && typeof get(obj, propName) === 'object') {
+            r = (
                 <RenderObject
                     {...this.props}
                     onEdit={() => this.setState({ editing: true })}/>
             );
-        }
 
         // Standard datatypes
+        } else {
+            r = (
+                <RenderField
+                    {...this.props}
+                    editing={this.state.editing}
+                    onChange={() => this.setState({editing: false})}/>
+            );
+        }
+
         return (
-            <RenderField
-                {...this.props}
-                editing={this.state.editing}
-                onChange={() => this.setState({ editing: false })}/>
+            <Hoverable>
+                {r}
+            </Hoverable>
         );
     }
 }

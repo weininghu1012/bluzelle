@@ -12,12 +12,10 @@ export class JSONEditor extends Component {
 
         return (
             <div style={{ fontFamily: 'monospace '}}>
-                <Hoverable>
-                    <RenderTree
-                        obj={proxy}
-                        propName=''
-                        isRoot={true}/>
-                </Hoverable>
+                <RenderTree
+                    obj={proxy}
+                    propName=''
+                    isRoot={true}/>
             </div>);
     }
 }

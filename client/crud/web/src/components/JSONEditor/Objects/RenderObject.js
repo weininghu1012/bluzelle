@@ -38,11 +38,10 @@ export class RenderObject extends Component {
 
 
         const fieldList = get(obj, propName).keys().sort().map(subkey =>
-            <Hoverable key={subkey}>
-                <RenderTreeWithEditableKey
-                    obj={get(obj, propName)}
-                    propName={subkey}/>
-            </Hoverable>);
+            <RenderTreeWithEditableKey
+                key={subkey}
+                obj={get(obj, propName)}
+                propName={subkey}/>);
 
 
         return (

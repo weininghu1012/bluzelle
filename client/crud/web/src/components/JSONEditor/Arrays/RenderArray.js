@@ -35,12 +35,11 @@ export class RenderArray extends Component {
 
 
         const fieldList = get(obj, propName).map((value, index) =>
-            <Hoverable key={index}>
-                <RenderTree
-                    obj={get(obj, propName)}
-                    propName={index}
-                    preamble={<span>{index}</span>}/>
-            </Hoverable>);
+            <RenderTree
+                key={index}
+                obj={get(obj, propName)}
+                propName={index}
+                preamble={<span>{index}</span>}/>);
 
 
         return <Collapsible
