@@ -4,6 +4,8 @@ import {RenderField} from "./RenderField";
 import {get} from '../../../mobXUtils';
 import {isObservableArray} from 'mobx';
 import {Hoverable} from "../Hoverable";
+import 'bootstrap/dist/css/bootstrap.css';
+
 
 @observer
 export class RenderTree extends Component {
@@ -46,7 +48,7 @@ export class RenderTree extends Component {
         }
 
         return (
-            <Hoverable>
+            <Hoverable style={{ fontFamily: 'monospace' }}>
                 {r}
             </Hoverable>
         );
