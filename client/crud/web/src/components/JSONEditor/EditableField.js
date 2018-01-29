@@ -63,7 +63,8 @@ export class EditableField extends Component {
                               type='text'
                               value={this.state.formValue}
                               onChange={this.handleChange.bind(this)}
-                              onBlur={this.handleSubmit.bind(this)}/>
+                              // onBlur={this.handleSubmit.bind(this)}
+                          />
                       </FormGroup>
                   </Form>
                   : <span style={{

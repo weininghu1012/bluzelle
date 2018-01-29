@@ -8,6 +8,7 @@ export const NewField = ({ arr, onEnd }) => (
         <EditableField
             active={true}
             val={''}
+            validateJSON={true}
             onChange={val => {
                 try {
                     const obj = observableMapRecursive(JSON.parse(val));

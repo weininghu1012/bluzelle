@@ -26,6 +26,7 @@ export class NewField extends Component {
             <EditableField
                 active={this.state.currentInput === 'val'}
                 val={'"value"'}
+                validateJSON={true}
                 onChange={val => {
                     try {
                         const obj = observableMapRecursive(JSON.parse(val));
