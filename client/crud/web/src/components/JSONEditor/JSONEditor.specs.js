@@ -144,8 +144,7 @@ describe('JSONEditor', () => {
             // These classes are part of react-bootstrap.
             expect(input.props()).to.have.property('class', 'has-success');
 
-
-            input.simulate('change', { target: { value: 'invalid' }});
+            input.simulate('change', { target: { value: 'this is invalid json' }});
 
             expect(input.props()).to.have.property('class', 'has-error');
 

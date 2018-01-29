@@ -111,7 +111,6 @@ class NewField extends Component {
                         onChange(this.state.key, obj);
                     } catch(e) {
                         onError();
-                        return;
                     }
                 }}/>;
 

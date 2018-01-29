@@ -9,4 +9,5 @@ describe('acceptance test for acceptance tests', () => {
     it('body has a src attribute', () => {
         expect(body().getAttribute('src')).to.not.equal(null);
     });
+
 });

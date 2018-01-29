@@ -1,6 +1,3 @@
-const TRIANGLE_RIGHT = '\u25b6';
-const TRIANGLE_DOWN = '\u25bc';
-
 export class Collapsible extends Component {
     constructor(props) {
         super(props);
@@ -12,18 +9,19 @@ export class Collapsible extends Component {
     }
 
     collapseTriangle() {
-        return this.state.collapsed ? TRIANGLE_RIGHT : TRIANGLE_DOWN;
+        return this.state.collapsed ? 'chevron-right' : 'chevron-down';
     }
 
     render() {
         const {children, label, buttons, preamble} = this.props;
+        const {collapsed} = this.state;
 
         return (
             <React.Fragment>
-                <div>
+                <div style={{ minHeight: 21 }}>
                     {preamble && <span style={{ marginRight: 5 }}>{preamble}:</span>}
-                    <span onClick={() => this.toggleCollapse()}>
-                        {this.collapseTriangle()} {label}
+                    <span onClick={this.toggleCollapse.bind(this)}>
+                        <BS.Glyphicon glyph={this.collapseTriangle()}/> {label}
                     </span>
                     {buttons}
                 </div>
@@ -32,7 +30,7 @@ export class Collapsible extends Component {
                     background: 'white',
                     borderLeft: '1px solid #CCCCCC'
                 }}>
-                    {this.state.collapsed || children}
+                    {collapsed || children}
                 </div>
             </React.Fragment>
         );

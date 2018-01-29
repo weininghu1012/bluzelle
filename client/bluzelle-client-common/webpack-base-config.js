@@ -83,6 +83,8 @@ module.exports = () => ({
             React: 'react',
             Fragment: ['react', 'Fragment'],
 
+            BS: 'react-bootstrap',
+
             Component: 'bluzelle-client-common/components/Component',
 
             LinkBtn: ['components/LinkBtn', 'default'],

@@ -1,39 +1,40 @@
-import {Button} from 'react-bootstrap';
-
 const common = {
     border: 0,
     background: 'none'
 };
 
 export const Delete = ({ onClick }) => (
-    <Button
+    <BS.Button
+        bsSize='xsmall'
         style={{
             ...common,
             float: 'right',
             color: 'red'
         }} onClick={ onClick }>
         X
-    </Button>
+    </BS.Button>
 );
 
 
-const PENCIL = '\u270E';
-
 export const Edit = ({ onClick }) => (
-    <Button style={{
-        ...common,
-        float: 'right',
-        color: 'orange'
-    }} onClick={ onClick }>
-        {PENCIL}
-    </Button>
+    <BS.Button
+        bsSize='xsmall'
+        style={{
+            ...common,
+            float: 'right',
+            color: 'orange'
+        }} onClick={ onClick }>
+        <BS.Glyphicon glyph='pencil'/>
+    </BS.Button>
 );
 
 export const Plus = ({ onClick }) => (
-    <Button style={{
-        ...common,
-        color: 'green'
-    }} onClick={ onClick }>
+    <BS.Button
+        bsSize='xsmall'
+        style={{
+            ...common,
+            color: 'green'
+        }} onClick={ onClick }>
         +
-    </Button>
+    </BS.Button>
 );

@@ -18,10 +18,6 @@ export class RenderTree extends Component {
     render() {
         const {obj, propName, preamble, hovering} = this.props;
 
-        if(hovering === undefined) {
-            debugger;
-        }
-
         // If array
         if (!this.state.editing && isObservableArray(get(obj, propName))) {
             return (
@@ -59,26 +55,11 @@ export class RenderTree extends Component {
     }
 }
 
-
-const colorFromType = obj => {
-    let color;
-
-    switch(typeof JSON.parse(obj)) {
-        case 'string':
-            color = 'blue';
-            break;
-
-        case 'number':
-            color = 'red';
-            break;
-
-        case 'boolean':
-            color = 'purple';
-            break;
-
-        default:
-            color = 'pink';
-    }
-
-    return color;
+const colorTypeMap = {
+    string: 'blue',
+    number: 'red',
+    boolean: 'purple'
 };
+
+const colorFromType = obj =>
+    colorTypeMap[typeof JSON.parse(obj)] || 'pink';
