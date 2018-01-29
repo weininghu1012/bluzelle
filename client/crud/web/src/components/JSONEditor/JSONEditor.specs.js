@@ -13,8 +13,8 @@ describe('JSONEditor', () => {
 
         it('should render an object', () => {
 
-            const obj = omr({ a: 5 });
-            const mWrapper = mount(<JSONEditor obj={obj}/>);
+            const obj = omr({ root: { a: 5 }});
+            const mWrapper = mount(<JSONEditor obj={obj} propName='root'/>);
 
             expect(mWrapper
                 .find(RenderTree)
@@ -23,7 +23,10 @@ describe('JSONEditor', () => {
         });
 
         it('should render recursively', () => {
-            const mWrapper = mount(<JSONEditor obj={omr({ a: { b: 5 }})}/>);
+
+            const obj = omr({ root: { a: { b: 5 }}});
+
+            const mWrapper = mount(<JSONEditor obj={obj} propName='root'/>);
 
             expect(mWrapper
                 .find(RenderTree)
@@ -50,21 +53,21 @@ describe('JSONEditor', () => {
         each(types, ([val1, val2], type) => {
             it(`should update a ${type} field`, () => {
 
-                const obj = omr({ a: val1 });
-                const mWrapper = mount(<JSONEditor obj={obj}/>);
+                const obj = omr({ root: { a: val1 }});
+                const mWrapper = mount(<JSONEditor obj={obj} propName='root'/>);
 
                 mWrapper.find(EditableField).filterWhere(el => el.text() === JSON.stringify(val1)).simulate('click');
                 mWrapper.find('input').simulate('change', { target: { value: JSON.stringify(val2) }});
                 mWrapper.find('form').simulate('submit');
 
-                expect(obj.get('a')).to.equal(val2);
+                expect(obj.get('root').get('a')).to.equal(val2);
             });
         });
 
         it('should delete a boolean field', () => {
 
-            const obj = omr({ a: true });
-            const mWrapper = mount(<JSONEditor obj={obj}/>);
+            const obj = omr({ root: { a: true }});
+            const mWrapper = mount(<JSONEditor obj={obj} propName='root'/>);
 
             mWrapper
                 .find(RenderObject)
@@ -74,28 +77,30 @@ describe('JSONEditor', () => {
             mWrapper
                 .find('button')
                 .filterWhere(el => el.text() === 'X')
+                .at(1) // Skip the delete root
                 .simulate('click');
 
-            expect(obj.get('a')).to.be.undefined;
+            expect(obj.get('root').get('a')).to.be.undefined;
 
         });
 
         it('should delete a deep field', () => {
 
-            const obj = omr({
+            const obj = omr({ root: {
                 field: 123,
                 otherObject: {
                     a: true,
                     b: false,
                     c: [1, 2, 3, "delete this"]
                 }
-            });
+            }});
 
-            const mWrapper = mount(<JSONEditor obj={obj}/>);
+            const mWrapper = mount(<JSONEditor obj={obj} propName='root' isRoot={true}/>);
 
             mWrapper
                 .find(RenderTree)
                 .filter({ propName: 3 })
+                .find(Hoverable)
                 .simulate('mouseOver');
 
             mWrapper
@@ -106,7 +111,7 @@ describe('JSONEditor', () => {
                 .first()
                 .simulate('click');
 
-            expect(obj.get('otherObject').get('c').length).to.equal(3);
+            expect(obj.get('root').get('otherObject').get('c').length).to.equal(3);
 
 
             mWrapper
@@ -118,16 +123,25 @@ describe('JSONEditor', () => {
                 .first()
                 .simulate('click');
 
-            expect(obj.get('otherObject')).to.be.undefined;
+            expect(obj.get('root').get('otherObject')).to.be.undefined;
+
+        });
+
+
+        it('should update the root field given', () => {
+
+            const obj = omr({ root: { a: { b: 5 }}});
+
+            // const mWrapper = mount(<JSONEditor />);
 
         });
 
 
         it('should update color based on validity-state of JSON', () => {
 
-            const obj = omr({ a: 5 });
+            const obj = omr({ root: { a: 5 }});
 
-            const mWrapper = mount(<JSONEditor obj={obj}/>);
+            const mWrapper = mount(<JSONEditor obj={obj} propName='root'/>);
 
             const ef = mWrapper
                 .find(EditableField)
@@ -154,11 +168,11 @@ describe('JSONEditor', () => {
 
         it('should be able to rename the key of a field', () => {
 
-            const obj = omr({
+            const obj = omr({ root: {
                 somekey: 123
-            });
+            }});
 
-            const wrapper = mount(<JSONEditor obj={obj}/>);
+            const wrapper = mount(<JSONEditor obj={obj} propName='root'/>);
 
             wrapper.find(EditableField)
                 .filterWhere(el => el.text() === 'somekey')
@@ -170,15 +184,17 @@ describe('JSONEditor', () => {
             wrapper.find('form')
                 .simulate('submit');
 
-            expect(obj.get('newkey')).to.equal(123);
-            expect(obj.get('somekey')).to.be.undefined;
+            expect(obj.get('root').get('newkey')).to.equal(123);
+            expect(obj.get('root').get('somekey')).to.be.undefined;
 
         });
 
 
         it('should have a (+) button', () => {
 
-            const wrapper = mount(<JSONEditor obj={omr({ a: 5 })}/>);
+            const obj = omr({ root: { a: 5 }});
+
+            const wrapper = mount(<JSONEditor obj={obj} propName='root'/>);
 
             wrapper.find(RenderObject).simulate('mouseOver');
 
@@ -191,9 +207,9 @@ describe('JSONEditor', () => {
 
         it('should have two consecutive inputs to create a new field', () => {
 
-            const obj = omr({});
+            const obj = omr({ root: {}});
 
-            const wrapper = mount(<JSONEditor obj={obj}/>);
+            const wrapper = mount(<JSONEditor obj={obj} propName='root'/>);
 
             wrapper
                 .find(Hoverable)
@@ -215,15 +231,15 @@ describe('JSONEditor', () => {
             wrapper.find('form')
                 .simulate('submit');
 
-            expect(obj.get('keyname')).to.equal(51);
+            expect(obj.get('root').get('keyname')).to.equal(51);
 
         });
 
         it('should not create a new field if the user enters invalid key/json', () => {
 
-            const obj = omr({});
+            const obj = omr({ root: {}});
 
-            const wrapper = mount(<JSONEditor obj={obj}/>);
+            const wrapper = mount(<JSONEditor obj={obj} propName='root'/>);
 
             wrapper
                 .find(Hoverable)
@@ -242,14 +258,14 @@ describe('JSONEditor', () => {
             wrapper.find('form')
                 .simulate('submit');
 
-            expect(obj.toJS()).to.be.empty;
+            expect(obj.get('root').toJS()).to.be.empty;
 
         });
 
 
         it('should have a single input for new array values', () => {
-            const obj = omr({ arr: [] });
-            const wrapper = mount(<JSONEditor obj={obj}/>);
+            const obj = omr({ root: { arr: [] }});
+            const wrapper = mount(<JSONEditor obj={obj} propName='root'/>);
 
             wrapper.find(RenderArray)
                 .simulate('mouseOver');
@@ -265,7 +281,7 @@ describe('JSONEditor', () => {
             wrapper.find('form')
                 .simulate('submit');
 
-            expect(obj.get('arr').toJS()).to.deep.equal(["hello world"]);
+            expect(obj.get('root').get('arr').toJS()).to.deep.equal(["hello world"]);
 
         });
 

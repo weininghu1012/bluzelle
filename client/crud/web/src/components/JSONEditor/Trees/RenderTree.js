@@ -48,9 +48,11 @@ export class RenderTree extends Component {
         }
 
         return (
-            <Hoverable style={{ fontFamily: 'monospace' }}>
-                {r}
-            </Hoverable>
+            <span style={{ fontFamily: 'monospace ' }}>
+                <Hoverable>
+                    {r}
+                </Hoverable>
+            </span>
         );
     }
 }

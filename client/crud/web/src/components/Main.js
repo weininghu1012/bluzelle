@@ -16,7 +16,7 @@ const MainComponent = () => (
                 </ReflexElement>
                 <ReflexSplitter/>
                 <ReflexElement>
-                    <JSONEditor obj={getSwarmData()}/>
+                    <JSONEditor obj={getSwarmData()} propName='key1' isRoot={true}/>
                 </ReflexElement>
             </ReflexContainer>
         </ReflexElement>

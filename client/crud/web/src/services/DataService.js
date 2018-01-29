@@ -8,6 +8,8 @@ global.data = data;
 
 function testData() {
     return {
-        array: [1, 2, 3, 4]
+        key1: {
+            array: [1, 2, 3, 4]
+        }
     };
 }
