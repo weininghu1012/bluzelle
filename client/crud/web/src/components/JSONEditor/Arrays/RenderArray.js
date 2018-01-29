@@ -1,10 +1,9 @@
-import {RenderTree} from "./RenderTree";
-import {Collapsible} from "./Collapsible";
-import {Plus, Edit, Delete} from "./Buttons";
-import {EditableField} from "./EditableField";
-import {observableMapRecursive} from "../../mobXUtils";
-import {Hoverable} from "./Hoverable";
-import {get, del} from '../../mobXUtils';
+import {RenderTree} from "../RenderTree";
+import {Collapsible} from "../Collapsible";
+import {Plus, Edit, Delete} from "../Buttons";
+import {Hoverable} from "../Hoverable";
+import {get, del} from '../../../mobXUtils';
+import {NewField} from "./NewField";
 
 @observer
 export class RenderArray extends Component {
@@ -17,12 +16,12 @@ export class RenderArray extends Component {
     }
 
     render() {
-        const {obj, propName, preamble, hovering, onEdit} = this.props;
+        const {obj, propName, preamble, hovering, isRoot, onEdit} = this.props;
 
         const buttons = hovering &&
             <React.Fragment>
                 <Plus onClick={() => this.setState({ showNewField: true })}/>
-                <Delete onClick={() => del(obj, propName)}/>
+                {isRoot || <Delete onClick={() => del(obj, propName)}/>}
                 <Edit onClick={onEdit}/>
             </React.Fragment>;
 
@@ -54,21 +53,3 @@ export class RenderArray extends Component {
         </Collapsible>;
     }
 }
-
-const NewField = ({ arr, onEnd }) => (
-    <div>
-        {arr.length}:
-
-        <EditableField
-            active={true}
-            val={''}
-            onChange={val => {
-                try {
-                    const obj = observableMapRecursive(JSON.parse(val));
-                    arr.push(obj);
-                } catch(e) {}
-
-                onEnd();
-            }}/>
-    </div>
-);

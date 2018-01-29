@@ -1,6 +1,6 @@
 import {JSONEditor} from "./JSONEditor";
 import {RenderObject} from "./RenderObject";
-import {RenderArray} from "./RenderArray";
+import {RenderArray} from "./Arrays/RenderArray";
 import {RenderTree} from "./RenderTree";
 import {EditableField} from "./EditableField";
 import {Hoverable} from "./Hoverable";

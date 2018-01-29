@@ -24,7 +24,7 @@ export class RenderObject extends Component {
             <React.Fragment>
                 <Plus onClick={() => this.setState({showNewField: true})}/>
                 {isRoot || <Delete onClick={() => del(obj, propName)}/>}
-                {isRoot || <Edit onClick={onEdit}/>}
+                <Edit onClick={onEdit}/>
             </React.Fragment>;
 
 

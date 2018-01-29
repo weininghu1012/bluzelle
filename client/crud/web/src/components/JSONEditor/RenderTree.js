@@ -1,4 +1,4 @@
-import {RenderArray} from "./RenderArray";
+import {RenderArray} from "./Arrays/RenderArray";
 import {RenderObject} from "./RenderObject";
 import {EditableField} from './EditableField';
 import {Delete} from "./Buttons";
