@@ -138,15 +138,12 @@ describe('JSONEditor', () => {
             const input = mWrapper.find('input');
             input.simulate('change', { target: { value: '[1, 2, 3]' }});
 
+            // These elements and classes are part of react-bootstrap.
+            const form = mWrapper.find('form');
+            const group = form.children().at(0);
 
             expect(input.props()).to.have.property('type', 'text');
-
-            // These classes are part of react-bootstrap.
-            expect(input.props()).to.have.property('class', 'has-success');
-
-            input.simulate('change', { target: { value: 'this is invalid json' }});
-
-            expect(input.props()).to.have.property('class', 'has-error');
+            expect(group.props()).to.have.property('validationState', 'success');
 
         });
 
