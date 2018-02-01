@@ -23,7 +23,7 @@ BOOST_AUTO_TEST_CASE( test_token_balance ) {
         }
     catch (std::exception& ex)
         {
-        std::cout << ex.what() << std::endl;
+        std::cerr << ex.what() << std::endl;
         BOOST_CHECK(false);
         }
 }
@@ -44,7 +44,7 @@ BOOST_AUTO_TEST_CASE( test_token_balance_fail ) {
         }
     catch (std::exception& ex)
         {
-        std::cout << ex.what() << std::endl;
+        std::cerr << ex.what() << std::endl;
         BOOST_CHECK(false);
         }
 }

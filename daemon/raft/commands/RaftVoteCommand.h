@@ -11,7 +11,11 @@ private:
 
 public:
     RaftVoteCommand(RaftState& s);
-    virtual boost::property_tree::ptree operator()();
+
+    virtual
+    boost::property_tree::ptree
+    operator()();
+
 };
 
 #endif //BLUZELLE_RAFTVOTECOMMAND_H

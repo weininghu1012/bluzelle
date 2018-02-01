@@ -11,7 +11,9 @@ private:
 
 public:
     RaftHeartbeatCommand(RaftState& s);
-    virtual boost::property_tree::ptree operator()();
+
+    boost::property_tree::ptree
+    operator()() override ;
 };
 
 #endif //BLUZELLE_RAFTHEARTBEATCOMMAND_H

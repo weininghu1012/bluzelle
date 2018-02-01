@@ -33,11 +33,11 @@ public:
         unique_ptr<RaftState>& ns)
     : RaftState(ios, s, cf, pq, ps, rh, ns)
     {
-        std::cout << "I am MockRaft" << std::endl;
+
     }
 
     RaftStateType
-    get_type() const
+    get_type() const override
     {
         return RaftStateType::Follower;
     }
@@ -90,8 +90,6 @@ make_mock_raft_state(
 
     MockRaftState* mrs = nullptr;
     std::unique_ptr<RaftState> umrs(mrs);
-
-
 
     return std::make_unique<MockRaftState>(
         ios,

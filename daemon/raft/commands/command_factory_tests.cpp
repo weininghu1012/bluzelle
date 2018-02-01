@@ -1,9 +1,11 @@
 #include "CommandFactory.h"
 #include "PeerList.h"
 #include "RaftFollowerState.h"
-#include "raft/JsonTools.h"
+#include "PingCommand.h"
 
 #include <boost/test/unit_test.hpp>
+
+namespace bpt = boost::property_tree;
 
 struct F
 {
@@ -56,5 +58,27 @@ BOOST_FIXTURE_TEST_SUITE(command_factory_tests, F)
             cerr << "test_get_api_command error: [" << e.what() << "]\n";
             }
     }
+
+    BOOST_AUTO_TEST_CASE( test_make_command_ping )
+    {
+        Storage st;
+        ApiCommandQueue acq;
+        CommandFactory sut(st,acq);
+
+        bpt::ptree pt
+        {
+            pt_from_json_string(R"({"cmd":"ping", "transaction-id":"123", "seq":123})")
+        };
+
+        unique_ptr<RaftState> raft_state;
+
+        unique_ptr<Command> command = sut.get_command(pt, *raft_state.get());
+
+        auto tree = (*command.get())();
+
+        BOOST_CHECK_EQUAL("pong", tree.get<string>("cmd"));
+
+    }
+
 
 BOOST_AUTO_TEST_SUITE_END()

@@ -1,18 +1,6 @@
 #ifndef BLUZELLE_RAFT_H
 #define BLUZELLE_RAFT_H
 
-#include <string>
-#include <thread>
-#include <queue>
-#include <utility>
-#include <mutex>
-
-using std::queue;
-using std::pair;
-using std::mutex;
-
-#include <boost/property_tree/ptree.hpp>
-
 #include "PeerList.h"
 #include "NodeInfo.hpp"
 #include "Storage.h"
@@ -21,10 +9,21 @@ using std::mutex;
 #include "DaemonInfo.h"
 #include "RaftState.h"
 
+#include <string>
+#include <thread>
+#include <queue>
+#include <utility>
+#include <mutex>
+#include <boost/property_tree/ptree.hpp>
 
-class Raft {
+using std::queue;
+using std::pair;
+using std::mutex;
+
+class Raft
+{
 private:
-    boost::asio::io_service& ios_;
+    boost::asio::io_service &ios_;
 
     PeerList peers_;                    // List of known peers.
 
@@ -45,16 +44,13 @@ private:
 public:
 
     explicit
-    Raft(boost::asio::io_service& ios);
-
-    void run();
-
-    string
-    handle_request(const string& req);
+    Raft(boost::asio::io_service &ios);
 
     void
-    rearm_heartbeat_timer();
+    run();
 
+    string
+    handle_request(const string &req);
 };
 
 #endif //BLUZELLE_RAFT_H

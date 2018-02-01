@@ -8,13 +8,22 @@ using namespace std;
 namespace bpt = boost::property_tree;
 
 bpt::ptree
-pt_from_json_string(
-    const string &s
-);
+pt_from_json_string
+    (
+        const string &s
+    );
 
 string
-pt_to_json_string(
-    bpt::ptree pt
-);
+pt_to_json_string
+    (
+        bpt::ptree pt
+    );
+
+void
+pt_to_cout
+    (
+        bpt::ptree pt
+    );
+
 
 #endif //BLUZELLE_JSONTOOLS_HPP_H

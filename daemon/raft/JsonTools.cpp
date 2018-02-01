@@ -45,3 +45,20 @@ pt_to_json_string(
         }
     return string();
 }
+
+
+void
+pt_to_cout
+    (
+        bpt::ptree pt
+    )
+{
+    try
+        {
+        cout << pt_to_json_string(pt) << "\n";
+        }
+    catch(const exception& e)
+        {
+        cerr << "pt_to_cout :" << e.what() << "\n";
+        }
+}

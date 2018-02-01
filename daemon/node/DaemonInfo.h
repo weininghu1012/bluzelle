@@ -21,7 +21,7 @@ DaemonInfo final :
 
     uint64_t            ropsten_token_balance_;
 
-    friend class Singleton<DaemonInfo>;
+    friend class        Singleton<DaemonInfo>;
 
     DaemonInfo() = default;
 

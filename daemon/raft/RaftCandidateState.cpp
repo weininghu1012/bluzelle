@@ -1,34 +1,33 @@
-
-
 #include "PeerList.h"
 #include "CommandFactory.h"
 #include "RaftCandidateState.h"
 #include "RaftLeaderState.h"
 #include "RaftFollowerState.h"
-
 #include "JsonTools.h"
 
 #include <iostream>
 #include <boost/asio/placeholders.hpp>
 
-static constexpr char s_request_for_vote_message[] = "{\"raft\": \"request-vote\"}";
+static constexpr char
+    s_request_for_vote_message[] = R"({"raft": "request-vote"})";
 
-RaftCandidateState::RaftCandidateState(boost::asio::io_service& ios,
-                                       Storage& s,
-                                       CommandFactory& cf,
-                                       ApiCommandQueue& pq,
-                                       PeerList& ps,
-                                       function<string(const string&)> rh,
-                                       unique_ptr<RaftState>& ns)
-        : RaftState(ios, s, cf, pq, ps, rh, ns),
-          election_timeout_timer_(ios_, boost::posix_time::milliseconds(
-                  raft_election_timeout_interval_min_milliseconds)),
-          nominated_for_leader_(false),
-          voted_yes_(0),
-          voted_no_(0)
+RaftCandidateState::RaftCandidateState
+    (
+        boost::asio::io_service &ios,
+        Storage &s,
+        CommandFactory &cf,
+        ApiCommandQueue &pq,
+        PeerList &ps,
+        function<string(const string &)> rh,
+        unique_ptr<RaftState> &ns)
+    : RaftState(ios, s, cf, pq, ps, rh, ns),
+      election_timeout_timer_(ios_, boost::posix_time::milliseconds(
+          raft_election_timeout_interval_min_milliseconds)),
+      nominated_for_leader_(false),
+      voted_yes_(0),
+      voted_no_(0)
 {
     std::cout << "          I am Candidate" << std::endl;
-
     schedule_election();
 }
 
@@ -71,14 +70,13 @@ RaftCandidateState::cancel_election()
 }
 
 void
-RaftCandidateState::start_election(const boost::system::error_code& e)
+RaftCandidateState::start_election(const boost::system::error_code &e)
 {
     if (e == boost::asio::error::operation_aborted)
         {
         std::cout << "election cancelled" << std::endl;
         return; // Timer was cancelled.
         }
-
 
     nominated_for_leader_ = true;
     std::cout << "votes requested ";
@@ -103,10 +101,12 @@ RaftCandidateState::count_vote(
     bool vote_yes
 )
 {
+
+
     if (vote_yes)
         {
         std::cout << "  'yes' received" << std::endl;
-        ++ voted_yes_;
+        ++voted_yes_;
         }
     else
         {
@@ -114,7 +114,8 @@ RaftCandidateState::count_vote(
         ++voted_no_;
         }
 
-    if (voted_yes_ >= peers_.peers().size() * 2 / 3) // If 2/3rd voted yes this node is the new leader.
+    if (voted_yes_ >= peers_.peers()
+                            .size() * 2 / 3) // If 2/3rd voted yes this node is the new leader.
         {
         std::cout << "Election finished - I won!" << std::endl;
         finish_election();
@@ -126,23 +127,22 @@ RaftCandidateState::count_vote(
                                                         handler_,
                                                         next_state_);
         }
-    else if ( voted_no_  > peers_.peers().size() * 2 / 3  )
+    else if (voted_no_ > peers_.peers()
+                               .size() * 2 / 3)
         {
         //next_state_ = std::make_unique<Raft()
         std::cout << "Election finished - I lost!" << std::endl;
         finish_election();
         next_state_ = std::make_unique<RaftFollowerState>(ios_,
-                                                        storage_,
-                                                        command_factory_,
-                                                        peer_queue_,
-                                                        peers_,
-                                                        handler_,
-                                                        next_state_);
+                                                          storage_,
+                                                          command_factory_,
+                                                          peer_queue_,
+                                                          peers_,
+                                                          handler_,
+                                                          next_state_);
 
 
         }
-
-
 
 
 }
@@ -153,14 +153,40 @@ RaftCandidateState::count_vote(
 // reached transition to leader state if not re-start election.
 unique_ptr<RaftState>
 RaftCandidateState::handle_request(
-    const string& request,
-    string& response)
+    const string &request,
+    string &response)
 {
     auto pt = pt_from_json_string(request);
 
     unique_ptr<Command> command = command_factory_.get_command(pt, *this);
     if (command != nullptr)
-        response = pt_to_json_string(command->operator()());
+        {
+            response = pt_to_json_string(command->operator()());
+        }
 
     return nullptr;
 }
+
+
+bool
+RaftCandidateState::nominated_self()
+{
+    return nominated_for_leader_;
+}
+
+RaftStateType
+RaftCandidateState::get_type() const
+{
+    return RaftStateType::Candidate;
+}
+
+
+uint16_t
+RaftCandidateState::yes_votes() const
+{return voted_yes_;}
+
+uint16_t
+RaftCandidateState::no_votes() const
+{return voted_no_;}
+
+

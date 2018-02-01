@@ -7,12 +7,19 @@
 class RaftCountVotesCommand : public Command
 {
 private:
-    RaftState& state_;
+
+    RaftState &state_;
+
     bool voted_yes_;
 
 public:
-    RaftCountVotesCommand(RaftState& s, bool yes);
-    virtual boost::property_tree::ptree operator()();
+
+    RaftCountVotesCommand
+        (RaftState &s,
+         bool yes);
+
+    boost::property_tree::ptree
+    operator()() override;
 };
 
 #endif //BLUZELLE_RAFTCOUNTVOTESCOMMAND_H

@@ -64,7 +64,7 @@ BOOST_FIXTURE_TEST_SUITE(websockets, F)
             }
         catch (const std::exception &e)
             {
-            std::cout << "Caught a standard exception:: [" << e.what() << "]" << std::endl;
+            std::cerr << "Caught a standard exception:: [" << e.what() << "]" << std::endl;
             BOOST_ASSERT(fail);
             }
         catch (...)

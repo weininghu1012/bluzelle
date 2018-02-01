@@ -6,7 +6,6 @@ static constexpr char s_vote_no_message[] = "{\"raft\":\"vote\", \"data\":{\"vot
 
 RaftVoteCommand::RaftVoteCommand(RaftState& s) : state_(s)
 {
-
 }
 
 #include <chrono>
@@ -16,12 +15,12 @@ boost::property_tree::ptree RaftVoteCommand::operator()()
 {
     boost::property_tree::ptree result;
 
-    RaftCandidateState* s = dynamic_cast<RaftCandidateState*>(&state_);
+    auto* s = dynamic_cast<RaftCandidateState*>(&state_);
     if (s != nullptr)
         {
         if (s->nominated_self())
             {
-            std::cout << "voted 'no'" << std::endl;
+            std::cout << "voted 'no': I am a candidate." << std::endl;
             result = pt_from_json_string(s_vote_no_message);
             }
         else

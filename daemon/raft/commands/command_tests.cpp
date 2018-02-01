@@ -79,8 +79,6 @@ BOOST_FIXTURE_TEST_SUITE(commands_suite, F)
 
             stringstream ss;
             bpt::write_json(ss, response);
-            cout << "[" << ss.str() << "]\n";
-
 
             BOOST_CHECK_EQUAL("read", response.get<string>("bzn-api"));
             BOOST_CHECK_EQUAL("c41b3c8b-634e-435a-b582-96b83bbd4032", response.get<string>("transaction-id"));
@@ -91,20 +89,6 @@ BOOST_FIXTURE_TEST_SUITE(commands_suite, F)
             {
             cerr << "Exception in test_api_read:" << e.what() << "\n";
             }
-
-
-
-
-
-
-
-
-
-
     }
-
-
-
-
-
 BOOST_AUTO_TEST_SUITE_END()
+

@@ -33,9 +33,6 @@ boost::property_tree::ptree ApiReadCommand::operator()()
         // TODO: Dmitry, here is a place we need to do some refactoring. Record doesn't hold value as a string, it's a blob.
         // TODO: This is a bad thing to do:
         string val_str;
-        val_str.reserve(
-                val.value_.size()
-        );
         std::transform(
                 val.value_.begin(),
                 val.value_.end(),

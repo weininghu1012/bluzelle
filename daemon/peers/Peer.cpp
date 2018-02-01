@@ -22,7 +22,7 @@ Peer::send_request(
         auto lookup = resolver.resolve(
                 {
                     info_.host(),
-                    boost::lexical_cast<string>(info_.port())
+                    std::to_string(info_.port())
                 }
         );
         boost::asio::connect(ws.next_layer(), lookup);
@@ -34,7 +34,7 @@ Peer::send_request(
             std::move(ws)
         ); // Store it for future use.
 
-        session->set_request_handler(h);
+        session->set_request_handler(std::move(h));
         session->needs_read(schedule_read);
         }
     catch
@@ -42,14 +42,14 @@ Peer::send_request(
             const std::exception& ex
         )
         {
-        cout << "Cannot connect to "
+        cerr << "Cannot connect to "
              << info_.host() << ":"
              << info_.port() << " '"
              << ex.what() << "'\n";
         }
     catch (...)
         {
-        cout << "Unhandled exception." << endl;
+        cerr << "Unhandled exception." << endl;
         }
 
     if (session != nullptr)

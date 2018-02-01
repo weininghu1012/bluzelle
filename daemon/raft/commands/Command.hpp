@@ -10,21 +10,26 @@
 using std::string;
 
 class Command {
-
 public:
-    virtual boost::property_tree::ptree operator()() = 0;
+    virtual
+    boost::property_tree::ptree operator()() = 0;
 
-    boost::property_tree::ptree success() {
+    boost::property_tree::ptree success()
+    {
         return result("success");
     }
 
-    boost::property_tree::ptree result(string res) {
+    boost::property_tree::ptree
+    result(string res)
+    {
         boost::property_tree::ptree pt;
         pt.put("result", res);
         return pt;
     }
 
-    boost::property_tree::ptree error(string er) {
+    boost::property_tree::ptree
+    error(string er)
+    {
         boost::property_tree::ptree pt;
         pt.put("error", er);
         return pt;
