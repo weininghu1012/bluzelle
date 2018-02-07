@@ -1,6 +1,6 @@
-import {sendCommand, addCommandProcessor} from 'services/CommunicationService'
-import {socketState} from 'services/CommunicationService'
-import {transactionBundler} from "../Utils"
+import {sendCommand, addCommandProcessor} from './CommunicationService'
+import {socketState} from './CommunicationService'
+import {transactionBundler} from "../utils/transactionBundler"
 
 const nodes = observable.map({});
 

@@ -27,6 +27,7 @@
     "jsdom-global": "^3.0.2",
     "mobx": "^3.4.1",
     "mocha": "^4.1.0",
+    "monet": "^0.8.10",
     "react": "^16.0.0",
     "react-bootstrap": "^0.32.1",
     "react-dom": "^16.0.0",

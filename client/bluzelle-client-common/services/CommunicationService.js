@@ -1,7 +1,7 @@
 import curry from 'lodash/fp/curry'
-import {getNodes} from 'services/NodeService'
+import {getNodes} from './NodeService'
 import groupBy from 'lodash/groupBy'
-import {tick} from 'services/TickService'
+import {tick} from './TickService'
 
 const commandProcessors = [];
 const MIN_CONNECTED_NODES = 3000;

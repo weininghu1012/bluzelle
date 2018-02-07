@@ -1,5 +1,5 @@
 import NodeInfo from './NodeInfo'
-import {updateNode, clearNodes, getNodeByAddress} from "../../services/NodeService";
+import {updateNode, clearNodes, getNodeByAddress} from "bluzelle-client-common/services/NodeService";
 import {MemoryRouter} from 'react-router-dom'
 
 describe('components/tabs/NodeInfo', () => {

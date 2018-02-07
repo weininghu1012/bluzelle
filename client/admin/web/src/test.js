@@ -10,7 +10,7 @@ import sinonChai from 'sinon-chai'
 import Adapter from 'enzyme-adapter-react-16';
 import {Maybe} from 'monet'
 
-import {clearNodes} from "./services/NodeService";
+import {clearNodes} from "bluzelle-client-common/services/NodeService";
 
 Enzyme.configure({ adapter: new Adapter() });
 chai.use(chaiEnzyme());
