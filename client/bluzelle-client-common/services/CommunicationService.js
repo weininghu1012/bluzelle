@@ -63,7 +63,15 @@ function connectToNode(node) {
     function setSocketState() {
         extendObservable(node, {socketState: socketStates[socket.readyState]});
     }
-};
+}
+
+
+export const sendToNodes = (cmd, data) => getNodes().forEach(node =>
+    sendToNode(node, cmd, data));
+
+export const sendToNode = (node, cmd, data) =>
+    node.socketState === 'open' && node.socket.send(JSON.stringify({cmd, data}));
+
 
 
 const socketStates = ['opening', 'open', 'closing', 'closed'];
