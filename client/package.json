@@ -62,7 +62,10 @@
     "webpack": "^3.10.0",
     "webpack-beep-plugin": "^1.0.0",
     "webpack-shell-plugin": "^0.5.0",
-    "websocket": "^1.0.25"
+    "websocket": "^1.0.25",
+    "source-map-support": "0.5.0",
+    "text-encoding": "^0.6.4",
+    "lodash": "^4.17.4"
   },
   "author": "",
   "license": "ISC"
