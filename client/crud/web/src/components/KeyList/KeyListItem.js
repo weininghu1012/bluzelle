@@ -1,9 +1,9 @@
 import {ObjIcon} from "../ObjIcon";
-import {executeContext} from "../../services/CommandQueueService";
+import {enableExecution} from "../../services/CommandQueueService";
 import {EditableField} from "../EditableField";
 import {selectedKey} from "./KeyList";
 
-@executeContext
+@enableExecution
 @observer
 export class KeyListItem extends Component {
 

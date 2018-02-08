@@ -1,11 +1,11 @@
 import {getRaw, addPrefix} from "../keyData";
 import {byteArrayToStr, strToByteArray} from "../../util/encoding";
-import {executeContext} from "../../services/CommandQueueService";
+import {enableExecution} from "../../services/CommandQueueService";
 
 export const PREFIX = 1;
 
 @observer
-@executeContext
+@enableExecution
 export class PlainTextEditor extends Component {
 
     constructor(props) {

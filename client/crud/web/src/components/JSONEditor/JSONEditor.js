@@ -3,12 +3,12 @@ import {pipe} from 'lodash/fp';
 import {getRaw, addPrefix} from "../keyData";
 import {observableMapRecursive as omr} from "../../util/mobXUtils";
 import {byteArrayToStr, strToByteArray} from "../../util/encoding";
-import {executeContext, setExecuteContext} from "../../services/CommandQueueService";
+import {enableExecution, enableExecutionForChildren} from "../../services/CommandQueueService";
 
 export const PREFIX = 0;
 
-@executeContext
-@setExecuteContext
+@enableExecution
+@enableExecutionForChildren
 export class JSONEditor extends Component {
 
     getChildContext() {

@@ -61,12 +61,12 @@ export const execute = ({ doIt, undoIt, onSave = () => {}, message }) => {
     });
 };
 
-export const executeContext = f => {
+export const enableExecution = f => {
     f.contextTypes = { execute: PropTypes.func };
     return f;
 };
 
-export const setExecuteContext = f => {
+export const enableExecutionForChildren = f => {
     f.childContextTypes = { execute: PropTypes.func };
     return f;
 };

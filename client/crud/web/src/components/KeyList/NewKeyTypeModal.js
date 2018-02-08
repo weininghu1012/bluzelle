@@ -1,10 +1,10 @@
 import {defaultKeyData as jsonDefault} from "../JSONEditor";
 import {defaultKeyData as textDefault} from "../PlainTextEditor";
 import {ObjIcon} from "../ObjIcon";
-import {executeContext} from "../../services/CommandQueueService";
+import {enableExecution} from "../../services/CommandQueueService";
 import {selectedKey} from "./KeyList";
 
-@executeContext
+@enableExecution
 export class NewKeyTypeModal extends Component {
 
     chooseJSON() {
