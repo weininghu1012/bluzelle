@@ -1,10 +1,8 @@
-import curry from 'lodash/fp/curry'
 import {getNodes} from './NodeService'
 import groupBy from 'lodash/groupBy'
-import {tick} from './TickService'
 
-const commandProcessors = [];
 const MIN_CONNECTED_NODES = 3000;
+
 
 export const entryPointUrl = observable(undefined);
 const entryPointSocket = observable(undefined);
@@ -66,14 +64,5 @@ function connectToNode(node) {
     }
 };
 
-export const receiveMessage = (data, node) => {
-    const msg = JSON.parse(data);
-    commandProcessors[msg.cmd] ? commandProcessors[msg.cmd](msg.data, node) : console.error(`${msg.cmd} has no command processor`)
-};
-
-
-export const addCommandProcessor = (name, fn) => commandProcessors[name] = fn;
 
 const socketStates = ['opening', 'open', 'closing', 'closed'];
-
-

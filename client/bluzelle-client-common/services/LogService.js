@@ -1,4 +1,4 @@
-import {addCommandProcessor} from "./CommunicationService";
+import {addCommandProcessor} from "./CommandService";
 import {getNodes} from './NodeService';
 
 export const log = ({level, message, node}) => logEntries.push({

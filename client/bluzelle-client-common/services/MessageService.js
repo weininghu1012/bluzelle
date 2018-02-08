@@ -1,4 +1,4 @@
-import {addCommandProcessor} from './CommunicationService'
+import {addCommandProcessor} from './CommandService'
 import takeRight from 'lodash/takeRight'
 import {updateNode} from "./NodeService";
 
