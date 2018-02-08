@@ -3,7 +3,6 @@ import {transactionBundler} from "../utils/transactionBundler"
 import {Maybe} from 'simple-monads';
 
 const nodes = observable.map({});
-global.nodes = nodes;
 
 export const getNodes = () => nodes.values();
 export const getNodeByAddress = address => nodes.get(address);
