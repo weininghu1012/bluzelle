@@ -1,5 +1,6 @@
 import {getNodes} from './NodeService'
 import groupBy from 'lodash/groupBy'
+import {receiveMessage} from './CommandService'
 
 const MIN_CONNECTED_NODES = 3000;
 

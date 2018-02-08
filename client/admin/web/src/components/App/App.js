@@ -1,7 +1,6 @@
 import {HashRouter, Route} from 'react-router-dom'
 import './bootstrap/css/darkly.css'
 import './style.css'
-import {socketState} from 'bluzelle-client-common/services/CommunicationService'
 import Main from 'components/Main'
 import DaemonSelector from 'components/DaemonSelector'
 import DevTools from 'mobx-react-devtools';

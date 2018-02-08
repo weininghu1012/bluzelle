@@ -1,7 +1,7 @@
 import CenterMiddle from 'components/CenterMiddle'
 import Panel from 'react-bootstrap/lib/Panel'
 import Button from 'react-bootstrap/lib/Button'
-import { socketState, entryPointUrl, closeCode, disconnect} from "bluzelle-client-common/services/CommunicationService";
+import { entryPointUrl, closeCode, disconnect} from "bluzelle-client-common/services/CommunicationService";
 import Header from 'components/Main/Header'
 
 @observer
