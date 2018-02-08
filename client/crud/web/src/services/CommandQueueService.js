@@ -1,4 +1,4 @@
-import {isObservableArray} from "mobx/lib/mobx";
+import {isObservableArray} from "mobx";
 import {extend} from 'lodash';
 import PropTypes from 'prop-types';
 
