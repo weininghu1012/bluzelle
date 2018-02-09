@@ -6,7 +6,7 @@ const _ = require('lodash');
 const fp = require('lodash/fp');
 const nodes = require('./NodeStore').nodes;
 const {behaveRandomly} = require('./Values');
-const {receiveMessage} = require('./CommandService');
+const CommandProcessors = require('./CommandProcessors');
 
 module.exports = function Node(port) {
 
@@ -64,22 +64,12 @@ module.exports = function Node(port) {
 
     me.getWsServer().on('connect', connection => {
         connections.push(connection);
-        connection.on('message', handleMessage);
+        connection.on('message', ({utf8Data: message}) => {
+            const command = JSON.parse(message);
+            CommandProcessors[command.cmd](command.data, connection);
+        });
         sendNodesInfo(connection);
     });
-
-
-    const handleMessage = message =>
-        message.type === 'utf8'
-            ? handleStringMessage(message.utf8Data)
-            : handleBinaryMessage(message.binaryData);
-
-
-    const handleStringMessage = str =>
-        console.log('received message: ' + str) || receiveMessage(str);
-
-    const handleBinaryMessage = bin => {};
-
 
     const sendToClients = (cmd, data) => connections.forEach(connection =>
         sendToClient(connection, cmd, data)
