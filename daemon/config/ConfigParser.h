@@ -17,8 +17,6 @@ public:
     ConfigParser(stringstream& instream);
 
     bpt::ptree operator()();
-
 };
-
 
 #endif //BLUZELLE_CONFIGPARSER_H
