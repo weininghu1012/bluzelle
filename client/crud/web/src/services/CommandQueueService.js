@@ -1,6 +1,8 @@
 import {isObservableArray} from "mobx";
 import {extend} from 'lodash';
 import PropTypes from 'prop-types';
+import {mapValues} from 'lodash';
+
 
 export const commandQueue = observable([]);
 export const currentPosition = observable(0);
@@ -95,12 +97,17 @@ export const del = (execute, obj, propName) => {
 };
 
 
+const toPlainArray = typedArr => Array.from(typedArr);
+
 export const save = () => {
     const newKeys = {};
 
     commandQueue.map(command => {
         extend(newKeys, command.onSave(newKeys));
     });
+
+
+    sendToNodes('updateData', mapValues(newKeys, toPlainArray));
 
     return newKeys;
 };

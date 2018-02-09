@@ -4,7 +4,10 @@ const {observable, toJS} = require('mobx');
 const data = observable.map(getSampleData());
 
 module.exports = {
-    updateData: obj => {console.log('received update data')},
+    updateData: obj => {
+        data.merge(obj);
+        console.log("New data: " + JSON.stringify(toJS(data)));
+    },
     getData: (obj, ws) => ws.send(JSON.stringify({cmd: 'updateData', data: toJS(data)}))
 };
 

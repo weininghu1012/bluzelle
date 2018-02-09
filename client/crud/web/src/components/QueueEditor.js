@@ -1,4 +1,5 @@
 import {commandQueue, undo, redo, canUndo, canRedo, save, currentPosition} from "../services/CommandQueueService";
+import {sendToNodes} from 'bluzelle-client-common/services/CommunicationService';
 
 @observer
 export class QueueEditor extends Component {
@@ -6,6 +7,15 @@ export class QueueEditor extends Component {
         super(props);
 
         this.state = {show: false};
+    }
+
+    save() {
+        console.log(save());
+    }
+
+    download() {
+        console.log('downloading');
+        sendToNodes('getData');
     }
 
     render() {
@@ -44,8 +54,18 @@ export class QueueEditor extends Component {
                 <BS.Tooltip id="save-tooltip">Save</BS.Tooltip>
             }>
                 <BS.Button style={{color: 'green'}}
-                           onClick={() => console.log(save())}>
+                           onClick={() => this.save()}>
                     <BS.Glyphicon glyph='floppy-save'/>
+                </BS.Button>
+            </BS.OverlayTrigger>;
+
+
+        const downloadButton =
+            <BS.OverlayTrigger placement="bottom" overlay={
+                <BS.Tooltip id="download-tooltip">Download</BS.Tooltip>
+            }>
+                <BS.Button onClick={() => this.download()}>
+                    <BS.Glyphicon glyph='download'/>
                 </BS.Button>
             </BS.OverlayTrigger>;
 
@@ -54,6 +74,7 @@ export class QueueEditor extends Component {
                        onClick={() => this.setState({show: false})}>
                 <BS.Glyphicon glyph='remove'/>
             </BS.Button>;
+
 
         const historyList =
             commandQueue.map(({revert, message}, index) =>
@@ -72,6 +93,7 @@ export class QueueEditor extends Component {
                 {undoRedo}
                 {historyButton}
                 {saveButton}
+                {downloadButton}
 
                 <BS.Modal show={this.state.show}
                           onHide={() => this.setState({show: false})}>
