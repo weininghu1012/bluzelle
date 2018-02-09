@@ -103,7 +103,7 @@ set(SOURCE_FILES
         websockets/Session.cpp
         websockets/Session.h
         websockets/WebSocketServer.h
-        raft/commands/ApiUpdateNodesCommand.cpp raft/commands/ApiUpdateNodesCommand.h node/DaemonInfo.cpp)
+        raft/commands/ApiUpdateNodesCommand.cpp raft/commands/ApiUpdateNodesCommand.h node/DaemonInfo.cpp config/ConfigParser.cpp config/ConfigParser.h)
 
 add_executable(the_db ${SOURCE_FILES})
 target_link_libraries(the_db ${Boost_LIBRARIES})
@@ -234,7 +234,7 @@ set(SOURCE_FILES
         raft/commands/ApiUpdateNodesCommand.cpp
         raft/commands/ApiUpdateNodesCommand.h
         raft/commands/command_tests.cpp
-        node/DaemonInfo.cpp)
+        node/DaemonInfo.cpp config/ConfigParser.cpp config/ConfigParser.h config/config_tests.cpp)
 
 add_executable(the_db_test ${SOURCE_FILES})
 target_link_libraries(the_db_test ${Boost_LIBRARIES})
