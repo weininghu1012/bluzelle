@@ -36,5 +36,5 @@ const transformToKeyData = arr => observable.map({
 addCommandProcessor('updateData', updates => {
     data.merge(mapValues(updates, transformToKeyData));
 
-    console.log('Updated data. New data: ', data);
+    console.log('New data from emulator. New data: ', data);
 });

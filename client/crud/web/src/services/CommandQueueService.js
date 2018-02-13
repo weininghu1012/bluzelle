@@ -97,6 +97,9 @@ export const del = (execute, obj, propName) => {
 };
 
 
+const toSerializable = v =>
+    v === 'deleted' ? v : toPlainArray(v);
+
 const toPlainArray = typedArr => Array.from(typedArr);
 
 export const save = () => {
@@ -106,8 +109,8 @@ export const save = () => {
         extend(newKeys, command.onSave(newKeys));
     });
 
-
-    sendToNodes('updateData', mapValues(newKeys, toPlainArray));
+    // Rename this to sendChangesToNode
+    sendToNodes('updateData', mapValues(newKeys, toSerializable));
 
     return newKeys;
 };
