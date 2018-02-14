@@ -14,8 +14,10 @@ export class PlainTextEditor extends Component {
         const {keyData} = this.props;
 
         const val = keyData.has('localChanges') ? keyData.get('localChanges') : interpret(keyData);
+        keyData.has('localChanges') || keyData.set('beginEditingTimestamp', new Date().getTime());
 
         this.state = {val};
+
         keyData.set('localChanges', val);
     }
 

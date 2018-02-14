@@ -26,11 +26,19 @@ export class JSONEditor extends Component {
         };
     }
 
+    interpret() {
+        const {keyData} = this.props;
+
+        if(!keyData.has('interpreted')) {
+            keyData.set('interpreted', omr(interpret(getRaw(keyData))));
+            keyData.set('beginEditingTimestamp', new Date().getTime());
+        }
+    }
+
     render() {
         const {keyData} = this.props;
 
-        keyData.has('interpreted')
-            || keyData.set('interpreted', omr(interpret(getRaw(keyData))));
+        this.interpret();
 
         return <RenderTree obj={keyData} propName='interpreted' isRoot={true}/>
     }
