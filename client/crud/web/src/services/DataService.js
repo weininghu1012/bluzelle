@@ -1,7 +1,7 @@
 import {addCommandProcessor} from "bluzelle-client-common/services/CommandService";
 import {mapValues} from 'lodash';
 import {removePreviousHistory, updateHistoryMessage} from './CommandQueueService';
-
+import {sendToNodes} from "bluzelle-client-common/services/CommunicationService";
 
 const data = observable.map({});
 
