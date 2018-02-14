@@ -88,6 +88,11 @@ export class KeyListItem extends Component {
                     <ObjIcon keyData={obj.get(keyname)}/>
                 </span>
 
+                {
+                    hasMoreRecentVersion(obj.get(keyname))
+                        && <Refresh keyData={obj.get(keyname)}/>
+                }
+
                 <EditableField
                     val={keyname}
                     onChange={this.rename.bind(this)}/>
@@ -107,3 +112,28 @@ const hasMoreRecentVersion = keyData =>
     keyData.has('mostRecentTimestamp')
     && keyData.has('beginEditingTimestamp')
     && keyData.get('mostRecentTimestamp') > keyData.get('beginEditingTimestamp');
+
+
+
+const Refresh = ({keyData}) => {
+    return (
+        <BS.OverlayTrigger placement="bottom" overlay={
+            <BS.Tooltip id="refresh-tooltip">
+                Began editing at: {new Date(keyData.get('beginEditingTimestamp')).toLocaleTimeString()}.
+                <br/>
+                Most recent version: {new Date(keyData.get('mostRecentTimestamp')).toLocaleTimeString()}.
+            </BS.Tooltip>
+        }>
+            <div style={{
+                display: 'inline-block',
+                marginRight: 8
+            }}>
+                <BS.Glyphicon glyph='refresh'
+                  onClick={(e) => {e.preventDefault(); alert('clicked')}}
+                  style={{
+                    verticalAlign: 'middle'
+                }}/>
+            </div>
+        </BS.OverlayTrigger>
+    );
+};
