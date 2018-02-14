@@ -2,7 +2,6 @@ import {isObservableArray} from "mobx";
 import PropTypes from 'prop-types';
 import {mapValues, extend, reduce} from 'lodash';
 
-
 export const commandQueue = observable([]);
 export const currentPosition = observable(0);
 
@@ -111,18 +110,18 @@ const addChangesFromCommand = (changes, command) =>
 const generateChanges = () =>
     reduce(commandsToSave(), addChangesFromCommand, {});
 
-const removePreviousHistory = () => {
+export const removePreviousHistory = () => {
     commandQueue.replace(commandQueue.slice(currentPosition.get()));
     currentPosition.set(0);
 };
 
-const updateHistoryMessage = () =>
-    commandQueue[0].message = <span>Saved.</span>;
+export const updateHistoryMessage = message =>
+    commandQueue[currentPosition.get()].message = message;
 
 export const save = () => {
     const serializableChanges = mapValues(generateChanges(), toSerializable);
     sendToNodes('sendChangesToNode', serializableChanges);
 
     removePreviousHistory();
-    updateHistoryMessage();
+    updateHistoryMessage(<span>Saved.</span>);
 };

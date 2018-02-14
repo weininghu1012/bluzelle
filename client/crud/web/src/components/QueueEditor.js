@@ -1,5 +1,5 @@
 import {commandQueue, undo, redo, canUndo, canRedo, save, currentPosition} from "../services/CommandQueueService";
-import {sendToNodes} from 'bluzelle-client-common/services/CommunicationService';
+import {requestDataFromNode} from "../services/DataService";
 
 @observer
 export class QueueEditor extends Component {
@@ -7,10 +7,6 @@ export class QueueEditor extends Component {
         super(props);
 
         this.state = {show: false};
-    }
-
-    download() {
-        sendToNodes('requestDataFromNode');
     }
 
     render() {
@@ -32,7 +28,7 @@ export class QueueEditor extends Component {
             <BS.ButtonGroup style={{marginRight: 10}}>
                 {undoButton}
                 {redoButton}
-            </BS.ButtonGroup>
+            </BS.ButtonGroup>;
 
         const historyButton =
             <BS.OverlayTrigger placement="bottom" overlay={
@@ -49,7 +45,7 @@ export class QueueEditor extends Component {
                 <BS.Tooltip id="save-tooltip">Save</BS.Tooltip>
             }>
                 <BS.Button style={{color: 'green'}}
-                           onClick={() => save()}>
+                           onClick={save}>
                     <BS.Glyphicon glyph='floppy-save'/>
                 </BS.Button>
             </BS.OverlayTrigger>;
@@ -59,7 +55,7 @@ export class QueueEditor extends Component {
             <BS.OverlayTrigger placement="bottom" overlay={
                 <BS.Tooltip id="download-tooltip">Download</BS.Tooltip>
             }>
-                <BS.Button onClick={() => this.download()}>
+                <BS.Button onClick={requestDataFromNode}>
                     <BS.Glyphicon glyph='download'/>
                 </BS.Button>
             </BS.OverlayTrigger>;

@@ -1,5 +1,5 @@
 import {Editor} from "./Editor";
-import {getSwarmData} from '../services/DataService';
+import {getLocalDataStore} from '../services/DataService';
 import {selectedKey, KeyList} from "./KeyList";
 import {Header} from "./Header/Header";
 import 'bootstrap/dist/css/bootstrap.css';
@@ -10,7 +10,7 @@ export class Main extends Component {
     constructor(props) {
         super(props);
 
-        const obj = getSwarmData();
+        const obj = getLocalDataStore();
 
         this.state = {obj};
     }
