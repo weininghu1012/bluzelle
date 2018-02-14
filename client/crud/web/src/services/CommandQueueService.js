@@ -109,8 +109,7 @@ export const save = () => {
         extend(newKeys, command.onSave(newKeys));
     });
 
-    // Rename this to sendChangesToNode
-    sendToNodes('updateData', mapValues(newKeys, toSerializable));
+    sendToNodes('sendChangesToNode', mapValues(newKeys, toSerializable));
 
     return newKeys;
 };

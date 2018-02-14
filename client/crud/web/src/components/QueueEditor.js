@@ -9,13 +9,8 @@ export class QueueEditor extends Component {
         this.state = {show: false};
     }
 
-    save() {
-        console.log(save());
-    }
-
     download() {
-        console.log('downloading');
-        sendToNodes('getData');
+        sendToNodes('requestDataFromNode');
     }
 
     render() {
@@ -54,7 +49,7 @@ export class QueueEditor extends Component {
                 <BS.Tooltip id="save-tooltip">Save</BS.Tooltip>
             }>
                 <BS.Button style={{color: 'green'}}
-                           onClick={() => this.save()}>
+                           onClick={() => save()}>
                     <BS.Glyphicon glyph='floppy-save'/>
                 </BS.Button>
             </BS.OverlayTrigger>;

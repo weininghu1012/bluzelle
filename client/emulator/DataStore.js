@@ -1,5 +1,5 @@
 const {observable, toJS} = require('mobx');
-
+const {forEach} = require('lodash');
 
 // const data = observable.map({});
 const data = observable.map(getSampleData());
@@ -8,15 +8,8 @@ const mergeAndDelete = (val, key) =>
     val === 'deleted' ? data.delete(key) : data.set(key, val);
 
 module.exports = {
-    updateData: changes => {
-
-        for(let key in changes) {
-            mergeAndDelete(changes[key], key);
-        }
-
-        console.log("New data: " + JSON.stringify(toJS(changes)) + "; new store: " + JSON.stringify(toJS(data)));
-    },
-    getData: (obj, ws) => ws.send(JSON.stringify({cmd: 'updateData', data: toJS(data)}))
+    sendChangesToNode: changes => forEach(changes, mergeAndDelete),
+    requestDataFromNode: (obj, ws) => ws.send(JSON.stringify({cmd: 'sendFullDataToUI', data: toJS(data)}))
 };
 
 

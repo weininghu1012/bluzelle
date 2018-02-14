@@ -1,8 +1,8 @@
 const {maxNodes} = require('./Values');
-const {updateData, getData} = require('./DataStore');
+const {sendChangesToNode, requestDataFromNode} = require('./DataStore');
 
 module.exports = {
     setMaxNodes: num => maxNodes.set(num),
-    updateData,
-    getData
+    sendChangesToNode,
+    requestDataFromNode
 };
