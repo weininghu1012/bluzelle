@@ -14,7 +14,9 @@ const transformFromJSONToKeyData = arr => observable.map({
 });
 
 addCommandProcessor('sendFullDataToUI', updates => {
+    data.clear();
     data.merge(mapValues(updates, transformFromJSONToKeyData));
+
     removePreviousHistory();
     updateHistoryMessage(<span>Downloaded.</span>);
 });
