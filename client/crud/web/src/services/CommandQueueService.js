@@ -1,7 +1,6 @@
 import {isObservableArray} from "mobx";
-import {extend} from 'lodash';
 import PropTypes from 'prop-types';
-import {mapValues} from 'lodash';
+import {mapValues, extend, reduce} from 'lodash';
 
 
 export const commandQueue = observable([]);
@@ -44,9 +43,10 @@ export const redo = () =>
     canRedo() && revert(currentPosition.get() + 1);
 
 
-// Caution: the consecutive execution of undoIt and doIt
-// must keep track of the original child object, or else subsequent redos
-// will not be bound correctly.
+// Caution: the consecutive execution of undoIt and doIt should cancel
+// each other out exactly. If the action is to, for instance, create a new
+// object, the object should have the same identity as it had before
+// undoing and redoing.
 
 export const execute = ({ doIt, undoIt, onSave = () => {}, message }) => {
     doIt();
@@ -102,14 +102,27 @@ const toSerializable = v =>
 
 const toPlainArray = typedArr => Array.from(typedArr);
 
+const commandsToSave = () =>
+    commandQueue.slice(0, currentPosition.get() + 1);
+
+const addChangesFromCommand = (changes, command) =>
+    extend(changes, command.onSave(changes));
+
+const generateChanges = () =>
+    reduce(commandsToSave(), addChangesFromCommand, {});
+
+const removePreviousHistory = () => {
+    commandQueue.replace(commandQueue.slice(currentPosition.get()));
+    currentPosition.set(0);
+};
+
+const updateHistoryMessage = () =>
+    commandQueue[0].message = <span>Saved.</span>;
+
 export const save = () => {
-    const newKeys = {};
+    const serializableChanges = mapValues(generateChanges(), toSerializable);
+    sendToNodes('sendChangesToNode', serializableChanges);
 
-    commandQueue.map(command => {
-        extend(newKeys, command.onSave(newKeys));
-    });
-
-    sendToNodes('sendChangesToNode', mapValues(newKeys, toSerializable));
-
-    return newKeys;
+    removePreviousHistory();
+    updateHistoryMessage();
 };
