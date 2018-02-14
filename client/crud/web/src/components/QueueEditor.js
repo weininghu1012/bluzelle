@@ -50,17 +50,6 @@ export class QueueEditor extends Component {
                 </BS.Button>
             </BS.OverlayTrigger>;
 
-
-        const downloadButton =
-            <BS.OverlayTrigger placement="bottom" overlay={
-                <BS.Tooltip id="download-tooltip">Download</BS.Tooltip>
-            }>
-                <BS.Button onClick={() => sendToNodes('requestKeyList')}>
-                    <BS.Glyphicon glyph='download'
-                    />
-                </BS.Button>
-            </BS.OverlayTrigger>;
-
         const closeButton =
             <BS.Button style={{float: 'right'}}
                        onClick={() => this.setState({show: false})}>
@@ -85,7 +74,6 @@ export class QueueEditor extends Component {
                 {undoRedo}
                 {historyButton}
                 {saveButton}
-                {downloadButton}
 
                 <BS.Modal show={this.state.show}
                           onHide={() => this.setState({show: false})}>

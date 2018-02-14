@@ -2,6 +2,8 @@ import {enableExecution} from "../../services/CommandQueueService";
 import {KeyListItem} from "./KeyListItem";
 import {RemoveButton} from "./RemoveButton";
 import {NewKeyField} from "./NewKeyField";
+import {sendToNodes} from "bluzelle-client-common/services/CommunicationService";
+
 
 export const selectedKey = observable(null);
 
@@ -14,6 +16,9 @@ export class KeyList extends Component {
         this.state = {
             showNewKey: false
         };
+
+        // TODO: make this better
+        setTimeout(() => sendToNodes('requestKeyList'), 500);
     }
 
     render() {
