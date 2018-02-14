@@ -1,5 +1,5 @@
-import {defaultKeyData as jsonDefault} from "../JSONEditor";
-import {defaultKeyData as textDefault} from "../PlainTextEditor";
+import {defaultKeyData as jsonDefault, defaultSerialized as jsonSerial} from "../JSONEditor";
+import {defaultKeyData as textDefault, defaultSerialized as textSerial} from "../PlainTextEditor";
 import {ObjIcon} from "../ObjIcon";
 import {enableExecution} from "../../services/CommandQueueService";
 import {selectedKey} from "./KeyList";
@@ -10,14 +10,14 @@ export class NewKeyTypeModal extends Component {
     chooseJSON() {
 
         // TODO: have observable.map by default on these defaults
-        this.addNewKey(observable.map(jsonDefault), 'JSON');
+        this.addNewKey(observable.map(jsonDefault), jsonSerial, 'JSON');
     }
 
     chooseText() {
-        this.addNewKey(observable.map(textDefault), 'plain text');
+        this.addNewKey(observable.map(textDefault), textSerial, 'plain text');
     }
 
-    addNewKey(keyData, typeName) {
+    addNewKey(keyData, serial, typeName) {
         const {obj, keyField} = this.props;
         const oldSelection = selectedKey.get();
 
@@ -30,6 +30,9 @@ export class NewKeyTypeModal extends Component {
                 selectedKey.set(oldSelection);
                 obj.delete(keyField)
             },
+            onSave: () => ({
+                [keyField]: serial
+            }),
             message: <span>Created <code key={1}>{keyField}</code> as {typeName}.</span>
         });
 
