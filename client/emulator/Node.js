@@ -33,7 +33,8 @@ module.exports = function Node(port) {
                 me.getWsServer().shutDown();
                 me.getHttpServer().close();
             }, 200);
-        }
+        },
+        sendToClients: () => me.sendToClients
     });
 
     const me = nodes.get(port);

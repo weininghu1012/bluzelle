@@ -1,5 +1,5 @@
 import {Editor} from "./Editor";
-import {getLocalDataStore, requestDataFromNode} from '../services/DataService';
+import {getLocalDataStore} from '../services/DataService';
 import {selectedKey, KeyList} from "./KeyList";
 import {Header} from "./Header/Header";
 import 'bootstrap/dist/css/bootstrap.css';
@@ -12,8 +12,6 @@ export class Main extends Component {
 
         const obj = getLocalDataStore();
         this.state = {obj};
-
-        setTimeout(requestDataFromNode, 500);
     }
 
     render() {

@@ -1,5 +1,5 @@
 import {commandQueue, undo, redo, canUndo, canRedo, save, currentPosition} from "../services/CommandQueueService";
-import {requestDataFromNode} from "../services/DataService";
+import {sendToNodes} from "bluzelle-client-common/services/CommunicationService";
 
 @observer
 export class QueueEditor extends Component {
@@ -55,8 +55,9 @@ export class QueueEditor extends Component {
             <BS.OverlayTrigger placement="bottom" overlay={
                 <BS.Tooltip id="download-tooltip">Download</BS.Tooltip>
             }>
-                <BS.Button onClick={requestDataFromNode}>
-                    <BS.Glyphicon glyph='download'/>
+                <BS.Button onClick={() => sendToNodes('requestKeyList')}>
+                    <BS.Glyphicon glyph='download'
+                    />
                 </BS.Button>
             </BS.OverlayTrigger>;
 
