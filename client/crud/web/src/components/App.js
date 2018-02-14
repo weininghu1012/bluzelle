@@ -5,16 +5,11 @@ import DevTools from 'mobx-react-devtools';
 import {getNodes} from 'bluzelle-client-common/services/NodeService'
 import 'bluzelle-client-common/services/CommunicationService';
 import DaemonSelector from 'bluzelle-client-common/components/DaemonSelector'
-import {sendToNodes} from 'bluzelle-client-common/services/CommunicationService'
+
 
 // Debugging
-
 // import {configureDevtool} from 'mobx-react-devtools';
-//
 // configureDevtool({logEnabled: true});
-
-global.sendToNodes = sendToNodes;
-
 
 @observer
 @enableExecutionForChildren

@@ -1,6 +1,7 @@
 import {isObservableArray} from "mobx";
 import PropTypes from 'prop-types';
 import {mapValues, extend, reduce} from 'lodash';
+import {sendToNodes} from "bluzelle-client-common/services/CommunicationService";
 
 export const commandQueue = observable([]);
 export const currentPosition = observable(0);
