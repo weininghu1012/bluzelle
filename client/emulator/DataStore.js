@@ -16,7 +16,7 @@ module.exports = {
                 cmd: 'bytearrayUpdate',
                 data: {
                     key: obj.key,
-                    bytearray: data.get(key)
+                    bytearray: data.get(obj.key)
                 }
             })),
 
@@ -31,9 +31,9 @@ module.exports = {
 };
 
 
-observe(data, (changes, type) => {
+observe(data, (changes) => {
     nodes.forEach(node => node.sendToClients({
-        cmd: type === 'delete' ? 'keyListDelete' : 'keyListUpdate',
+        cmd: changes.type === 'delete' ? 'keyListDelete' : 'keyListUpdate',
         data: [changes.name]
     }));
 });

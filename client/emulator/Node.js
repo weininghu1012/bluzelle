@@ -34,7 +34,7 @@ module.exports = function Node(port) {
                 me.getHttpServer().close();
             }, 200);
         },
-        sendToClients: () => me.sendToClients
+        sendToClients: ({cmd, data}) => sendToClients(cmd, data)
     });
 
     const me = nodes.get(port);

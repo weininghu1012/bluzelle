@@ -12,7 +12,7 @@ const touch = key =>
 
 addCommandProcessor('keyListUpdate', keys => keys.forEach(touch));
 addCommandProcessor('keyListDelete', keys => {
-    keys.forEach(data.delete);
+    keys.forEach(key => data.delete(key));
 
     removePreviousHistory();
     updateHistoryMessage(<span>Deleted keys.</span>);
