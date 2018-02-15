@@ -53,4 +53,3 @@ export const objectToKeyData = obj => ({
     bytearray: addPrefix(serialize(obj), PREFIX)});
 
 export const defaultKeyData = objectToKeyData({});
-export const defaultSerialized = serialize(defaultKeyData);

@@ -14,13 +14,13 @@ const revert = targetPosition => {
         const prev = commandQueue[cp-1];
 
         commandQueue[cp].undoIt(prev);
-        currentPosition.set(cp - 1)
+        currentPosition.set(cp - 1);
         revert(targetPosition);
     }
 
     if (cp < targetPosition) {
         commandQueue[cp + 1].doIt();
-        currentPosition.set(cp + 1)
+        currentPosition.set(cp + 1);
         revert(targetPosition);
     }
 };
@@ -122,7 +122,7 @@ export const updateHistoryMessage = message =>
 
 const clearEditingData = changes => {
     const data = getLocalDataStore();
-    Object.keys(changes).forEach(key => data.get(key).clear());
+    Object.keys(changes).forEach(key => data.has(key) && data.get(key).clear());
 };
 
 export const save = () => {

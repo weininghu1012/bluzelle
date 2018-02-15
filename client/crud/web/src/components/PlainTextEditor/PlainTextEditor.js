@@ -74,4 +74,3 @@ export const interpret = keyData =>
     byteArrayToStr(getRaw(keyData));
 
 export const defaultKeyData = textToKeyData('');
-export const defaultSerialized = serialize(defaultKeyData);
