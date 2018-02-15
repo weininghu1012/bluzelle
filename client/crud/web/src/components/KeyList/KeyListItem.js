@@ -2,7 +2,7 @@ import {ObjIcon} from "../ObjIcon";
 import {enableExecution} from "../../services/CommandQueueService";
 import {EditableField} from "../EditableField";
 import {selectedKey} from "./KeyList";
-import {sendToNodes} from "bluzelle-client-common/services/CommunicationService";
+import {RefreshButton} from "./RefreshButton";
 
 @enableExecution
 @observer
@@ -90,7 +90,7 @@ export class KeyListItem extends Component {
 
                 {
                     hasMoreRecentVersion(obj.get(keyname))
-                        && <Refresh keyData={obj.get(keyname)}/>
+                        && <RefreshButton keyData={obj.get(keyname)}/>
                 }
 
                 <EditableField
@@ -116,38 +116,6 @@ const hasMoreRecentVersion = keyData =>
 
 
 
-
-// 1. Set mostRecentTimestamp when saving
-
-// 2. Move into own component
-
 // 1.5 Isolate [Object object] bug.
 
 // 3. Renaming bug
-
-
-const Refresh = ({keyData}) => {
-    return (
-        <BS.OverlayTrigger placement="bottom" overlay={
-            <BS.Tooltip id="refresh-tooltip">
-                Began editing at: {new Date(keyData.get('beginEditingTimestamp')).toLocaleTimeString()}.
-                <br/>
-                Most recent version: {new Date(keyData.get('mostRecentTimestamp')).toLocaleTimeString()}.
-            </BS.Tooltip>
-        }>
-            <div style={{
-                display: 'inline-block',
-                marginRight: 8
-            }}>
-                <BS.Glyphicon glyph='refresh'
-                  onClick={(e) => {
-                      e.stopPropagation();
-                      keyData.clear();
-                  }}
-                  style={{
-                    verticalAlign: 'middle'
-                }}/>
-            </div>
-        </BS.OverlayTrigger>
-    );
-};
