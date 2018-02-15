@@ -2,6 +2,7 @@ import {ObjIcon} from "../ObjIcon";
 import {enableExecution} from "../../services/CommandQueueService";
 import {EditableField} from "../EditableField";
 import {selectedKey} from "./KeyList";
+import {sendToNodes} from "bluzelle-client-common/services/CommunicationService";
 
 @enableExecution
 @observer
@@ -13,7 +14,6 @@ export class KeyListItem extends Component {
         this.context.execute({
             doIt: () => selectedKey.set(target),
             undoIt: () => selectedKey.set(oldVal),
-            onSave: () => {},
             message: <span>Selected <code key={1}>{target}</code>.</span>
         });
     }
@@ -115,6 +115,17 @@ const hasMoreRecentVersion = keyData =>
 
 
 
+
+
+// 1. Set mostRecentTimestamp when saving
+
+// 2. Move into own component
+
+// 1.5 Isolate [Object object] bug.
+
+// 3. Renaming bug
+
+
 const Refresh = ({keyData}) => {
     return (
         <BS.OverlayTrigger placement="bottom" overlay={
@@ -129,7 +140,10 @@ const Refresh = ({keyData}) => {
                 marginRight: 8
             }}>
                 <BS.Glyphicon glyph='refresh'
-                  onClick={(e) => {e.preventDefault(); alert('clicked')}}
+                  onClick={(e) => {
+                      e.stopPropagation();
+                      keyData.clear();
+                  }}
                   style={{
                     verticalAlign: 'middle'
                 }}/>

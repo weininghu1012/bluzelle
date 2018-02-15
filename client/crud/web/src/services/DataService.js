@@ -6,7 +6,7 @@ const data = observable.map({});
 
 export const getLocalDataStore = () => data;
 
-const touch = key =>
+export const touch = key =>
     data.has(key) ? data.get(key).set('mostRecentTimestamp', new Date().getTime())
                   : data.set(key, observable.map({ mostRecentTimestamp: new Date().getTime() }));
 

@@ -2,6 +2,7 @@ import {isObservableArray} from "mobx";
 import PropTypes from 'prop-types';
 import {mapValues, extend, reduce} from 'lodash';
 import {sendToNodes} from "bluzelle-client-common/services/CommunicationService";
+import {getLocalDataStore} from "./DataService";
 
 export const commandQueue = observable([]);
 export const currentPosition = observable(0);
@@ -119,8 +120,17 @@ export const removePreviousHistory = () => {
 export const updateHistoryMessage = message =>
     commandQueue[currentPosition.get()].message = message;
 
+const clearEditingData = changes => {
+    const data = getLocalDataStore();
+    Object.keys(changes).forEach(key => data.get(key).clear());
+};
+
 export const save = () => {
-    const serializableChanges = mapValues(generateChanges(), toSerializable);
+    const changes = generateChanges();
+
+    clearEditingData(changes);
+
+    const serializableChanges = mapValues(changes, toSerializable);
     sendToNodes('sendChangesToNode', serializableChanges);
 
     removePreviousHistory();

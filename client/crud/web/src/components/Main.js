@@ -35,7 +35,7 @@ export class Main extends Component {
                         </ReflexElement>
                         <ReflexSplitter/>
                         <ReflexElement>
-                            {selectedKey.get() !== null && <Editor obj={obj}/>}
+                            {obj.has(selectedKey.get()) && <Editor obj={obj}/>}
                         </ReflexElement>
                     </ReflexContainer>
                 </ReflexElement>
