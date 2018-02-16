@@ -5,18 +5,8 @@ import {Header} from "./Header/Header";
 import 'bootstrap/dist/css/bootstrap.css';
 import {CommandControls} from "./CommandControls";
 
-import {sendToNodes} from "bluzelle-client-common/services/CommunicationService";
-
 @observer
 export class Main extends Component {
-
-    constructor(props) {
-        super(props);
-
-        // TODO: make this better
-        setTimeout(() => sendToNodes('requestKeyList'), 500);
-    }
-
     render() {
 
         const obj = getLocalDataStore();

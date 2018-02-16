@@ -6,10 +6,19 @@ import {getNodes} from 'bluzelle-client-common/services/NodeService'
 import 'bluzelle-client-common/services/CommunicationService';
 import DaemonSelector from 'bluzelle-client-common/components/DaemonSelector'
 
-
 // Debugging
 // import {configureDevtool} from 'mobx-react-devtools';
 // configureDevtool({logEnabled: true});
+
+
+import {sendToNodes} from "bluzelle-client-common/services/CommunicationService";
+import {when} from 'mobx';
+
+const socketOpen = () => getNodes().some(node => node.socketState === 'open');
+const getKeyList = () => sendToNodes('requestKeyList');
+
+when(socketOpen, getKeyList);
+
 
 @observer
 @enableExecutionForChildren
