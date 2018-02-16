@@ -1,5 +1,5 @@
 import {getRaw, addPrefix} from "../keyData";
-import {byteArrayToStr, strToByteArray} from "../../util/encoding";
+import {arrayToStr, strToArray} from "../../util/encoding";
 import {enableExecution} from "../../services/CommandQueueService";
 
 export const PREFIX = 1;
@@ -68,9 +68,9 @@ export const textToKeyData = str => observable.map({
     bytearray: serialize(str)
 });
 
-const serialize = str => addPrefix(strToByteArray(str), PREFIX);
+const serialize = str => addPrefix(strToArray(str), PREFIX);
 
 export const interpret = keyData =>
-    byteArrayToStr(getRaw(keyData));
+    arrayToStr(getRaw(keyData));
 
 export const defaultKeyData = textToKeyData('');

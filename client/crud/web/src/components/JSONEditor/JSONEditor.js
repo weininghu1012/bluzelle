@@ -2,7 +2,7 @@ import {RenderTree} from "./Trees/RenderTree";
 import {pipe} from 'lodash/fp';
 import {getRaw, addPrefix} from "../keyData";
 import {observableMapRecursive as omr} from "../../util/mobXUtils";
-import {byteArrayToStr, strToByteArray} from "../../util/encoding";
+import {arrayToStr, strToArray} from "../../util/encoding";
 import {enableExecution, enableExecutionForChildren} from "../../services/CommandQueueService";
 
 export const PREFIX = 0;
@@ -45,8 +45,8 @@ export class JSONEditor extends Component {
 }
 
 
-const interpret = pipe(byteArrayToStr, JSON.parse);
-const serialize = pipe(JSON.stringify, strToByteArray);
+const interpret = pipe(arrayToStr, JSON.parse);
+const serialize = pipe(JSON.stringify, strToArray);
 
 
 export const objectToKeyData = obj => observable.map({

@@ -87,6 +87,7 @@ export class KeyListItem extends Component {
                 onClick={() => selectedKey.get() === keyname ? this.select(null) : this.select(keyname)}
                 active={selectedKey.get() === keyname}
 
+                // TODO: fix this error
                 // This line gives error?
                 bsStyle={hasMoreRecentVersion(obj.get(keyname)) ? 'info' : null}
                 >

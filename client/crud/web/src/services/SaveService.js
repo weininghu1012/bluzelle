@@ -17,19 +17,17 @@ const addChangesFromCommand = (changes, command) =>
 const generateChanges = () =>
     reduce(commandsToSave(), addChangesFromCommand, {});
 
-
-const clearEditingData = changes => {
+const clearEditingData = () => {
     const data = getLocalDataStore();
-    Object.keys(changes).forEach(key => data.has(key) && data.get(key).clear());
+    data.keys().forEach(key => data.has(key) && data.get(key).clear());
 };
 
 export const save = () => {
     const changes = generateChanges();
 
-    clearEditingData(changes);
+    clearEditingData();
 
-    const serializableChanges = mapValues(changes, toSerializable);
-    sendToNodes('sendChangesToNode', serializableChanges);
+    sendToNodes('sendChangesToNode', changes);
 
     removePreviousHistory();
     updateHistoryMessage(<span>Saved.</span>);
