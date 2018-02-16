@@ -49,7 +49,7 @@ const interpret = pipe(byteArrayToStr, JSON.parse);
 const serialize = pipe(JSON.stringify, strToByteArray);
 
 
-export const objectToKeyData = obj => ({
+export const objectToKeyData = obj => observable.map({
     bytearray: addPrefix(serialize(obj), PREFIX)});
 
 export const defaultKeyData = objectToKeyData({});

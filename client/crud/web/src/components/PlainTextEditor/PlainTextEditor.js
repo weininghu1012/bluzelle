@@ -64,7 +64,7 @@ export class PlainTextEditor extends Component {
     }
 }
 
-export const textToKeyData = str => ({
+export const textToKeyData = str => observable.map({
     bytearray: serialize(str)
 });
 

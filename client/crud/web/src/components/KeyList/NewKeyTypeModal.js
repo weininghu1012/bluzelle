@@ -8,13 +8,11 @@ import {selectedKey} from "./KeyList";
 export class NewKeyTypeModal extends Component {
 
     chooseJSON() {
-
-        // TODO: have observable.map by default on these defaults
-        this.addNewKey(observable.map(jsonDefault), jsonDefault.bytearray, 'JSON');
+        this.addNewKey(jsonDefault, jsonDefault.get('bytearray'), 'JSON');
     }
 
     chooseText() {
-        this.addNewKey(observable.map(textDefault), textDefault.bytearray, 'plain text');
+        this.addNewKey(textDefault, textDefault.get('bytearray'), 'plain text');
     }
 
     addNewKey(keyData, serial, typeName) {
@@ -51,11 +49,11 @@ export class NewKeyTypeModal extends Component {
                 <BS.Modal.Body>
                     <BS.ListGroup>
                         <BS.ListGroupItem onClick={this.chooseJSON.bind(this)}>
-                            <ObjIcon keyData={observable.map(jsonDefault)}/>
+                            <ObjIcon keyData={jsonDefault}/>
                             JSON Data
                         </BS.ListGroupItem>
                         <BS.ListGroupItem onClick={this.chooseText.bind(this)}>
-                            <ObjIcon keyData={observable.map(textDefault)}/>
+                            <ObjIcon keyData={textDefault}/>
                             Plain Text
                         </BS.ListGroupItem>
                     </BS.ListGroup>
