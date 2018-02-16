@@ -3,20 +3,23 @@ import {getLocalDataStore} from '../services/DataService';
 import {selectedKey, KeyList} from "./KeyList";
 import {Header} from "./Header/Header";
 import 'bootstrap/dist/css/bootstrap.css';
-import {QueueEditor} from "./CommandControls";
+import {CommandControls} from "./CommandControls";
+
+import {sendToNodes} from "bluzelle-client-common/services/CommunicationService";
 
 @observer
 export class Main extends Component {
+
     constructor(props) {
         super(props);
 
-        const obj = getLocalDataStore();
-        this.state = {obj};
+        // TODO: make this better
+        setTimeout(() => sendToNodes('requestKeyList'), 500);
     }
 
     render() {
 
-        const {obj} = this.state;
+        const obj = getLocalDataStore();
 
         return (
             <ReflexContainer style={{height: '100%'}}>
@@ -27,7 +30,7 @@ export class Main extends Component {
                 <ReflexElement flex={1}>
                     <ReflexContainer orientation='vertical'>
                         <ReflexElement flex={0.4}>
-                            <QueueEditor/>
+                            <CommandControls/>
 
                             <hr/>
 

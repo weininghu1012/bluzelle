@@ -1,8 +1,8 @@
-import {commandQueue, undo, redo, canUndo, canRedo, save, currentPosition} from "../services/CommandQueueService";
-import {sendToNodes} from "bluzelle-client-common/services/CommunicationService";
+import {commandQueue, undo, redo, canUndo, canRedo, currentPosition} from "../services/CommandQueueService";
+import {save} from "../services/SaveService";
 
 @observer
-export class QueueEditor extends Component {
+export class CommandControls extends Component {
     constructor(props) {
         super(props);
 

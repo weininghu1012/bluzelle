@@ -15,7 +15,7 @@ addCommandProcessor('keyListDelete', keys => {
     keys.forEach(key => data.delete(key));
 
     removePreviousHistory();
-    updateHistoryMessage(<span>Deleted keys.</span>);
+    updateHistoryMessage(<span>Deleted keys <code key={1}>{JSON.stringify(keys)}</code> from node.</span>);
 
 });
 
@@ -24,6 +24,6 @@ addCommandProcessor('bytearrayUpdate', ({key, bytearray}) => {
     data.get(key).set('bytearray', new Uint8Array(bytearray));
 
     removePreviousHistory();
-    updateHistoryMessage(<span>Updated key.</span>);
+    updateHistoryMessage(<span>Updated <code key={1}>{key}</code> from node.</span>);
 
 });

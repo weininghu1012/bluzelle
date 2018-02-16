@@ -1,8 +1,5 @@
 import {isObservableArray} from "mobx";
 import PropTypes from 'prop-types';
-import {mapValues, extend, reduce} from 'lodash';
-import {sendToNodes} from "bluzelle-client-common/services/CommunicationService";
-import {getLocalDataStore} from "./DataService";
 
 export const commandQueue = observable([]);
 export const currentPosition = observable(0);
@@ -78,6 +75,14 @@ export const enableExecutionForChildren = f => {
 const deleteFuture = () =>
     (currentPosition.get() >= 0) && (commandQueue.length = currentPosition.get());
 
+export const removePreviousHistory = () => {
+    commandQueue.replace(commandQueue.slice(currentPosition.get()));
+    currentPosition.set(0);
+};
+
+export const updateHistoryMessage = message =>
+    commandQueue[currentPosition.get()].message = message;
+
 
 export const del = (execute, obj, propName) => {
     if(isObservableArray(obj)) {
@@ -95,44 +100,4 @@ export const del = (execute, obj, propName) => {
             undoIt: () => obj.set(propName, old),
             message: <span>Deleted key <code key={1}>{propName}</code>.</span>});
     }
-};
-
-
-const toSerializable = v =>
-    v === 'deleted' ? v : toPlainArray(v);
-
-const toPlainArray = typedArr => Array.from(typedArr);
-
-const commandsToSave = () =>
-    commandQueue.slice(0, currentPosition.get() + 1);
-
-const addChangesFromCommand = (changes, command) =>
-    extend(changes, command.onSave(changes));
-
-const generateChanges = () =>
-    reduce(commandsToSave(), addChangesFromCommand, {});
-
-export const removePreviousHistory = () => {
-    commandQueue.replace(commandQueue.slice(currentPosition.get()));
-    currentPosition.set(0);
-};
-
-export const updateHistoryMessage = message =>
-    commandQueue[currentPosition.get()].message = message;
-
-const clearEditingData = changes => {
-    const data = getLocalDataStore();
-    Object.keys(changes).forEach(key => data.has(key) && data.get(key).clear());
-};
-
-export const save = () => {
-    const changes = generateChanges();
-
-    clearEditingData(changes);
-
-    const serializableChanges = mapValues(changes, toSerializable);
-    sendToNodes('sendChangesToNode', serializableChanges);
-
-    removePreviousHistory();
-    updateHistoryMessage(<span>Saved.</span>);
 };
