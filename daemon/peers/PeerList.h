@@ -6,19 +6,29 @@
 
 #include <vector>
 
-using namespace std;
-
 class PeerList {
-    vector<Peer> peers_;
+    std::vector<Peer> _peers;
+
+    std::vector<Peer>
+    read_peers_from_file(const std::string& filename, boost::asio::io_service& ios);
+
+    std::vector<Peer>
+    read_peers_from_url(const std::string& url, boost::asio::io_service& ios);
+
 public:
+
+    // TODO RHN - I don't know why we need to have the io service here, if we
+    // only use one instance, why copy it? There must be some reason...
     PeerList(
-        boost::asio::io_service& ios
+        boost::asio::io_service& ios,
+        const std::string& peers_file_name = "",
+        const std::string& peers_url = ""
     );
 
-    vector<Peer>&
+    std::vector<Peer>&
     peers()
     {
-        return peers_;
+        return _peers;
     }
 };
 

@@ -23,6 +23,13 @@ public:
     {
     }
 
+
+    const string& name() {return this->info_.name();};
+
+    const string& host() {return this->info_.host();};
+
+    uint16_t port() {return this->info_.port();};
+
     void send_request(
         const string& req,
         function<string(const string&)> h,
