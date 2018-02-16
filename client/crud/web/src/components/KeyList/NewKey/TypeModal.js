@@ -1,11 +1,11 @@
-import {defaultKeyData as jsonDefault} from "../JSONEditor";
-import {defaultKeyData as textDefault} from "../PlainTextEditor";
-import {ObjIcon} from "../ObjIcon";
-import {enableExecution} from "../../services/CommandQueueService";
-import {selectedKey} from "./KeyList";
+import {defaultKeyData as jsonDefault} from "../../JSONEditor";
+import {defaultKeyData as textDefault} from "../../PlainTextEditor";
+import {ObjIcon} from "../../ObjIcon";
+import {enableExecution} from "../../../services/CommandQueueService";
+import {selectedKey} from "../KeyList";
 
 @enableExecution
-export class NewKeyTypeModal extends Component {
+export class TypeModal extends Component {
 
     chooseJSON() {
         this.addNewKey(jsonDefault, jsonDefault.get('bytearray'), 'JSON');
