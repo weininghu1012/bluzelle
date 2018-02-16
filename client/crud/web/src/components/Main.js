@@ -3,7 +3,7 @@ import {getLocalDataStore} from '../services/DataService';
 import {selectedKey, KeyList} from "./KeyList";
 import {Header} from "./Header/Header";
 import 'bootstrap/dist/css/bootstrap.css';
-import {QueueEditor} from "./QueueEditor";
+import {QueueEditor} from "./CommandControls";
 
 @observer
 export class Main extends Component {
