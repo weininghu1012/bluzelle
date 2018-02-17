@@ -22,6 +22,7 @@ find_package(
         REQUIRED COMPONENTS
         chrono
         coroutine
+        filesystem
         program_options
         random
         regex

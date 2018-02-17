@@ -1,5 +1,6 @@
 #include "PeerList.h"
 #include "node/DaemonInfo.h"
+#include "URL.h"
 
 #include <iostream>
 #include <string>
@@ -11,6 +12,9 @@
 #include <boost/beast/version.hpp>
 #include <boost/asio/connect.hpp>
 #include <boost/asio/ip/tcp.hpp>
+#include <boost/regex.hpp>
+#include <boost/lexical_cast.hpp>
+#include <boost/algorithm/string_regex.hpp>
 
 PeerList::PeerList(
     boost::asio::io_service& ios,
@@ -30,12 +34,41 @@ PeerList::PeerList(
         peers.end(),
         std::back_inserter(this->_peers));
 
-    const auto peers_from_url = read_peers_from_url(peers_url, ios);
+    const auto peers_from_url = read_peers_from_url(
+        peers_url,
+        ios);
+
     std::copy(
         peers_from_url.begin(),
         peers_from_url.end(),
         std::back_inserter(this->_peers));
 }
+
+
+template <typename S>
+std::vector<Peer>
+peers_from_stream(S& instream,
+                  boost::asio::io_service& ios)
+{
+    std::vector<Peer> peers;
+    std::string line;
+    while(getline(instream,line))
+        {
+        boost::trim(line);
+        if (';' != line.at(0))
+            {
+            std::vector<std::string> parts;
+            boost::split(parts, line, boost::is_any_of("=:"));
+            NodeInfo n;
+            n.name() = parts[0];
+            n.host() = parts[1];
+            n.port() = boost::lexical_cast<uint16_t >(parts[2]);
+            peers.emplace_back(Peer(ios, n));
+            }
+        }
+    return peers;
+}
+
 
 std::vector<Peer>
 PeerList::read_peers_from_file(const std::string &filename,
@@ -61,63 +94,48 @@ PeerList::read_peers_from_file(const std::string &filename,
 }
 
 std::vector<Peer>
-PeerList::read_peers_from_url(const std::string &url,
+PeerList::read_peers_from_url(const std::string &url_string,
                               boost::asio::io_service& ios)
 {
-    using tcp = boost::asio::ip::tcp;       // from <boost/asio/ip/tcp.hpp>
-    namespace http = boost::beast::http;    // from <boost/beast/http.hpp>
     std::vector<Peer> peers;
+    if(url_string.size()>0)
+        {
+        using tcp = boost::asio::ip::tcp;       // from <boost/asio/ip/tcp.hpp>
+        namespace http = boost::beast::http;    // from <boost/beast/http.hpp>
+        URL url(url_string);
+        const int version = 11;
 
+        boost::asio::io_context ioc;
+        tcp::resolver resolver{ioc};
+        tcp::socket socket{ioc};
 
+        auto const results = resolver.resolve(
+            url.get_host(),
+            boost::lexical_cast<std::string>(url.get_port())
+        );
 
-    // https://www.dropbox.com/s/3florzyurredq2q/peers.txt?dl=1"
-    auto const host = "localhost";
-    auto const port = "8080";
-    auto const target = "/peers.txt";
-    int version = 11;
+        boost::asio::connect(socket, results.begin(), results.end());
 
-    boost::asio::io_context ioc;
+        http::request<http::string_body> req{http::verb::get, url.get_target(), version};
+        req.set(http::field::host, url.get_host());
+        req.set(http::field::user_agent, BOOST_BEAST_VERSION_STRING);
 
-    tcp::resolver resolver{ioc};
-    tcp::socket socket{ioc};
+        http::write(socket, req);
 
-    auto const results = resolver.resolve(host, port);
+        boost::beast::flat_buffer buffer;
 
-    boost::asio::connect(socket, results.begin(), results.end());
+        // Declare a container to hold the response
+        http::response<http::dynamic_body> res;
 
-    http::request<http::string_body> req{http::verb::get, target, version};
-    req.set(http::field::host, host);
-    req.set(http::field::user_agent, BOOST_BEAST_VERSION_STRING);
+        // Receive the HTTP response
+        http::read(socket, buffer, res);
 
-    http::write(socket, req);
-
-    boost::beast::flat_buffer buffer;
-
-    // Declare a container to hold the response
-    http::response<http::dynamic_body> res;
-
-    // Receive the HTTP response
-    http::read(socket, buffer, res);
-
-    // Write the message to standard out
-    std::cout << res << std::endl;
-
-    // Gracefully close the socket
-    boost::system::error_code ec;
-    socket.shutdown(tcp::socket::shutdown_both, ec);
-
-
-
-
-
-
-
-
-
-
-
-
-
+        std::stringstream peer_stream(boost::beast::buffers_to_string(res.body().data()));
+        peers = peers_from_stream(peer_stream,ios);
+        // Gracefully close the socket
+        boost::system::error_code ec;
+        socket.shutdown(tcp::socket::shutdown_both, ec);
+        }
     return peers;
 }
 
