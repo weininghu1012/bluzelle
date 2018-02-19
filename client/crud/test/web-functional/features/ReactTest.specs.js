@@ -1,3 +1,5 @@
+const executeAsyncWithError = require('../executeAsyncWithError');
+
 describe('React test utilities', () => {
 
     it('should not expose app data without flag', () => {
@@ -6,7 +8,7 @@ describe('React test utilities', () => {
 
         browser.execute(() => {
 
-            if(window.TestUtils || window.components || window.app) {
+            if(window.TestUtils || window.components || window.root) {
                 throw new Error('App data is exposed');
             }
 
@@ -20,7 +22,7 @@ describe('React test utilities', () => {
 
         browser.execute(() => {
 
-            if(!TestUtils || window.components === undefined || window.app === undefined) {
+            if(!TestUtils || window.components === undefined || window.root === undefined) {
                 throw new Error('App data not exposed in browser.');
             }
 
@@ -37,7 +39,7 @@ describe('React test utilities', () => {
         browser.execute(() => {
 
             const App = TestUtils.findRenderedComponentWithType(
-                app,
+                root,
                 components.App
             );
 
@@ -56,6 +58,49 @@ describe('React test utilities', () => {
             browser.execute(() => assert(() => true === false));
 
         expect(errorFunction).to.throw();
+
+    });
+
+
+    it('valid async should not fail', () => {
+
+        browser.url('http://localhost:8200/?expose=true');
+
+        executeAsyncWithError(browser, done => done());
+
+    });
+
+
+    it('async executions should fail properly', () => {
+
+        browser.url('http://localhost:8200/?expose=true');
+
+        const failure = () => executeAsyncWithError(browser, done =>
+            throwAsync(new Error('Aw shucks'), done));
+
+        expect(failure).to.throw();
+
+    });
+
+
+    it('should have a waitFor that runs correctly', () => {
+
+        browser.url('http://localhost:8200/?expose=true');
+
+        executeAsyncWithError(browser, done =>
+            waitFor(() => assert(() => true), done).then(done));
+
+    });
+
+
+    it('should have a waitFor that fails after 500ms', () => {
+
+        browser.url('http://localhost:8200/?expose=true');
+
+        const failure = () => executeAsyncWithError(browser, done =>
+            waitFor(() => assert(() => false), done));
+
+        expect(failure).to.throw();
 
     });
 
