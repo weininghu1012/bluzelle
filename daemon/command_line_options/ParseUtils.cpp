@@ -74,6 +74,9 @@ parse_command_line(
     DaemonInfo::get_instance().host_port() = port;
     DaemonInfo::get_instance().host_name() = "Node_running_on_port_" + std::to_string(port);
 
+    // optional server ip to use...
+    DaemonInfo::get_instance().host_ip() = options.get_host_ip();
+
     if(simulated_delay_values_set(options))
         {
         if(!simulated_delay_values_within_bounds(options))

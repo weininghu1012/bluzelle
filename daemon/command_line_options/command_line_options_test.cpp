@@ -330,6 +330,32 @@ BOOST_FIXTURE_TEST_SUITE(command_line_options, F)
             }
     }
 
+
+//  --run_test=test_options_server_src_address
+    BOOST_AUTO_TEST_CASE(test_options_server_src_address) {
+        const char *argv[] =
+            {
+                    (char *) "~/bluzelle/test",
+                    (char *) "--server_address",
+                    (char *) "192.168.0.2",
+                    (char *) "--config",
+                    (char *) "~/.bluzellerc",
+            };
+
+        try
+            {
+            CommandLineOptions op;
+            op.parse(5, argv);
+
+            BOOST_CHECK_EQUAL(op.get_host_ip(), "192.168.0.2");
+            }
+        catch (...)
+            {
+            BOOST_CHECK(false);
+            }
+    }
+
+
 //  --run_test=test_options_missing_config
     BOOST_AUTO_TEST_CASE(test_options_missing_config)
     {

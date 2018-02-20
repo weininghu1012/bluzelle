@@ -14,6 +14,7 @@ private:
 
     static const string s_help_option_name;
     static const string s_address_option_name;
+    static const string s_host_ip_option_name;
     static const string s_config_option_name;
     static const string s_port_option_name;
     static const string s_simulated_delay_lower_option_name;
@@ -24,6 +25,7 @@ private:
 
     ushort port_;
     string address_;
+    string host_ip_;
     string config_;
     string error_;
     uint16_t simulated_delay_lower_;
@@ -51,14 +53,16 @@ public:
     get_description() const;
 
     ushort
-    get_port()
-    const;
+    get_port() const;
 
     string
     get_address() const;
 
     string
     get_config() const;
+
+    string
+    get_host_ip() const;
 
     static bool
     is_valid_ethereum_address(const string &addr);
