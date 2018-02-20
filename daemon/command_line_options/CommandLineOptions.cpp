@@ -5,15 +5,16 @@
 
 #include "CommandLineOptions.h"
 
-using namespace boost::program_options;
-
 const uint CommandLineOptions::s_address_size = 42; // ("0x2ba35056580b505690c03dfb1df58bc6b6cd9f89").length().
 
-const string CommandLineOptions::s_help_option_name = "help";
-const string CommandLineOptions::s_address_option_name = "address";
-const string CommandLineOptions::s_host_ip_option_name = "server_address";
-const string CommandLineOptions::s_config_option_name = "config";
-const string CommandLineOptions::s_port_option_name = "port";
+const std::string CommandLineOptions::s_help_option_name = "help";
+const std::string CommandLineOptions::s_address_option_name = "address";
+const std::string CommandLineOptions::s_host_ip_option_name = "listener_address";
+const std::string CommandLineOptions::s_config_option_name = "config";
+const std::string CommandLineOptions::s_port_option_name = "port";
+
+namespace bpo = boost::program_options;
+
 
 CommandLineOptions::CommandLineOptions()
         : desc_("Allowed options")
@@ -25,24 +26,25 @@ CommandLineOptions::CommandLineOptions()
         )
         (
             (s_address_option_name + ",a").c_str(),
-            value<string>(&address_)->required(),
+            bpo::value<std::string>(&address_)->required(),
             "Ethererum account address"
         )
         (
-            (s_host_ip_option_name + ",s").c_str(),
-            value<string>(&host_ip_)->required(),
-            "Server ip address"
+            (s_host_ip_option_name + ",l").c_str(),
+            bpo::value<std::string>(&host_ip_),
+            "Listener ip address"
         )
         (
             (s_port_option_name + ",p").c_str(),
-            value<ushort>(&port_)->required(),
+            bpo::value<ushort>(&port_)->required(),
             "port to use")
         (
             (s_config_option_name + ",c").c_str(),
-            value<string>(&config_),
+            bpo::value<std::string>(&config_),
             "path to configuration file"
         );
 }
+
 
 bool
 CommandLineOptions::parse(
@@ -65,7 +67,7 @@ CommandLineOptions::parse(
             }
         notify(vm_);
         }
-    catch (error &err)
+    catch (bpo::error &err)
         {
         error_ =  err.what();
         return false;
@@ -74,21 +76,22 @@ CommandLineOptions::parse(
     return true;
 }
 
-string
+std::string
 CommandLineOptions::get_last_error() const
 {
     return error_;
 }
 
-options_description
+bpo::options_description
 CommandLineOptions::get_description() const
 {
     return desc_;
 }
 
+
 bool
 CommandLineOptions::is_valid_ethereum_address(
-    const string &addr
+    const std::string &addr
 )
 {
     if(
@@ -117,14 +120,16 @@ CommandLineOptions::is_valid_ethereum_address(
     return false;
 }
 
+
 bool
 CommandLineOptions::is_valid_port(
     ushort p
 )
 {
-    return (p >= 49152) &&
-           (p <= 65535); // As per IANA https://www.iana.org/assignments/service-names-port-numbers/service-names-port-numbers.xhtml
+    // As per IANA https://www.iana.org/assignments/service-names-port-numbers/service-names-port-numbers.xhtml
+    return (p >= 49152) && (p <= 65535);
 }
+
 
 ushort
 CommandLineOptions::get_port() const
@@ -132,18 +137,23 @@ CommandLineOptions::get_port() const
     return get_option<ushort>(s_port_option_name);
 }
 
-string
+
+std::string
 CommandLineOptions::get_address() const
 {
-    return get_option<string>(s_address_option_name);
+    return get_option<std::string>(s_address_option_name);
 }
 
-string
+
+std::string
 CommandLineOptions::get_config() const
 {
-    return get_option<string>(s_config_option_name);
+    return get_option<std::string>(s_config_option_name);
 }
 
-string CommandLineOptions::get_host_ip() const {
-    return get_option<string>(s_host_ip_option_name);
+
+std::string
+CommandLineOptions::get_host_ip() const
+{
+    return get_option<std::string>(s_host_ip_option_name);
 }

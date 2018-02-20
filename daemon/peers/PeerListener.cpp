@@ -28,7 +28,10 @@ PeerListener::PeerListener
     if (ec)
         {
         fail(ec, "PeerListener::bind");
-        return;
+
+        // This is a fatal error!
+        // todo: for now this will stop us from looping madly... peers needs to be more robust!
+        throw std::exception();
         }
 
     // Start listening for connections

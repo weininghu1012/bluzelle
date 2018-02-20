@@ -93,7 +93,7 @@ BOOST_FIXTURE_TEST_SUITE(command_line_options, F)
         const char *argv[] =
             {
                     (char *) "~/bluzelle/test",
-                    (char *) "--server_address",
+                    (char *) "--listener_address",
                     (char *) "192.168.0.2",
                     (char *) "--config",
                     (char *) "~/.bluzellerc",
