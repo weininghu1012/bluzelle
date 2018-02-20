@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.11)
 
 set(CMAKE_CXX_STANDARD 17)
 set(REQUIRED_BOOST "1.66.0")
@@ -126,7 +126,7 @@ add_custom_command(
 )
 
 ###############################################################################
-# Unit tests
+# Unit tests Boost Unit
 message(STATUS "*** CMakeLists for bluzelled_test")
 enable_testing()
 
@@ -253,3 +253,22 @@ target_link_libraries(the_db_test ${Boost_LIBRARIES})
 if(UNIX AND NOT APPLE)
     target_link_libraries(the_db_test pthread)
 endif()
+
+
+
+find_package(GTest REQUIRED)
+if(GTEST_FOUND)
+    message(STATUS "Google Test found Creating a Google Test executable")
+    include_directories(${GTEST_INCLUDE_DIRS})
+    include_directories(peers)
+    add_executable(the_db_google_test peers/peerlist_test.cpp)
+endif()
+
+
+
+
+
+
+
+
+
