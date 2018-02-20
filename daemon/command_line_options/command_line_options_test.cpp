@@ -12,10 +12,10 @@ struct F
     ~F() = default;
 };
 
-// --run_test=websockets
+// --run_test=command_line_options
 BOOST_FIXTURE_TEST_SUITE(command_line_options, F)
 
-    //  --run_test=websockets/test_options_all
+    //  --run_test=command_line_options/test_options_all
     BOOST_AUTO_TEST_CASE(test_options_all)
     {
         const char *argv[] =
@@ -37,7 +37,7 @@ BOOST_FIXTURE_TEST_SUITE(command_line_options, F)
         BOOST_CHECK(op.get_config() == "~/.bluzellerc");
     }
 
-//  --run_test=websockets/test_options_missing_address
+    //  --run_test=command_line_options/test_options_missing_address
     BOOST_AUTO_TEST_CASE(test_options_missing_address)
     {
         const char *argv[] =
@@ -62,7 +62,7 @@ BOOST_FIXTURE_TEST_SUITE(command_line_options, F)
             }
     }
 
-//  --run_test=websockets/test_options_missing_port
+    //  --run_test=command_line_options/test_options_missing_port
     BOOST_AUTO_TEST_CASE(test_options_missing_port)
     {
         const char *argv[] =
@@ -88,7 +88,7 @@ BOOST_FIXTURE_TEST_SUITE(command_line_options, F)
     }
 
 
-//  --run_test=test_options_server_src_address
+    //  --run_test=command_line_options/test_options_server_src_address
     BOOST_AUTO_TEST_CASE(test_options_server_src_address) {
         const char *argv[] =
             {
@@ -113,7 +113,7 @@ BOOST_FIXTURE_TEST_SUITE(command_line_options, F)
     }
 
 
-//  --run_test=test_options_missing_config
+    //  --run_test=command_line_options/test_options_missing_config
     BOOST_AUTO_TEST_CASE(test_options_missing_config)
     {
         const char *argv[] =
@@ -138,7 +138,7 @@ BOOST_FIXTURE_TEST_SUITE(command_line_options, F)
             }
     }
 
-//  --run_test=test_options_address_validation
+    //  --run_test=command_line_options/test_options_address_validation
     BOOST_AUTO_TEST_CASE(test_options_address_validation)
     {
         CommandLineOptions op;
@@ -150,7 +150,7 @@ BOOST_FIXTURE_TEST_SUITE(command_line_options, F)
         BOOST_CHECK_EQUAL(valid, true);
     }
 
-//  --run_test=test_options_address_validation_fail
+    //  --run_test=command_line_options/test_options_address_validation_fail
     BOOST_AUTO_TEST_CASE(test_options_address_validation_fail)
     {
         CommandLineOptions op;
