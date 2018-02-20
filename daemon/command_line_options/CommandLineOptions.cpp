@@ -14,14 +14,10 @@ const string CommandLineOptions::s_address_option_name = "address";
 const string CommandLineOptions::s_host_ip_option_name = "server_address";
 const string CommandLineOptions::s_config_option_name = "config";
 const string CommandLineOptions::s_port_option_name = "port";
-const string CommandLineOptions::s_simulated_delay_lower_option_name = "simulated_delay_lower";
-const string CommandLineOptions::s_simulated_delay_upper_option_name = "simulated_delay_upper";
 
 CommandLineOptions::CommandLineOptions()
         : desc_("Allowed options")
 {
-    simulated_delay_lower_ = 0;
-    simulated_delay_upper_ = 0;
     desc_.add_options()
         (
             (s_help_option_name + ",h").c_str(),
@@ -45,15 +41,6 @@ CommandLineOptions::CommandLineOptions()
             (s_config_option_name + ",c").c_str(),
             value<string>(&config_),
             "path to configuration file"
-        )
-        (
-            (s_simulated_delay_lower_option_name + ",l").c_str(),
-            value<uint16_t>(&simulated_delay_lower_),
-            "lower bound of simulated delay")
-        (
-            (s_simulated_delay_upper_option_name + ",u").c_str(),
-            value<uint16_t >(&simulated_delay_upper_),
-            "upper bound of simulated delay"
         );
 }
 
@@ -62,8 +49,6 @@ CommandLineOptions::parse(
     int argc,
     const char *argv[])
 {
-    simulated_delay_upper_ = 0;
-    simulated_delay_lower_ = 0;
     vm_.clear();
     try
         {

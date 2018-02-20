@@ -17,8 +17,6 @@ private:
     static const string s_host_ip_option_name;
     static const string s_config_option_name;
     static const string s_port_option_name;
-    static const string s_simulated_delay_lower_option_name;
-    static const string s_simulated_delay_upper_option_name;
 
     boost::program_options::variables_map vm_;
     boost::program_options::options_description desc_;
@@ -28,8 +26,6 @@ private:
     string host_ip_;
     string config_;
     string error_;
-    uint16_t simulated_delay_lower_;
-    uint16_t simulated_delay_upper_;
 
     template<typename T>
     T get_option(const string &name) const {
@@ -70,17 +66,6 @@ public:
     static bool
     is_valid_port(ushort p);
 
-    uint16_t
-    get_simulated_delay_lower() const
-    {
-        return simulated_delay_lower_;
-    }
-
-    uint16_t
-    get_simulated_delay_upper() const
-    {
-        return simulated_delay_upper_;
-    }
 };
 
 #endif //BLUZELLE_COMMANDLINEOPTIONS_H
