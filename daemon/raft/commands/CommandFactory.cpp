@@ -143,7 +143,7 @@ CommandFactory::make_command(
 
     cerr << "st [" << &st << "] should be used\n";
 
-    if(commands.size()==0)
+    if(commands.empty())
         {
         commands["ping"] = [](){
             std::cout << "ping\n";

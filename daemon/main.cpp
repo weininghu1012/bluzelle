@@ -7,7 +7,7 @@
 #include "Node.h"
 #include "ParseUtils.h"
 #include "WebSocketServer.h"
-
+#include <signal.h>
 #include <boost/uuid/uuid_generators.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/algorithm/string.hpp>
@@ -35,17 +35,32 @@ void
 start_websocket_server();
 
 void
-start_node();
+start_node(std::shared_ptr<boost::asio::io_service> ios);
 
 int 
 main(const int argc,
-     const char *argv[])
+    const char *argv[])
 	{
+        // I/O service to use.
+        auto ios = std::make_shared<boost::asio::io_service>();
+
+        boost::asio::signal_set signals(*ios, SIGINT, SIGTERM);
+		signals.async_wait(
+            [ios](const boost::system::error_code& error,
+                int /*signal_number*/)
+            {
+                if (!error)
+                {
+                    ios->stop();
+                }
+            }
+        );
+
         validate_node(argc, argv);
     	initialize_daemon();
     	display_daemon_info();
     	start_websocket_server();
-    	start_node();
+    	start_node(ios);
     
 	return 0;
 	}
@@ -203,19 +218,18 @@ start_websocket_server()
 
 // TODO: Move start_node out of main into Daemon
 void
-start_node()
+start_node(std::shared_ptr<boost::asio::io_service> ios)
 {
-    boost::asio::io_service ios; // I/O service to use.
     boost::thread_group tg;
-    Node this_node(ios);
+    Node this_node(*ios);
     try
         {
         this_node.run();
         for (unsigned i = 0; i < boost::thread::hardware_concurrency(); ++i)
             {
-            tg.create_thread(boost::bind(&boost::asio::io_service::run, &ios));
+            tg.create_thread(boost::bind(&boost::asio::io_service::run, ios.get()));
             }
-        ios.run();
+        ios->run();
         }
     catch (std::exception &ex)
         {
