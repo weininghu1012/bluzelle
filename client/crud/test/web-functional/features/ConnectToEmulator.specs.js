@@ -13,6 +13,16 @@ describe('Emulator connections', () => {
 
         browser.element('button').click();
 
+
+        // TODO: grab an element handle/props
+        // TODO: rebase as single commit on devel
+
+
+        // 1. New branch
+        // 2. Refactoring
+        // 3. Squash into one commit <--- git rebase -i
+
+
         executeAsyncWithError(browser, done =>
             waitFor(() =>
                 TestUtils.findRenderedComponentWithType(
@@ -28,16 +38,11 @@ describe('Emulator connections', () => {
 
     it('should be able to set data', () => {
 
-        // TODO: this tests passes independently. We should make emulator
-        // state independent of tests.
-
-
         const data = {
             text: [1, 72, 101, 108, 108, 111, 32, 119, 111, 114, 108, 100, 44, 32, 116, 104, 105, 115, 32, 105, 115, 32, 115, 111, 109, 101, 32, 112, 108, 97, 105, 110, 32, 116, 101, 120, 116, 46]
         };
 
         start();
-
         setData(data);
 
 

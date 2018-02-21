@@ -53,10 +53,12 @@ if(window.location.href.includes('?expose=true')) {
 
     window.components = {};
 
-    // Add all components to window
     const componentsContext = require.context('./components', true, /\.js/);
     componentsContext.keys().forEach(path =>
+
+        // Do not include test files
         path.includes('specs') ||
+
             Object.assign(window.components, componentsContext(path)));
 
 
@@ -67,8 +69,3 @@ if(window.location.href.includes('?expose=true')) {
         Object.assign(window.services, servicesContext(path)));
 
 }
-
-
-// Load files in /services
-// const testsContext = require.context('./services', true, /Service\.js$/);
-// testsContext.keys().forEach(testsContext);
