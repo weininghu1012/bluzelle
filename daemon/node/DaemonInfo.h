@@ -4,6 +4,7 @@
 #include "node/NodeInfo.hpp"
 #include "node/Singleton.h"
 
+#include <raft/RaftState.h>
 #include <vector>
 #include <boost/uuid/uuid.hpp>
 
@@ -25,6 +26,8 @@ DaemonInfo final :
 
     DaemonInfo() = default;
 
+    RaftStateType raft_state_ = RaftStateType::Unknown;
+
 public:
 
     boost::uuids::uuid&
@@ -44,6 +47,9 @@ public:
 
     uint64_t&
     ropsten_token_balance();
+
+    RaftStateType&
+    raft_state();
 };
 
 #endif //BLUZELLE_DAEMONINFO_H

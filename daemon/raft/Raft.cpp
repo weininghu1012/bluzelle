@@ -63,7 +63,10 @@ string Raft::handle_request(const string &req)
 
     // Check if there is state transtion followed by command execution.
     if (next_state != nullptr)
+        {
         raft_state_.reset(next_state.get());
+        DaemonInfo::get_instance().raft_state() = next_state->get_type();
+        }
 
     return resp;
 }

@@ -1,16 +1,15 @@
 #ifndef BLUZELLE_RAFTSTATE_H
 #define BLUZELLE_RAFTSTATE_H
 
+#include "ApiCommandQueue.h"
+
 #include <string>
 #include <memory>
 #include <functional>
 
-using namespace std;
-
 #include <boost/asio/io_service.hpp>
 
 class PeerList;
-class ApiCommandQueue;
 class Storage;
 class CommandFactory;
 
@@ -43,15 +42,15 @@ protected:
 
     CommandFactory& command_factory_;
 
-    function<string(const string&)> handler_;
+    std::function<std::string(const std::string&)> handler_;
 
-    unique_ptr<RaftState>& next_state_;
+    std::unique_ptr<RaftState>& next_state_;
 
 public:
-    virtual unique_ptr<RaftState>
+    virtual std::unique_ptr<RaftState>
     handle_request(
-        const string& request,
-        string& response) = 0;
+        const std::string& request,
+        std::string& response) = 0;
 
     RaftState(
         boost::asio::io_service& ios,
@@ -59,8 +58,8 @@ public:
         CommandFactory& cf,
         ApiCommandQueue& pq,
         PeerList& ps,
-        function<string(const string&)> rh,
-        unique_ptr<RaftState>& ns
+        std::function<std::string(const std::string&)> rh,
+        std::unique_ptr<RaftState>& ns
     )
     : ios_(ios),
       peers_(ps),

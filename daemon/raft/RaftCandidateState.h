@@ -30,8 +30,8 @@ public:
                        CommandFactory& cf,
                        ApiCommandQueue& pq,
                        PeerList& ps,
-                       function<string(const string&)> rh,
-                       unique_ptr<RaftState>& ns);
+                       std::function<std::string(const std::string&)> rh,
+                       std::unique_ptr<RaftState>& ns);
 
     ~RaftCandidateState();
 
@@ -45,10 +45,10 @@ public:
     count_vote(bool vote_yes);
 
     virtual
-    unique_ptr<RaftState>
+    std::unique_ptr<RaftState>
     handle_request(
-        const string& request,
-        string& response) override;
+        const std::string& request,
+        std::string& response) override;
 
     virtual
     RaftStateType get_type() const override

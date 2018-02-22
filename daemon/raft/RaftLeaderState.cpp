@@ -15,8 +15,8 @@ RaftLeaderState::RaftLeaderState(boost::asio::io_service& ios,
                                  CommandFactory& cf,
                                  ApiCommandQueue& pq,
                                  PeerList& ps,
-                                 function<string(const string&)> rh,
-                                 unique_ptr<RaftState>& ns)
+                                 std::function<string(const std::string&)> rh,
+                                 std::unique_ptr<RaftState>& ns)
         : RaftState(ios, s, cf, pq, ps, rh, ns),
           heartbeat_timer_(ios_,
                            boost::posix_time::milliseconds(raft_default_heartbeat_interval_milliseconds))
@@ -70,11 +70,11 @@ void RaftLeaderState::heartbeat(const boost::system::error_code& e)
 }
 
 
-unique_ptr<RaftState> RaftLeaderState::handle_request(const string& request, string& response)
+std::unique_ptr<RaftState> RaftLeaderState::handle_request(const std::string& request, std::string& response)
 {
     auto pt = pt_from_json_string(request);
 
-    unique_ptr<Command> command = command_factory_.get_command(pt, *this);
+    std::unique_ptr<Command> command = command_factory_.get_command(pt, *this);
     if (command != nullptr)
         response = pt_to_json_string(command->operator()());
 

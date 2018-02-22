@@ -29,11 +29,11 @@ RaftFollowerState::~RaftFollowerState()
     heartbeat_timer_.cancel();
 }
 
-unique_ptr<RaftState> RaftFollowerState::handle_request(const string& request, string& response)
+std::unique_ptr<RaftState> RaftFollowerState::handle_request(const std::string& request, std::string& response)
 {
     auto pt = pt_from_json_string(request);
 
-    unique_ptr<Command> command = command_factory_.get_command(pt, *this);
+    std::unique_ptr<Command> command = command_factory_.get_command(pt, *this);
     if (command != nullptr)
         response = pt_to_json_string(command->operator()());
 

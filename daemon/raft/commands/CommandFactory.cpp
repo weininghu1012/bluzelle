@@ -101,15 +101,27 @@ CommandFactory::make_crud_command(
     const boost::property_tree::ptree& pt,
     RaftState& st) const
 {
-    std::cerr << "RaftState " << &st << " is unused in make_crud_command.\n";
+    // todo: log current state...
+    std::cerr << "Current RaftState " << &st << '\n';
+
     auto cmd = pt.get<string>("crud");
     auto dat = get_data(pt);
 
     if (cmd == "create")
-        return std::make_unique<CrudCreateCommand>(storage_, dat.first, dat.second);
+    {
+        if (st.get_type() == RaftStateType::Leader)
+        {
+            return std::make_unique<CrudCreateCommand>(storage_, dat.first, dat.second);
+        }
+
+        // find the leader...
+        return nullptr;
+    }
 
     if (cmd == "read")
+    {
         return std::make_unique<CrudReadCommand>(storage_, dat.first);
+    }
 
     return nullptr;
 }

@@ -16,10 +16,10 @@ private:
 public:
 
     Peer(
-            boost::asio::io_service& ios,
-            NodeInfo &node_info
-    )  : ios_(ios),
-         info_(node_info)
+        boost::asio::io_service& ios,
+        NodeInfo &node_info)
+        : ios_(ios)
+        , info_(node_info)
     {
     }
 

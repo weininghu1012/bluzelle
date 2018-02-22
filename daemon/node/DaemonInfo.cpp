@@ -42,3 +42,9 @@ DaemonInfo::ropsten_token_balance()
 {
     return ropsten_token_balance_;
 }
+
+RaftStateType&
+DaemonInfo::raft_state()
+{
+    return this->raft_state_;
+}

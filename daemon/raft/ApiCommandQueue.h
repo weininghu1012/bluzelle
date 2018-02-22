@@ -5,14 +5,7 @@
 #include <queue>
 #include <utility>
 
-using std::queue;
-using std::pair;
-using std::string;
+using ApiCommandQueue = std::queue<std::pair<std::string,std::string>>;
 
-class ApiCommandQueue : public queue<pair<string,string>>
-{
-public:
-
-};
 
 #endif //BLUZELLE_APICOMMANDQUEUE_H

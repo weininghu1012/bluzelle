@@ -26,6 +26,10 @@ BOOST_FIXTURE_TEST_SUITE(daemoninfo_suite, F)
         BOOST_CHECK_EQUAL(accepted_ip, sut.host_ip());
         BOOST_CHECK_EQUAL(accepted_port, sut.host_port());
         BOOST_CHECK_EQUAL(accepted_name, sut.host_name());
+
+        BOOST_CHECK(RaftStateType::Unknown == sut.raft_state());
+        sut.raft_state() = RaftStateType::Leader;
+        BOOST_CHECK(RaftStateType::Leader == sut.raft_state());
     }
 
 BOOST_AUTO_TEST_SUITE_END()
