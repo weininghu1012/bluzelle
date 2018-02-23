@@ -26,17 +26,24 @@ export const close = function() {
 
 
 
-const reactLink = __dirname + '/test-app/react.js';
-
 const addReact = function() {
-    if(fs.existsSync(reactLink)) {
+    if(fs.existsSync(__dirname + '/test-app/react.js')) {
         return;
     }
 
     const reactDir = path.dirname(require.resolve('react'));
     const reactPath = reactDir + '/umd/react.production.min.js';
 
-    fs.symlinkSync(reactPath, reactLink);
+    fs.symlinkSync(reactPath, __dirname + '/test-app/react.js');
+
+
+    const reactDOMDir = path.dirname(require.resolve('react-dom'));
+
+    const reactDOMPath = reactDOMDir + '/umd/react-dom.production.min.js';
+    fs.symlinkSync(reactDOMPath, __dirname + '/test-app/react-dom.js');
+
+    const reactTestUtilsPath = reactDOMDir + '/umd/react-dom-test-utils.production.min.js';
+    fs.symlinkSync(reactTestUtilsPath, __dirname + '/test-app/react-dom-test-utils.js');
 
 };
 

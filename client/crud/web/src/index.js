@@ -5,6 +5,7 @@ import TestUtils from 'react-dom/test-utils';
 
 const root = ReactDom.render(<App />, document.querySelector('#app-container'));
 
+// testHooks({ root, TestUtils  });
 
 if(window.location.href.includes('?expose=true')) {
 
