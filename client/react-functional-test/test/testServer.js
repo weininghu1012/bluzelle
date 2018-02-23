@@ -21,7 +21,6 @@ export const start = function(port=8200) {
 
 
 export const close = function() {
-    removeReact();
     server && server.close();
 };
 
