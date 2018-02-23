@@ -15,6 +15,7 @@ let randomBehavior = false;
 
 module.exports = {
     getNodes: () => nodes.values(),
+    getNodesCount: () => nodes.size,
     setMaxNodes: CommandProcessors.setMaxNodes,
     getMaxNodes: () => maxNodes.get(),
     shutdown: () => nodes.values().map(node => node.shutdown()),
@@ -22,7 +23,7 @@ module.exports = {
     getData: getData,
     setData: setData,
     behaveRandomly: (v) => behaveRandomly.set(v),
-    isRandom: () => behaveRandomly.get()
+    isRandom: () => behaveRandomly.get(),
 };
 
 
