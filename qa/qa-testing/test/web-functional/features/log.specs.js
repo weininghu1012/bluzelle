@@ -15,7 +15,16 @@ describe('Log tab', () => {
                 header().waitForExist('div.react-grid-Canvas>div>div');
                 browser.elements('div.react-grid-Canvas>div>div').value[0]
                     .waitForExist(`div*=${text}`);
+                emulator.getNodes()[0].used.set(90);
+                console.log(emulator.getNodes()[0].used.get());
             });
+        });
+
+        it('should log storage warning', () => {
+            header().waitForExist('div.react-grid-Canvas>div>div');
+            emulator.setRandomNodeUsage(85);
+            browser.elements('div.react-grid-Canvas>div>div')
+                .waitForExist('div*=Usage is at');
         });
     });
 });
