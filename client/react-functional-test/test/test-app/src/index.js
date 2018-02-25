@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import {addHooks} from '../../../react-webdriver-test-hooks';
 
 class SimpleComponent extends React.Component {
 
@@ -14,4 +15,6 @@ const root = ReactDOM.render(
     document.getElementById('react-root')
 );
 
-// testHooks({ root: root, TestUtils: ReactTestUtils });
+
+window.location.href.includes('noHooks')
+    || addHooks({ root });

@@ -6,11 +6,17 @@ const path = require('path');
 let server;
 
 export const start = function(port=8200) {
-    const filename = path.resolve(__dirname + '/test-app/dist/index.html');
+    const DIST_DIR = __dirname + '/test-app/dist';
 
     server = http.createServer(function (request, response) {
-        response.writeHead(200);
-        response.end(fs.readFileSync(filename));
+
+        const filename = path.resolve(`${DIST_DIR}/${request.url}`);
+        fs.existsSync(filename) && fs.lstatSync(filename).isFile() ? sendFile(filename) : sendFile(`${DIST_DIR}/index.html`);
+
+        function sendFile(filename) {
+            response.writeHead(200);
+            response.end(fs.readFileSync(filename));
+        }
     });
 
     server.listen(port);
