@@ -6,9 +6,7 @@ const path = require('path');
 let server;
 
 export const start = function(port=8200) {
-    addReact();
-
-    const filename = path.resolve(__dirname + '/test-app/index.html');
+    const filename = path.resolve(__dirname + '/test-app/dist/index.html');
 
     server = http.createServer(function (request, response) {
         response.writeHead(200);
@@ -16,41 +14,9 @@ export const start = function(port=8200) {
     });
 
     server.listen(port);
-
 };
 
 
 export const close = function() {
     server && server.close();
-};
-
-
-
-const addReact = function() {
-    if(fs.existsSync(__dirname + '/test-app/react.js')) {
-        return;
-    }
-
-    const reactDir = path.dirname(require.resolve('react'));
-    const reactPath = reactDir + '/umd/react.production.min.js';
-
-    fs.symlinkSync(reactPath, __dirname + '/test-app/react.js');
-
-
-    const reactDOMDir = path.dirname(require.resolve('react-dom'));
-
-    const reactDOMPath = reactDOMDir + '/umd/react-dom.production.min.js';
-    fs.symlinkSync(reactDOMPath, __dirname + '/test-app/react-dom.js');
-
-    const reactTestUtilsPath = reactDOMDir + '/umd/react-dom-test-utils.production.min.js';
-    fs.symlinkSync(reactTestUtilsPath, __dirname + '/test-app/react-dom-test-utils.js');
-
-};
-
-const removeReact = function() {
-    if(!fs.existsSync(reactLink)) {
-        return;
-    }
-
-    fs.unlinkSync(reactLink);
 };
