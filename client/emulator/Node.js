@@ -35,8 +35,7 @@ module.exports = function Node(port) {
                 me.getHttpServer().close();
             }, 200);
         },
-        sendToClients: ({cmd, data}) => sendToClients(cmd, data)
-        },
+        sendToClients: ({cmd, data}) => sendToClients(cmd, data),
         setUsage: (val) => updateUsage(val)
     });
 
@@ -165,7 +164,7 @@ module.exports = function Node(port) {
 
     function getPeerInfo(node) {
         return nodes.values().filter(peer => peer.address !== node.address).map(n => _.pick(n, 'address', 'ip', 'port'));
-    };
+    }
 
     const getOtherRandomNode = () => {
         const n = getRandomNode();
