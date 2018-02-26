@@ -15,8 +15,6 @@ describe('Log tab', () => {
                 header().waitForExist('div.react-grid-Canvas>div>div');
                 browser.elements('div.react-grid-Canvas>div>div').value[0]
                     .waitForExist(`div*=${text}`);
-                emulator.getNodes()[0].used.set(90);
-                console.log(emulator.getNodes()[0].used.get());
             });
         });
 
