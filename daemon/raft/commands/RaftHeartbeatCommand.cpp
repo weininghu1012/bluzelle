@@ -21,7 +21,9 @@ boost::property_tree::ptree RaftHeartbeatCommand::operator()()
 
     std::cout << "♥" << std::endl;
 
-    if (state_.get_type() == RaftStateType::Candidate)
+    const auto& state_type = state_.get_type();
+
+    if (state_type == RaftStateType::Candidate)
         {
         state_.set_next_state_follower();
         auto cs = dynamic_cast<RaftCandidateState*>(&state_);
@@ -29,8 +31,7 @@ boost::property_tree::ptree RaftHeartbeatCommand::operator()()
             cs->cancel_election(); // Election timer could be running, stop it before deleting state.
         }
 
-
-    if (state_.get_type() == RaftStateType::Follower)
+    if (state_type == RaftStateType::Follower)
         {
         auto fs = dynamic_cast<RaftFollowerState*>(&state_);
         if (fs != nullptr)

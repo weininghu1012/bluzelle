@@ -42,6 +42,7 @@ void Raft::run()
                                                        raft_next_state_);
 }
 
+
 string Raft::handle_request(const string &req)
 {
     // State transition can be a result of timer (Follower->Candidate) or command execution.

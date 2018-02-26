@@ -10,12 +10,12 @@ PeerSession::PeerSession(
     ws_(std::move(ws)),
     strand_(ws_.get_executor().context())
 {
-    //cout << "session [+]" << endl;
+    cout << "session [+]" << endl;
 }
 
 PeerSession::~PeerSession()
 {
-    //cout << "session [-]" << endl;
+    cout << "session [-]" << endl;
 }
 
 void
