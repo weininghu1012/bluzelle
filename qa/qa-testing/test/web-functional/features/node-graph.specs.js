@@ -16,16 +16,16 @@ describe('Node graph tab', () => {
         });
     });
 
-    describe('individual nodes', () => {
-        _.each({green: 'alive', red: 'dead', blue: 'new'}, (state, color) => {
-            it(`should display specs when mouseover on ${color} node`, () => {
-                const nodeInfo = addNode({nodeState: state});
-                updateNode(nodeInfo.address, {nodeState: state});
-                checkInfoTable(nodeInfo.address, state);
-                checkInfoTable(nodeInfo.address, nodeInfo.address);
-            });
-        });
-    });
+    // describe('individual nodes', () => {
+    //     _.each({green: 'alive', red: 'dead', blue: 'new'}, (state, color) => {
+    //         it(`should display specs when mouseover on ${color} node`, () => {
+    //             const nodeInfo = addNode({nodeState: state});
+    //             updateNode(nodeInfo.address, {nodeState: state});
+    //             checkInfoTable(nodeInfo.address, state);
+    //             checkInfoTable(nodeInfo.address, nodeInfo.address);
+    //         });
+    //     });
+    // });
 });
 
 const checkInfoTable = (address, value) => {
