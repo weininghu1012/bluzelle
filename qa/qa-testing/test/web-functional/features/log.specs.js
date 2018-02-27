@@ -1,6 +1,7 @@
 describe('Log tab', () => {
     describe('Table Headers', () => {
         const header = require('../getBaseElement')('div.react-grid-HeaderRow');
+
         it('should contain table headers', () => {
             ['Level', 'Timestamp', 'Message', 'Node'].forEach( text => {
                 header().waitForExist (`div.widget-HeaderCell__value*=${text}`);
@@ -9,19 +10,20 @@ describe('Log tab', () => {
     });
 
     describe('Table rows', () => {
-        const header = require('../getBaseElement')('div.react-grid-Grid');
+        const body = require('../getBaseElement')('div.react-grid-Grid');
+
         it('should log node added', () => {
             ['info', new Date().toISOString().substring(0, 11), 'Node added', '127.0.0.1'].forEach( text => {
-                header().waitForExist('div.react-grid-Canvas>div>div');
-                browser.elements('div.react-grid-Canvas>div>div').value[0]
+                body().waitForExist('div.react-grid-Canvas>div>div');
+                body().elements('div.react-grid-Canvas>div>div').value[0]
                     .waitForExist(`div*=${text}`);
             });
         });
 
         it('should log storage warning', () => {
-            header().waitForExist('div.react-grid-Canvas>div>div');
-            emulator.setRandomNodeUsage(85);
-            browser.elements('div.react-grid-Canvas>div>div')
+            body().waitForExist('div.react-grid-Canvas>div>div');
+            emulator.setRandomNodeUsage(99);
+            body().elements('div.react-grid-Canvas>div>div')
                 .waitForExist('div*=Usage is at');
         });
     });

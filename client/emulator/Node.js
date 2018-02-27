@@ -155,10 +155,9 @@ module.exports = function Node(port) {
     });
 
     function updateUsage(val) {
-        const n = getRandomNode();
-        n.used = val;
+        me.used = val;
         sendToClients('updateNodes', [
-            _.pick(n, 'ip', 'port', 'address', 'used', 'available')
+            _.pick(me, 'ip', 'port', 'address', 'used', 'available')
         ]);
     };
 

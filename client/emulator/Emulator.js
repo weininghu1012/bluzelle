@@ -15,7 +15,6 @@ let randomBehavior = false;
 
 module.exports = {
     getNodes: () => nodes.values(),
-    getNodesCount: () => nodes.size,
     setMaxNodes: CommandProcessors.setMaxNodes,
     getMaxNodes: () => maxNodes.get(),
     shutdown: () => nodes.values().map(node => node.shutdown()),
