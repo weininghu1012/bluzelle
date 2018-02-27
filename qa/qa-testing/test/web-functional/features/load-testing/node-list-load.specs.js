@@ -3,9 +3,7 @@ const {clickTab} = require('../../utils');
 describe('Node list load tests', () => {
     const body = require('../../getBaseElement')('body');
 
-    beforeEach(() => {
-        clickTab('Node List');
-    });
+    beforeEach(() => clickTab('Node List'));
 
     it('should be able to handle a lot of nodes quickly', () => {
         // There seems to be some side effects that limits how many nodes can be created and listed.

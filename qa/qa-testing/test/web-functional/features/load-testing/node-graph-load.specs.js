@@ -1,10 +1,9 @@
+const {clickTab} = require('../../utils');
+
 describe('Node graph load tests', () => {
     const body = require('../../getBaseElement')('body');
 
-    beforeEach(() => {
-        browser.waitForExist('=Node Graph');
-        browser.click('=Node Graph');
-    });
+    beforeEach(() => clickTab('Node Graph'));
 
     it('should be able to handle 50 nodes quickly', () => {
         emulator.setMaxNodes(50);

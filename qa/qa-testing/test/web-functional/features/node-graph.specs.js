@@ -1,15 +1,16 @@
-describe('Node graph tab', () => {
-    require('../getBaseElement')('body');
+const {clickTab} = require('../utils');
 
-    beforeEach(() => {
-        browser.waitForExist('=Node Graph');
-        browser.click('=Node Graph');
-    });
+describe('Node graph tab', () => {
+    const body = require('../getBaseElement')('body');
+
+    beforeEach(() => clickTab('Node Graph'));
 
     describe('multiple nodes', () => {
         it('should show the number of nodes set by the emulator', () => {
-            emulator.setMaxNodes(5);
-            browser.waitUntil(() => browser.elements('circle').value.length === 10);
+            const NUM_OF_NODES = 3;
+
+            emulator.setMaxNodes(NUM_OF_NODES);
+            body().waitUntil(() => body().elements('circle').value.length === NUM_OF_NODES * 2);
         });
     });
 
