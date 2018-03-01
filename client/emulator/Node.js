@@ -26,15 +26,16 @@ module.exports = function Node(port) {
         nodeAdded: (node) => {
             sendToClients('updateNodes', [node]);
         },
-        shutdown: () => {
+        shutdown: () => new Promise( (resolve, reject) => {
             nodes.delete(port);
             sendToClients('removeNodes', [me.address]);
             me.alive = false;
             setTimeout(() => {
                 me.getWsServer().shutDown();
                 me.getHttpServer().close();
+                resolve();
             }, 200);
-        },
+        }),
         sendToClients: ({cmd, data}) => sendToClients(cmd, data),
         setUsage: (val) => updateUsage(val)
     });
