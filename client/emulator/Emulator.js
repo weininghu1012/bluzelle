@@ -30,8 +30,6 @@ module.exports = {
 
 
 function start(startPort = 8100) {
-    require('./Network').start(startPort - 1);
-
     lastPort = startPort;
     module.exports.wasStarted = true;
 
