@@ -33,7 +33,7 @@ module.exports = function Node(port) {
             setTimeout(() => {
                 me.getWsServer().shutDown();
                 me.getHttpServer().close();
-                resolve();
+                nodes.has(port) ? reject() : resolve();
             }, 200);
         }),
         sendToClients: ({cmd, data}) => sendToClients(cmd, data),
