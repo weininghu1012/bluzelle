@@ -3,17 +3,12 @@ const nodes = require('../../../emulator/NodeStore').nodes;
 
 emulator.start(8200);
 
-beforeEach('setup', () => {
-    console.log('nodes before: ', nodes.keys());
+beforeEach('setup', async () => {
 
-    Promise.all(emulator.shutdown())
-        .then(() => console.log('Nodes all shutdown.'));
-
+    await Promise.all(emulator.shutdown());
     emulator.setMaxNodes(1);
-
-    browser.pause(400); // wait for node to be added
-    console.log('nodes after', nodes.keys());
-    browser.waitForExist('header');
+    browser.waitUntil(() => nodes.keys().length);
+    browser.pause(400);
 });
 
 
