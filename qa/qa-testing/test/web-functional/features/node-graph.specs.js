@@ -1,7 +1,6 @@
 const {clickTab} = require('../utils');
 
 describe('Node graph tab', () => {
-    const body = require('../getBaseElement')('body');
 
     beforeEach(() => clickTab('Node Graph'));
 
@@ -10,7 +9,7 @@ describe('Node graph tab', () => {
             const NUM_OF_NODES = 3;
 
             emulator.setMaxNodes(NUM_OF_NODES);
-            body().waitUntil(() => body().elements('circle').value.length === NUM_OF_NODES * 2);
+            browser.waitUntil(() => browser.elements('circle').value.length === NUM_OF_NODES * 2);
         });
     });
 

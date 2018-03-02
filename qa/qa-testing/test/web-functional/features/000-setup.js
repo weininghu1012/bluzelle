@@ -9,6 +9,7 @@ beforeEach('setup', async () => {
     emulator.setMaxNodes(1);
     browser.waitUntil(() => nodes.keys().length);
     browser.pause(400);
+    browser.url('http://localhost:8200');
 });
 
 

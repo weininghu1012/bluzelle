@@ -1,7 +1,6 @@
 const {clickTab} = require('../../utils');
 
 describe('Node list load tests', () => {
-    const body = require('../../getBaseElement')('body');
 
     beforeEach(() => clickTab('Node List'));
 
@@ -14,7 +13,7 @@ describe('Node list load tests', () => {
 
         emulator.setMaxNodes(NUM_OF_NODES);
         const start = new Date().getTime();
-        body().waitUntil(() =>  body().elements('div.react-grid-Canvas>div>div').value.length === NUM_OF_NODES, 15000);
+        browser.waitUntil(() =>  browser.elements('div.react-grid-Canvas>div>div').value.length === NUM_OF_NODES, 15000);
         expect(new Date().getTime() - start).to.be.at.most(15000);
     });
 });

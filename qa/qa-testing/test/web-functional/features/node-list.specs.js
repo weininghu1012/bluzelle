@@ -2,8 +2,6 @@ const {clickTab} = require('../utils');
 const _ = require('lodash');
 
 describe('Node List tab', () => {
-    const main = require('../getBaseElement')('div.react-grid-Main');
-
 
     describe('Table Headers', () => {
 
@@ -11,7 +9,7 @@ describe('Node List tab', () => {
 
         it('should contain table headers', () => {
             ['Address', 'Status', 'Actions'].forEach(text => {
-                main().waitForExist(`div.widget-HeaderCell__value*=${text}`);
+                browser.waitForExist(`div.widget-HeaderCell__value*=${text}`);
             });
         });
     });
@@ -25,19 +23,19 @@ describe('Node List tab', () => {
         });
 
         it('should show all nodes', () => {
-            main().waitUntil(() => {
-                return main().elements('div.react-grid-Canvas>div>div').value.length === NUM_OF_NODES
+            browser.waitUntil(() => {
+                return browser.elements('div.react-grid-Canvas>div>div').value.length === NUM_OF_NODES
             }, 5000, 'expected nodes to equal number set by emulator');
         });
 
         it('should show all nodes to be new then alive', () => {
-            main().waitUntil(() =>
-                main().elements('div.react-grid-Canvas>div>div').value.length === NUM_OF_NODES
+            browser.waitUntil(() =>
+                browser.elements('div.react-grid-Canvas>div>div').value.length === NUM_OF_NODES
             );
 
             ['new', 'alive'].forEach(status =>
                 _.times(NUM_OF_NODES).forEach(idx =>
-                    main().elements('div.react-grid-Canvas>div>div').value[idx]
+                    browser.elements('div.react-grid-Canvas>div>div').value[idx]
                         .waitForExist(`div=${status}`)
                 )
             );
